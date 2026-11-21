@@ -37,7 +37,7 @@ module slime_logic (
     output reg  [1:0]   lives,
     output reg  [3:0]   ksec,           // seconds of king mode left (0 when not king)
     output reg  [5:0]   frame,          // free-running frame counter (for blinking)
-    output wire [1:0]   pose            // slime picture: 0 idle, 1 left, 2 right, 3 died
+    output wire [2:0]   pose            // slime picture: 0 idle, 1 left, 2 right, 3 died, 4 down, 5 up
 );
     //---------------- settings you can change ----------------
     localparam N_EVOLVE     = 8'd30;    // pellets needed for form 2
@@ -93,9 +93,11 @@ module slime_logic (
     reg        pmoving, want_valid;
 
     // which slime picture to draw
-    assign pose = (state == S_DEAD)               ? 2'd3 :
-                  (pmoving && pdir == LEFT)       ? 2'd1 :
-                  (pmoving && pdir == RIGHT)      ? 2'd2 : 2'd0;
+    assign pose = (state == S_DEAD)               ? 3'd3 :
+                  (!pmoving)                      ? 3'd0 :
+                  (pdir == LEFT)                  ? 3'd1 :
+                  (pdir == RIGHT)                 ? 3'd2 :
+                  (pdir == DOWN)                  ? 3'd4 : 3'd5;
 
     wire [4:0] ptx = px[9:5];                       // tile the slime is on
     wire [3:0] pty = py[8:5];

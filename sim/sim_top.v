@@ -30,7 +30,7 @@ module sim_top (
     wire [4:0]   crown_tx;
     wire [3:0]   crown_ty;
     wire [5:0]   frame;
-    wire [1:0]   pose;
+    wire [2:0]   pose;
 
     slime_logic u_logic (
         .clk(clk), .rst(rst), .tick(tick), .tick2(tick2),

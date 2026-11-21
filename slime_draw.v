@@ -20,7 +20,7 @@ module slime_draw (
     input  wire [3:0]   crown_ty,
     input  wire [3:0]   ksec,
     input  wire [5:0]   frame,
-    input  wire [1:0]   pose,           // 0 idle, 1 left, 2 right, 3 died
+    input  wire [2:0]   pose,           // 0 idle, 1 left, 2 right, 3 died, 4 down, 5 up
     input  wire [1:0]   lives,
     output reg  [11:0]  rgb
 );
@@ -85,7 +85,7 @@ module slime_draw (
     wire [9:0] sx   = x - px;
     wire [9:0] sy   = y - py;
     wire       p_in = (x >= px) && (sx < 10'd32) && (y >= py) && (sy < 10'd32);
-    wire [1:0] p_form = (form == 2'd3 && king_ending && pose != 2'd3) ? 2'd2 : form;
+    wire [1:0] p_form = (form == 2'd3 && king_ending && pose != 3'd3) ? 2'd2 : form;
     wire [3:0] p_ci;
     art_slime u_slime (.id({p_form - 2'd1, pose}), .row(sy[4:0]), .col(sx[4:0]), .ci(p_ci));
     wire       p_pix = p_in && (p_ci != 4'd0);

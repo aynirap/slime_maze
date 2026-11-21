@@ -38,7 +38,6 @@ class alignas(VL_CACHE_LINE_BYTES) Vfast_top___024root final {
         ::CData/*3:0*/ fast_top__DOT__u_logic__DOT__galive;
         ::CData/*0:0*/ fast_top__DOT__u_logic__DOT__crown_on;
         ::CData/*5:0*/ fast_top__DOT__u_logic__DOT__frame;
-        ::CData/*1:0*/ fast_top__DOT__u_logic__DOT__pose;
         ::CData/*3:0*/ fast_top__DOT__u_logic__DOT__bcd_add10__Vstatic__d1;
         ::CData/*3:0*/ fast_top__DOT__u_logic__DOT__bcd_add10__Vstatic__d2;
         ::CData/*3:0*/ fast_top__DOT__u_logic__DOT__bcd_add10__Vstatic__d3;
@@ -80,7 +79,7 @@ class alignas(VL_CACHE_LINE_BYTES) Vfast_top___024root final {
         ::CData/*0:0*/ fast_top__DOT__u_draw__DOT__u_m__DOT__wall;
         ::CData/*3:0*/ fast_top__DOT__u_draw__DOT__u_crown__DOT__ci;
         ::CData/*3:0*/ fast_top__DOT__u_draw__DOT__u_ball__DOT__ci;
-        ::CData/*0:0*/ __Vdfg_Regularize_311;
+        ::CData/*0:0*/ __Vdfg_Regularize_312;
         ::CData/*0:0*/ __Vtrigprevexpr___TOP__clk__0;
         ::CData/*0:0*/ __Vtrigprevexpr___TOP__rst__0;
         ::CData/*0:0*/ __Vtrigprevexpr___TOP__tick__0;
@@ -99,9 +98,9 @@ class alignas(VL_CACHE_LINE_BYTES) Vfast_top___024root final {
         ::SData/*9:0*/ fast_top__DOT__u_logic__DOT__gy__BRA__2__KET__;
         ::SData/*9:0*/ fast_top__DOT__u_logic__DOT__gy__BRA__3__KET__;
         ::SData/*8:0*/ fast_top__DOT__u_logic__DOT__pidx;
+        ::SData/*8:0*/ fast_top__DOT__u_draw__DOT__tidx;
     };
     struct {
-        ::SData/*8:0*/ fast_top__DOT__u_draw__DOT__tidx;
         ::SData/*9:0*/ fast_top__DOT__u_draw__DOT__sx;
         ::SData/*9:0*/ fast_top__DOT__u_draw__DOT__sy;
         ::SData/*9:0*/ fast_top__DOT__u_draw__DOT__g_ghost__BRA__0__KET____DOT__dx;
@@ -116,7 +115,7 @@ class alignas(VL_CACHE_LINE_BYTES) Vfast_top___024root final {
         ::SData/*9:0*/ __Vtrigprevexpr___TOP__y__0;
         ::VlWide<10>/*299:0*/ fast_top__DOT__u_logic__DOT__pellet;
         ::IData/*19:0*/ fast_top__DOT__u_draw__DOT__u_m__DOT__row;
-        ::IData/*31:0*/ __Vdfg_Regularize_335;
+        ::IData/*31:0*/ __Vdfg_Regularize_336;
         ::VlUnpacked<::QData/*63:0*/, 1> __VstlTriggered;
         ::VlUnpacked<::QData/*63:0*/, 2> __VicoTriggered;
         ::VlUnpacked<::QData/*63:0*/, 1> __VactTriggered;

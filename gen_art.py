@@ -6,9 +6,9 @@
 import sys
 from PIL import Image
 D=sys.argv[1]
-main_names=['slime1_idle','slime1_left','slime1_right','slime1_died',
-            'slime2_idle','slime2_left','slime2_right','slime2_died',
-            'slime3_idle','slime3_left','slime3_right','slime3_died',
+main_names=['slime1_idle','slime1_left','slime1_right','slime1_died','slime1_down','slime1_up',
+            'slime2_idle','slime2_left','slime2_right','slime2_died','slime2_down','slime2_up',
+            'slime3_idle','slime3_left','slime3_right','slime3_died','slime3_down','slime3_up',
             'king0','king1','king2','ball','kingmode','life_alive','life_died']
 ghost_names=['ghost_0','ghost_1','ghost_2','ghost_3','ghost_scared']
 imgs={n:Image.open(f'{D}/art/{n}.png').convert('RGBA') for n in main_names+ghost_names}
@@ -70,6 +70,7 @@ def rom(mod, comment, ids, idw, pal, size=32):
         "    reg [%d:0] r;" % (size*4-1),"    always @* begin"]
     o.append("        case (%s)" % ("{id, row}" if idw else "row"))
     for k,n in enumerate(ids):
+        if n is None: continue                      # empty slot
         o.append("            // %s" % n)
         for y,line in enumerate(rows(n,pal,size)):
             if set(line)=={'0'}: continue
@@ -80,7 +81,9 @@ def rom(mod, comment, ids, idw, pal, size=32):
 
 M,G=pals['main'],pals['ghost']
 palette("art_palette",M,"Palette for the slime, crown, pellet and icons")
-rom("art_slime", ["Player : id = {form - 1, pose}","  pose 0 idle, 1 left, 2 right, 3 died"], main_names[0:12], 4, M)
+S=main_names[0:18]                                  # 6 pictures per form, 8 slots per form
+rom("art_slime", ["Player : id = {form - 1, pose}","  pose 0 idle, 1 left, 2 right, 3 died, 4 down, 5 up"],
+    S[0:6]+[None,None]+S[6:12]+[None,None]+S[12:18], 5, M)
 rom("art_crown", ["Crown item : id 0, 1, 2 = animation frames"], ['king0','king1','king2'], 2, M)
 rom("art_ball",  ["Pellet"], ['ball'], 0, M)
 rom("art_icon",  ["King-mode icon"], ['kingmode'], 0, M)

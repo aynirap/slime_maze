@@ -60,7 +60,7 @@ module slime_top (
     wire [15:0]  score;
     wire [3:0]   ksec;
     wire [5:0]   frame;
-    wire [1:0]   pose;
+    wire [2:0]   pose;
 
     slime_logic u_logic (
         .clk(clk), .rst(rst), .tick(tick), .tick2(tick2),
