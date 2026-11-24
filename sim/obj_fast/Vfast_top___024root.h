@@ -73,13 +73,13 @@ class alignas(VL_CACHE_LINE_BYTES) Vfast_top___024root final {
         ::CData/*0:0*/ fast_top__DOT__u_logic__DOT__ptick;
         ::CData/*0:0*/ fast_top__DOT__u_draw__DOT__crown_pix;
         ::CData/*0:0*/ fast_top__DOT__u_draw__DOT__king_ending;
-        ::CData/*3:0*/ fast_top__DOT__u_draw__DOT__icon_ci;
+        ::CData/*4:0*/ fast_top__DOT__u_draw__DOT__icon_ci;
         ::CData/*0:0*/ fast_top__DOT__u_draw__DOT__show_msg;
         ::CData/*0:0*/ fast_top__DOT__u_draw__DOT__in_line1;
         ::CData/*0:0*/ fast_top__DOT__u_draw__DOT__u_m__DOT__wall;
-        ::CData/*3:0*/ fast_top__DOT__u_draw__DOT__u_crown__DOT__ci;
-        ::CData/*3:0*/ fast_top__DOT__u_draw__DOT__u_ball__DOT__ci;
-        ::CData/*0:0*/ __Vdfg_Regularize_312;
+        ::CData/*4:0*/ fast_top__DOT__u_draw__DOT__u_crown__DOT__ci;
+        ::CData/*4:0*/ fast_top__DOT__u_draw__DOT__u_ball__DOT__ci;
+        ::CData/*0:0*/ __Vdfg_Regularize_313;
         ::CData/*0:0*/ __Vtrigprevexpr___TOP__clk__0;
         ::CData/*0:0*/ __Vtrigprevexpr___TOP__rst__0;
         ::CData/*0:0*/ __Vtrigprevexpr___TOP__tick__0;
@@ -115,7 +115,7 @@ class alignas(VL_CACHE_LINE_BYTES) Vfast_top___024root final {
         ::SData/*9:0*/ __Vtrigprevexpr___TOP__y__0;
         ::VlWide<10>/*299:0*/ fast_top__DOT__u_logic__DOT__pellet;
         ::IData/*19:0*/ fast_top__DOT__u_draw__DOT__u_m__DOT__row;
-        ::IData/*31:0*/ __Vdfg_Regularize_336;
+        ::IData/*31:0*/ __Vdfg_Regularize_338;
         ::VlUnpacked<::QData/*63:0*/, 1> __VstlTriggered;
         ::VlUnpacked<::QData/*63:0*/, 2> __VicoTriggered;
         ::VlUnpacked<::QData/*63:0*/, 1> __VactTriggered;

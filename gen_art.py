@@ -1,11 +1,11 @@
 # Converts the PNG sprites in art/ into slime_art.v (palette ROMs).
 #   usage:  python3 gen_art.py .
-# Two palettes, each at most 15 colours (colour 0 = transparent):
-#   art_palette   : slime, crown, pellet, icons
-#   ghost_palette : ghosts
+# Two palettes (colour 0 = transparent):
+#   art_palette   : slime, crown, pellet, icons  (5-bit colour number, at most 31 colours)
+#   ghost_palette : ghosts                       (4-bit colour number, at most 15 colours)
 import sys
 from PIL import Image
-D=sys.argv[1]
+D=sys.argv[1] if len(sys.argv)>1 else '.'
 main_names=['slime1_idle','slime1_left','slime1_right','slime1_died','slime1_down','slime1_up',
             'slime2_idle','slime2_left','slime2_right','slime2_died','slime2_down','slime2_up',
             'slime3_idle','slime3_left','slime3_right','slime3_died','slime3_down','slime3_up',
@@ -13,25 +13,25 @@ main_names=['slime1_idle','slime1_left','slime1_right','slime1_died','slime1_dow
 ghost_names=['ghost_0','ghost_1','ghost_2','ghost_3','ghost_scared']
 imgs={n:Image.open(f'{D}/art/{n}.png').convert('RGBA') for n in main_names+ghost_names}
 
-def make_pal(names):
+def make_pal(names, limit):
     pal=[]
     for n in names:
         for p in imgs[n].get_flattened_data():
             if p[3]>=128:
                 c=tuple(round(v/17) for v in p[:3])
                 if c not in pal: pal.append(c)
-    assert len(pal)<=15, ('too many colours', names, len(pal))
+    assert len(pal)<=limit, ('too many colours', names, len(pal), 'max', limit)
     return pal
-pals={'main':make_pal(main_names),'ghost':make_pal(ghost_names)}
+pals={'main':make_pal(main_names,31),'ghost':make_pal(ghost_names,15)}
 
 def rows(n,pal,size):
     im=imgs[n]; assert im.size==(size,size), (n, im.size, 'should be', size)
     out=[]
     for y in range(size):
-        line=''
+        line=[]
         for x in range(size):
             p=im.getpixel((x,y))
-            line+='0' if p[3]<128 else '%X'%(pal.index(tuple(round(v/17) for v in p[:3]))+1)
+            line.append(0 if p[3]<128 else pal.index(tuple(round(v/17) for v in p[:3]))+1)
         out.append(line)
     return out
 
@@ -46,18 +46,18 @@ o=["`timescale 1ns / 1ps",
 "//   left pixel first.  All modules are combinational ROMs (LUTs).",
 "//=============================================================================",
 ""]
-def palette(mod,pal,comment):
+def palette(mod,pal,comment,bits):
     global o
     o+=["//-----------------------------------------------------------------------------",
         "// "+comment,
         "//-----------------------------------------------------------------------------",
-        "module %s (" % mod,"    input  wire [3:0]  ci,","    output reg  [11:0] rgb",");",
+        "module %s (" % mod,"    input  wire [%d:0]  ci," % (bits-1),"    output reg  [11:0] rgb",");",
         "    always @* begin","        case (ci)"]
     for i,c in enumerate(pal):
-        o.append("            4'd%-2d: rgb = 12'h%X%X%X;" % (i+1,*c))
+        o.append("            %d'd%-2d: rgb = 12'h%X%X%X;" % (bits,i+1,*c))
     o+=["            default: rgb = 12'h000;","        endcase","    end","endmodule",""]
 
-def rom(mod, comment, ids, idw, pal, size=32):
+def rom(mod, comment, ids, idw, pal, size=32, bits=4):
     global o
     rw={32:5,8:3}[size]
     o.append("//-----------------------------------------------------------------------------")
@@ -66,31 +66,33 @@ def rom(mod, comment, ids, idw, pal, size=32):
     o.append("module %s (" % mod)
     if idw: o.append("    input  wire [%d:0] id," % (idw-1))
     o+=["    input  wire [%d:0] row," % (rw-1),"    input  wire [%d:0] col," % (rw-1),
-        "    output wire [3:0] ci          // colour number, 0 = transparent",");",
-        "    reg [%d:0] r;" % (size*4-1),"    always @* begin"]
+        "    output wire [%d:0] ci          // colour number, 0 = transparent" % (bits-1),");",
+        "    reg [%d:0] r;" % (size*bits-1),"    always @* begin"]
     o.append("        case (%s)" % ("{id, row}" if idw else "row"))
     for k,n in enumerate(ids):
         if n is None: continue                      # empty slot
         o.append("            // %s" % n)
         for y,line in enumerate(rows(n,pal,size)):
-            if set(line)=={'0'}: continue
+            if not any(line): continue
+            v=0
+            for c in line: v=(v<<bits)|c
             key = ("{%d'd%d, %d'd%d}" % (idw,k,rw,y)) if idw else ("%d'd%d" % (rw,y))
-            o.append("            %-18s r = %d'h%s;" % (key+":", size*4, line))
-    o+=["            default: r = %d'h0;" % (size*4),"        endcase","    end",
-        "    assign ci = r[(%d'd%d - col) * 4 +: 4];" % (rw,size-1),"endmodule",""]
+            o.append("            %-18s r = %d'h%0*X;" % (key+":", size*bits, (size*bits+3)//4, v))
+    o+=["            default: r = %d'h0;" % (size*bits),"        endcase","    end",
+        "    assign ci = r[(%d'd%d - col) * %d +: %d];" % (rw,size-1,bits,bits),"endmodule",""]
 
 M,G=pals['main'],pals['ghost']
-palette("art_palette",M,"Palette for the slime, crown, pellet and icons")
+palette("art_palette",M,"Palette for the slime, crown, pellet and icons (5-bit colour number)",5)
 S=main_names[0:18]                                  # 6 pictures per form, 8 slots per form
 rom("art_slime", ["Player : id = {form - 1, pose}","  pose 0 idle, 1 left, 2 right, 3 died, 4 down, 5 up"],
-    S[0:6]+[None,None]+S[6:12]+[None,None]+S[12:18], 5, M)
-rom("art_crown", ["Crown item : id 0, 1, 2 = animation frames"], ['king0','king1','king2'], 2, M)
-rom("art_ball",  ["Pellet"], ['ball'], 0, M)
-rom("art_icon",  ["King-mode icon"], ['kingmode'], 0, M)
-rom("art_life",  ["Life icon, 8 x 8 : id 0 = life left, id 1 = life lost"], ['life_alive','life_died'], 1, M, 8)
-palette("ghost_palette",G,"Palette for the ghosts")
+    S[0:6]+[None,None]+S[6:12]+[None,None]+S[12:18], 5, M, bits=5)
+rom("art_crown", ["Crown item : id 0, 1, 2 = animation frames"], ['king0','king1','king2'], 2, M, bits=5)
+rom("art_ball",  ["Pellet"], ['ball'], 0, M, bits=5)
+rom("art_icon",  ["King-mode icon"], ['kingmode'], 0, M, bits=5)
+rom("art_life",  ["Life icon, 8 x 8 : id 0 = life left, id 1 = life lost"], ['life_alive','life_died'], 1, M, 8, bits=5)
+palette("ghost_palette",G,"Palette for the ghosts",4)
 rom("art_ghost", ["Ghost : id 0, 1, 2, 3 = the four ghosts","  id 4 = scared (king mode)"],
     ghost_names, 3, G)
 open(f'{D}/slime_art.v','w').write('\n'.join(o))
-print('art_palette  ', len(M), 'colours')
-print('ghost_palette', len(G), 'colours')
+print('art_palette  ', len(M), 'of 31 colours')
+print('ghost_palette', len(G), 'of 15 colours')

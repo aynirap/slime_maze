@@ -160,15 +160,15 @@ VL_ATTR_COLD bool Vfast_top___024root___trigger_anySet__stl(const ::VlUnpacked<:
 }
 
 extern const ::VlWide<16>/*511:0*/ Vfast_top__ConstPool__CONST_0;
-extern const ::VlWide<128>/*4095:0*/ Vfast_top__ConstPool__CONST_10;
-extern const ::VlWide<512>/*16383:0*/ Vfast_top__ConstPool__CONST_9;
-extern const ::VlWide<16>/*511:0*/ Vfast_top__ConstPool__CONST_8;
-extern const ::VlWide<128>/*4095:0*/ Vfast_top__ConstPool__CONST_7;
+extern const ::VlWide<160>/*5119:0*/ Vfast_top__ConstPool__CONST_10;
+extern const ::VlWide<640>/*20479:0*/ Vfast_top__ConstPool__CONST_9;
+extern const ::VlWide<32>/*1023:0*/ Vfast_top__ConstPool__CONST_8;
+extern const ::VlWide<160>/*5119:0*/ Vfast_top__ConstPool__CONST_7;
 extern const ::VlUnpacked<::CData/*2:0*/, 64> Vfast_top__ConstPool__CONSARRAY_2;
 extern const ::VlWide<938>/*30015:0*/ Vfast_top__ConstPool__CONST_6;
-extern const ::VlUnpacked<::VlWide<4>/*127:0*/, 469> Vfast_top__ConstPool__CONSARRAY_0;
+extern const ::VlUnpacked<::VlWide<5>/*159:0*/, 469> Vfast_top__ConstPool__CONSARRAY_0;
 extern const ::VlWide<1024>/*32767:0*/ Vfast_top__ConstPool__CONST_2;
-extern const ::VlWide<16>/*511:0*/ Vfast_top__ConstPool__CONST_3;
+extern const ::VlWide<32>/*1023:0*/ Vfast_top__ConstPool__CONST_3;
 extern const ::VlWide<16>/*511:0*/ Vfast_top__ConstPool__CONST_1;
 extern const ::VlWide<256>/*8191:0*/ Vfast_top__ConstPool__CONST_4;
 extern const ::VlWide<16>/*511:0*/ Vfast_top__ConstPool__CONST_5;
@@ -222,16 +222,16 @@ VL_ATTR_COLD void Vfast_top___024root___stl_comb__TOP__0(Vfast_top___024root* vl
     fast_top__DOT__u_draw__DOT__g_ci__BRA__3__KET__ = 0;
     ::SData/*11:0*/ fast_top__DOT__u_draw__DOT__u_pal__DOT__rgb;
     fast_top__DOT__u_draw__DOT__u_pal__DOT__rgb = 0;
-    ::CData/*3:0*/ fast_top__DOT__u_draw__DOT__u_slime__DOT__ci;
+    ::CData/*4:0*/ fast_top__DOT__u_draw__DOT__u_slime__DOT__ci;
     fast_top__DOT__u_draw__DOT__u_slime__DOT__ci = 0;
-    ::CData/*0:0*/ __Vdfg_Regularize_337;
-    __Vdfg_Regularize_337 = 0;
-    ::CData/*0:0*/ __Vdfg_Regularize_338;
-    __Vdfg_Regularize_338 = 0;
     ::CData/*0:0*/ __Vdfg_Regularize_339;
     __Vdfg_Regularize_339 = 0;
     ::CData/*0:0*/ __Vdfg_Regularize_340;
     __Vdfg_Regularize_340 = 0;
+    ::CData/*0:0*/ __Vdfg_Regularize_341;
+    __Vdfg_Regularize_341 = 0;
+    ::CData/*0:0*/ __Vdfg_Regularize_342;
+    __Vdfg_Regularize_342 = 0;
     ::IData/*31:0*/ __Vtemp_1;
     ::IData/*31:0*/ __VExpandSel_Lsb_1;
     ::IData/*31:0*/ __VExpandSel_Lsb_2;
@@ -246,7 +246,7 @@ VL_ATTR_COLD void Vfast_top___024root___stl_comb__TOP__0(Vfast_top___024root* vl
     ::IData/*31:0*/ __VExpandSel_Lsb_11;
     ::IData/*31:0*/ __VExpandSel_Lsb_12;
     ::IData/*31:0*/ __VExpandSel_Lsb_13;
-    ::IData/*31:0*/ __VExpandSel_Lsb_14;
+    ::CData/*31:0*/ __VExpandSel_Lsb_14;
     ::IData/*31:0*/ __VExpandSel_Lsb_15;
     ::IData/*31:0*/ __VExpandSel_Lsb_16;
     ::IData/*31:0*/ __VExpandSel_Lsb_17;
@@ -254,6 +254,7 @@ VL_ATTR_COLD void Vfast_top___024root___stl_comb__TOP__0(Vfast_top___024root* vl
     ::IData/*31:0*/ __VExpandSel_Lsb_19;
     ::IData/*31:0*/ __VExpandSel_Lsb_20;
     ::IData/*31:0*/ __VExpandSel_Lsb_21;
+    ::IData/*31:0*/ __VExpandSel_Lsb_22;
     // Body
     vlSelfRef.fast_top__DOT__u_logic__DOT__pidx = (0x000001ffU 
                                                    & ((0x000000f0U 
@@ -431,45 +432,59 @@ VL_ATTR_COLD void Vfast_top___024root___stl_comb__TOP__0(Vfast_top___024root* vl
     vlSelfRef.fast_top__DOT__u_draw__DOT__g_ghost__BRA__2__KET____DOT__dy 
         = (0x000003ffU & ((::IData)(vlSelfRef.__VprimaryPorts.y) 
                           - (::IData)(vlSelfRef.fast_top__DOT__u_logic__DOT__gy__BRA__2__KET__)));
-    __VExpandSel_Lsb_1 = ((0x00000f80U & ((::IData)(vlSelfRef.__VprimaryPorts.y) 
-                                          << 7U)) + 
-                          (0x0000007cU & (((::IData)(0x1fU) 
-                                           - (::IData)(vlSelfRef.__VprimaryPorts.x)) 
-                                          << 2U)));
-    vlSelfRef.fast_top__DOT__u_draw__DOT__u_ball__DOT__ci 
-        = (0x0000000fU & (((0U == (0x0000001fU & __VExpandSel_Lsb_1))
-                            ? 0U : (Vfast_top__ConstPool__CONST_10
-                                    [(((::IData)(3U) 
-                                       + __VExpandSel_Lsb_1) 
-                                      >> 5U)] << ((::IData)(0x00000020U) 
-                                                  - 
-                                                  (0x0000001fU 
-                                                   & __VExpandSel_Lsb_1)))) 
-                          | (Vfast_top__ConstPool__CONST_10
-                             [(__VExpandSel_Lsb_1 >> 5U)] 
-                             >> (0x0000001fU & __VExpandSel_Lsb_1))));
-    __VExpandSel_Lsb_2 = (((((3U == (3U & ((::IData)(vlSelfRef.fast_top__DOT__u_logic__DOT__frame) 
-                                           >> 3U)))
-                              ? 1U : (3U & ((::IData)(vlSelfRef.fast_top__DOT__u_logic__DOT__frame) 
-                                            >> 3U))) 
-                            << 0x0000000cU) | (0x00000f80U 
-                                               & ((::IData)(vlSelfRef.__VprimaryPorts.y) 
-                                                  << 7U))) 
-                          + (0x0000007cU & (((::IData)(0x1fU) 
-                                             - (::IData)(vlSelfRef.__VprimaryPorts.x)) 
-                                            << 2U)));
-    vlSelfRef.fast_top__DOT__u_draw__DOT__u_crown__DOT__ci 
-        = (0x0000000fU & (((0U == (0x0000001fU & __VExpandSel_Lsb_2))
-                            ? 0U : (Vfast_top__ConstPool__CONST_9
-                                    [(((::IData)(3U) 
-                                       + __VExpandSel_Lsb_2) 
-                                      >> 5U)] << ((::IData)(0x00000020U) 
-                                                  - 
-                                                  (0x0000001fU 
-                                                   & __VExpandSel_Lsb_2)))) 
-                          | (Vfast_top__ConstPool__CONST_9
-                             [(__VExpandSel_Lsb_2 >> 5U)] 
-                             >> (0x0000001fU & __VExpandSel_Lsb_2))));
+    __VExpandSel_Lsb_1 = (((::IData)(0x000000a0U) * 
+                           (0x0000001fU & (::IData)(vlSelfRef.__VprimaryPorts.y))) 
+                          + (0x000000ffU & ((::IData)(5U) 
+                                            * ((::IData)(0x0000001fU) 
+                                               - (0x0000001fU 
+                                                  & (::IData)(vlSelfRef.__VprimaryPorts.x))))));
+    __VExpandSel_Lsb_2 = (((::IData)(0x000000a0U) * 
+                           ((((3U == (3U & ((::IData)(vlSelfRef.fast_top__DOT__u_logic__DOT__frame) 
+                                            >> 3U)))
+                               ? 1U : (3U & ((::IData)(vlSelfRef.fast_top__DOT__u_logic__DOT__frame) 
+                                             >> 3U))) 
+                             << 5U) | (0x0000001fU 
+                                       & (::IData)(vlSelfRef.__VprimaryPorts.y)))) 
+                          + (0x000000ffU & ((::IData)(5U) 
+                                            * ((::IData)(0x0000001fU) 
+                                               - (0x0000001fU 
+                                                  & (::IData)(vlSelfRef.__VprimaryPorts.x))))));
+    if ((0x9fU >= (0x000000ffU & ((::IData)(5U) * ((::IData)(0x0000001fU) 
+                                                   - 
+                                                   (0x0000001fU 
+                                                    & (::IData)(vlSelfRef.__VprimaryPorts.x))))))) {
+        vlSelfRef.fast_top__DOT__u_draw__DOT__u_ball__DOT__ci 
+            = (0x0000001fU & (((0U == (0x0000001fU 
+                                       & __VExpandSel_Lsb_1))
+                                ? 0U : (Vfast_top__ConstPool__CONST_10
+                                        [(((::IData)(4U) 
+                                           + __VExpandSel_Lsb_1) 
+                                          >> 5U)] << 
+                                        ((::IData)(0x00000020U) 
+                                         - (0x0000001fU 
+                                            & __VExpandSel_Lsb_1)))) 
+                              | (Vfast_top__ConstPool__CONST_10
+                                 [(__VExpandSel_Lsb_1 
+                                   >> 5U)] >> (0x0000001fU 
+                                               & __VExpandSel_Lsb_1))));
+        vlSelfRef.fast_top__DOT__u_draw__DOT__u_crown__DOT__ci 
+            = (0x0000001fU & (((0U == (0x0000001fU 
+                                       & __VExpandSel_Lsb_2))
+                                ? 0U : (Vfast_top__ConstPool__CONST_9
+                                        [(((::IData)(4U) 
+                                           + __VExpandSel_Lsb_2) 
+                                          >> 5U)] << 
+                                        ((::IData)(0x00000020U) 
+                                         - (0x0000001fU 
+                                            & __VExpandSel_Lsb_2)))) 
+                              | (Vfast_top__ConstPool__CONST_9
+                                 [(__VExpandSel_Lsb_2 
+                                   >> 5U)] >> (0x0000001fU 
+                                               & __VExpandSel_Lsb_2))));
+    } else {
+        vlSelfRef.fast_top__DOT__u_draw__DOT__u_ball__DOT__ci = 0U;
+        vlSelfRef.fast_top__DOT__u_draw__DOT__u_crown__DOT__ci = 0U;
+    }
     vlSelfRef.fast_top__DOT__u_draw__DOT__u_m__DOT__row 
         = (0x000fffffU & Vfast_top__ConstPool__CONST_0
            [(0x0000000fU & ((::IData)(vlSelfRef.__VprimaryPorts.y) 
@@ -495,7 +510,7 @@ VL_ATTR_COLD void Vfast_top___024root___stl_comb__TOP__0(Vfast_top___024root* vl
                                           << 5U)) + 
                           (0x0000001fU & ((::IData)(0x13U) 
                                           - (::IData)(fast_top__DOT__u_logic__DOT____Vcellinp__u_mw__tx))));
-    __Vdfg_Regularize_340 = ((~ ((0x13U < (::IData)(fast_top__DOT__u_logic__DOT____Vcellinp__u_mw__tx)) 
+    __Vdfg_Regularize_342 = ((~ ((0x13U < (::IData)(fast_top__DOT__u_logic__DOT____Vcellinp__u_mw__tx)) 
                                  | ((0x13U >= (0x0000001fU 
                                                & ((::IData)(0x13U) 
                                                   - (::IData)(fast_top__DOT__u_logic__DOT____Vcellinp__u_mw__tx)))) 
@@ -1211,7 +1226,7 @@ VL_ATTR_COLD void Vfast_top___024root___stl_comb__TOP__0(Vfast_top___024root* vl
                               >> (::IData)(vlSelfRef.fast_top__DOT__u_logic__DOT__d3)))
                         ? (::IData)(vlSelfRef.fast_top__DOT__u_logic__DOT__d3)
                         : (1U ^ (::IData)(vlSelfRef.fast_top__DOT__u_logic__DOT__gdir__BRA__3__KET__))))));
-    vlSelfRef.__Vdfg_Regularize_336 = (0x0000003fU 
+    vlSelfRef.__Vdfg_Regularize_338 = (0x0000003fU 
                                        & ((::IData)(vlSelfRef.fast_top__DOT__u_draw__DOT__in_line1)
                                            ? (0x0000003fU 
                                               & (((::IData)(vlSelfRef.__VprimaryPorts.x) 
@@ -1251,23 +1266,24 @@ VL_ATTR_COLD void Vfast_top___024root___stl_comb__TOP__0(Vfast_top___024root* vl
     __VExpandSel_Lsb_12 = (((((0x0000001fU & ((::IData)(vlSelfRef.__VprimaryPorts.x) 
                                               >> 5U)) 
                               >= (::IData)(vlSelfRef.__VprimaryPorts.lives)) 
-                             << 8U) | (0x000000e0U 
+                             << 9U) | (0x000001c0U 
                                        & (((::IData)(vlSelfRef.__VprimaryPorts.y) 
                                            - (::IData)(8U)) 
-                                          << 4U))) 
-                           + (0x0000001cU & (((::IData)(7U) 
-                                              - (7U 
-                                                 & (((::IData)(vlSelfRef.__VprimaryPorts.x) 
-                                                     - (::IData)(8U)) 
-                                                    >> 1U))) 
-                                             << 2U)));
-    __VExpandSel_Lsb_13 = ((0x00000f80U & ((::IData)(vlSelfRef.__VprimaryPorts.y) 
-                                           << 7U)) 
-                           + (0x0000007cU & (((::IData)(0x1fU) 
-                                              - (::IData)(vlSelfRef.__VprimaryPorts.x)) 
-                                             << 2U)));
+                                          << 5U))) 
+                           + (0x0000003fU & ((::IData)(5U) 
+                                             * ((::IData)(7U) 
+                                                - (7U 
+                                                   & (((::IData)(vlSelfRef.__VprimaryPorts.x) 
+                                                       - (::IData)(8U)) 
+                                                      >> 1U))))));
+    __VExpandSel_Lsb_13 = (((::IData)(0x000000a0U) 
+                            * (0x0000001fU & (::IData)(vlSelfRef.__VprimaryPorts.y))) 
+                           + (0x000000ffU & ((::IData)(5U) 
+                                             * ((::IData)(0x0000001fU) 
+                                                - (0x0000001fU 
+                                                   & (::IData)(vlSelfRef.__VprimaryPorts.x))))));
     vlSelfRef.fast_top__DOT__u_draw__DOT__icon_ci = 
-        (0x0000000fU & ((::IData)(((0U == (0x01e0U 
+        (0x0000001fU & ((::IData)(((0U == (0x01e0U 
                                            & (::IData)(vlSelfRef.__VprimaryPorts.y))) 
                                    & (((((3U > (0x0000001fU 
                                                 & ((::IData)(vlSelfRef.__VprimaryPorts.x) 
@@ -1281,39 +1297,63 @@ VL_ATTR_COLD void Vfast_top___024root___stl_comb__TOP__0(Vfast_top___024root* vl
                                                  & (::IData)(vlSelfRef.__VprimaryPorts.y)))) 
                                       & (0x18U > (0x0000001fU 
                                                   & (::IData)(vlSelfRef.__VprimaryPorts.y))))))
-                         ? (((0U == (0x0000001fU & __VExpandSel_Lsb_12))
-                              ? 0U : (Vfast_top__ConstPool__CONST_8
-                                      [(((::IData)(3U) 
-                                         + __VExpandSel_Lsb_12) 
-                                        >> 5U)] << 
-                                      ((::IData)(0x00000020U) 
-                                       - (0x0000001fU 
-                                          & __VExpandSel_Lsb_12)))) 
-                            | (Vfast_top__ConstPool__CONST_8
-                               [(__VExpandSel_Lsb_12 
-                                 >> 5U)] >> (0x0000001fU 
-                                             & __VExpandSel_Lsb_12)))
-                         : ((::IData)(((((0U == (0x01e0U 
-                                                 & (::IData)(vlSelfRef.__VprimaryPorts.y))) 
-                                         & (3U == (::IData)(vlSelfRef.__VprimaryPorts.form))) 
-                                        & (~ (::IData)(vlSelfRef.fast_top__DOT__u_draw__DOT__king_ending))) 
-                                       & (0x0260U == 
-                                          (0x03e0U 
-                                           & (::IData)(vlSelfRef.__VprimaryPorts.x)))))
+                         ? ((0x27U >= (0x0000003fU 
+                                       & ((::IData)(5U) 
+                                          * ((::IData)(7U) 
+                                             - (7U 
+                                                & (((::IData)(vlSelfRef.__VprimaryPorts.x) 
+                                                    - (::IData)(8U)) 
+                                                   >> 1U))))))
                              ? (((0U == (0x0000001fU 
-                                         & __VExpandSel_Lsb_13))
-                                  ? 0U : (Vfast_top__ConstPool__CONST_7
-                                          [(((::IData)(3U) 
-                                             + __VExpandSel_Lsb_13) 
+                                         & __VExpandSel_Lsb_12))
+                                  ? 0U : (Vfast_top__ConstPool__CONST_8
+                                          [(((::IData)(4U) 
+                                             + __VExpandSel_Lsb_12) 
                                             >> 5U)] 
                                           << ((::IData)(0x00000020U) 
                                               - (0x0000001fU 
-                                                 & __VExpandSel_Lsb_13)))) 
-                                | (Vfast_top__ConstPool__CONST_7
-                                   [(__VExpandSel_Lsb_13 
+                                                 & __VExpandSel_Lsb_12)))) 
+                                | (Vfast_top__ConstPool__CONST_8
+                                   [(__VExpandSel_Lsb_12 
                                      >> 5U)] >> (0x0000001fU 
+                                                 & __VExpandSel_Lsb_12)))
+                             : 0U) : ((::IData)((((
+                                                   ((0U 
+                                                     == 
+                                                     (0x01e0U 
+                                                      & (::IData)(vlSelfRef.__VprimaryPorts.y))) 
+                                                    & (3U 
+                                                       == (::IData)(vlSelfRef.__VprimaryPorts.form))) 
+                                                   & (~ (::IData)(vlSelfRef.fast_top__DOT__u_draw__DOT__king_ending))) 
+                                                  & (0x0260U 
+                                                     == 
+                                                     (0x03e0U 
+                                                      & (::IData)(vlSelfRef.__VprimaryPorts.x)))) 
+                                                 & (0x9fU 
+                                                    >= 
+                                                    (0x000000ffU 
+                                                     & ((::IData)(5U) 
+                                                        * 
+                                                        ((::IData)(0x0000001fU) 
+                                                         - 
+                                                         (0x0000001fU 
+                                                          & (::IData)(vlSelfRef.__VprimaryPorts.x))))))))
+                                       ? (((0U == (0x0000001fU 
+                                                   & __VExpandSel_Lsb_13))
+                                            ? 0U : 
+                                           (Vfast_top__ConstPool__CONST_7
+                                            [(((::IData)(4U) 
+                                               + __VExpandSel_Lsb_13) 
+                                              >> 5U)] 
+                                            << ((::IData)(0x00000020U) 
+                                                - (0x0000001fU 
+                                                   & __VExpandSel_Lsb_13)))) 
+                                          | (Vfast_top__ConstPool__CONST_7
+                                             [(__VExpandSel_Lsb_13 
+                                               >> 5U)] 
+                                             >> (0x0000001fU 
                                                  & __VExpandSel_Lsb_13)))
-                             : 0U)));
+                                       : 0U)));
     __Vtemp_1 = VL_MATCHMASKED_I(10, ((0x00000300U 
                                        & (((((3U == (::IData)(vlSelfRef.__VprimaryPorts.form)) 
                                              & ((3U 
@@ -1337,34 +1377,34 @@ VL_ATTR_COLD void Vfast_top___024root___stl_comb__TOP__0(Vfast_top___024root* vl
                                                       | (::IData)(vlSelfRef.__VprimaryPorts.state)))]) 
                                         << 5U) | (0x0000001fU 
                                                   & (::IData)(vlSelfRef.fast_top__DOT__u_draw__DOT__sy)))), Vfast_top__ConstPool__CONST_6);
+    __VExpandSel_Lsb_14 = (0x000000ffU & ((::IData)(5U) 
+                                          * ((::IData)(0x0000001fU) 
+                                             - (0x0000001fU 
+                                                & (::IData)(vlSelfRef.fast_top__DOT__u_draw__DOT__sx)))));
     fast_top__DOT__u_draw__DOT__u_slime__DOT__ci = 
-        (0x0000000fU & (((0U == (0x0000001cU & (((::IData)(0x1fU) 
-                                                 - (::IData)(vlSelfRef.fast_top__DOT__u_draw__DOT__sx)) 
-                                                << 2U)))
-                          ? 0U : (Vfast_top__ConstPool__CONSARRAY_0
-                                  [__Vtemp_1][(((::IData)(3U) 
-                                                + (0x0000007cU 
-                                                   & (((::IData)(0x1fU) 
-                                                       - (::IData)(vlSelfRef.fast_top__DOT__u_draw__DOT__sx)) 
-                                                      << 2U))) 
-                                               >> 5U)] 
-                                  << ((::IData)(0x00000020U) 
-                                      - (0x0000001cU 
-                                         & (((::IData)(0x1fU) 
-                                             - (::IData)(vlSelfRef.fast_top__DOT__u_draw__DOT__sx)) 
-                                            << 2U))))) 
-                        | (Vfast_top__ConstPool__CONSARRAY_0
-                           [__Vtemp_1][(3U & (((::IData)(0x1fU) 
-                                               - (::IData)(vlSelfRef.fast_top__DOT__u_draw__DOT__sx)) 
-                                              >> 3U))] 
-                           >> (0x0000001cU & (((::IData)(0x1fU) 
-                                               - (::IData)(vlSelfRef.fast_top__DOT__u_draw__DOT__sx)) 
-                                              << 2U)))));
-    vlSelfRef.__Vdfg_Regularize_312 = ((~ (::IData)(vlSelfRef.fast_top__DOT__u_draw__DOT__king_ending)) 
+        ((0x9fU >= (0x000000ffU & ((::IData)(5U) * 
+                                   ((::IData)(0x0000001fU) 
+                                    - (0x0000001fU 
+                                       & (::IData)(vlSelfRef.fast_top__DOT__u_draw__DOT__sx))))))
+          ? (0x0000001fU & (((0U == (0x0000001fU & __VExpandSel_Lsb_14))
+                              ? 0U : (Vfast_top__ConstPool__CONSARRAY_0
+                                      [__Vtemp_1][(
+                                                   ((::IData)(4U) 
+                                                    + __VExpandSel_Lsb_14) 
+                                                   >> 5U)] 
+                                      << ((::IData)(0x00000020U) 
+                                          - (0x0000001fU 
+                                             & __VExpandSel_Lsb_14)))) 
+                            | (Vfast_top__ConstPool__CONSARRAY_0
+                               [__Vtemp_1][(__VExpandSel_Lsb_14 
+                                            >> 5U)] 
+                               >> (0x0000001fU & __VExpandSel_Lsb_14))))
+          : 0U);
+    vlSelfRef.__Vdfg_Regularize_313 = ((~ (::IData)(vlSelfRef.fast_top__DOT__u_draw__DOT__king_ending)) 
                                        & (3U == (::IData)(vlSelfRef.__VprimaryPorts.form)));
     vlSelfRef.fast_top__DOT__u_logic__DOT__p_nd = ((::IData)(vlSelfRef.fast_top__DOT__u_logic__DOT__p_aligned)
                                                     ? 
-                                                   ((::IData)(__Vdfg_Regularize_340)
+                                                   ((::IData)(__Vdfg_Regularize_342)
                                                      ? (::IData)(vlSelfRef.fast_top__DOT__u_logic__DOT__want)
                                                      : (::IData)(vlSelfRef.fast_top__DOT__u_logic__DOT__pdir))
                                                     : 
@@ -1375,7 +1415,7 @@ VL_ATTR_COLD void Vfast_top___024root___stl_comb__TOP__0(Vfast_top___024root* vl
                                                          ^ (::IData)(vlSelfRef.fast_top__DOT__u_logic__DOT__pdir))))
                                                      ? (::IData)(vlSelfRef.fast_top__DOT__u_logic__DOT__want)
                                                      : (::IData)(vlSelfRef.fast_top__DOT__u_logic__DOT__pdir)));
-    __VExpandSel_Lsb_14 = ((0x000001e0U & (((0U == (::IData)(vlSelfRef.fast_top__DOT__u_logic__DOT__pdir))
+    __VExpandSel_Lsb_15 = ((0x000001e0U & (((0U == (::IData)(vlSelfRef.fast_top__DOT__u_logic__DOT__pdir))
                                              ? (((::IData)(vlSelfRef.fast_top__DOT__u_logic__DOT__py) 
                                                  >> 5U) 
                                                 - (::IData)(1U))
@@ -1387,7 +1427,7 @@ VL_ATTR_COLD void Vfast_top___024root___stl_comb__TOP__0(Vfast_top___024root* vl
                            + (0x0000001fU & ((::IData)(0x13U) 
                                              - (::IData)(fast_top__DOT__u_logic__DOT____Vcellinp__u_mc__tx))));
     vlSelfRef.fast_top__DOT__u_logic__DOT__p_go = (1U 
-                                                   & ((::IData)(__Vdfg_Regularize_340) 
+                                                   & ((::IData)(__Vdfg_Regularize_342) 
                                                       | ((~ (::IData)(vlSelfRef.fast_top__DOT__u_logic__DOT__p_aligned)) 
                                                          | ((~ 
                                                              ((0x13U 
@@ -1400,11 +1440,11 @@ VL_ATTR_COLD void Vfast_top___024root___stl_comb__TOP__0(Vfast_top___024root* vl
                                                                  && (1U 
                                                                      & (Vfast_top__ConstPool__CONST_0
                                                                         [
-                                                                        (__VExpandSel_Lsb_14 
+                                                                        (__VExpandSel_Lsb_15 
                                                                          >> 5U)] 
                                                                         >> 
                                                                         (0x0000001fU 
-                                                                         & __VExpandSel_Lsb_14)))))) 
+                                                                         & __VExpandSel_Lsb_15)))))) 
                                                             & (::IData)(vlSelfRef.fast_top__DOT__u_logic__DOT__pmoving)))));
     fast_top__DOT__u_draw__DOT__pellet_on = ((~ ((0U 
                                                   == (::IData)(vlSelfRef.fast_top__DOT__u_draw__DOT__u_ball__DOT__ci)) 
@@ -1428,7 +1468,7 @@ VL_ATTR_COLD void Vfast_top___024root___stl_comb__TOP__0(Vfast_top___024root* vl
                                                    >= (::IData)(vlSelfRef.fast_top__DOT__u_logic__DOT__py)) 
                                                   & (0x0020U 
                                                      > (::IData)(vlSelfRef.fast_top__DOT__u_draw__DOT__sy))))));
-    __VExpandSel_Lsb_15 = (((((::IData)(vlSelfRef.__Vdfg_Regularize_312)
+    __VExpandSel_Lsb_16 = (((((::IData)(vlSelfRef.__Vdfg_Regularize_313)
                                ? 4U : 3U) << 0x0000000cU) 
                             | (0x00000f80U & ((::IData)(vlSelfRef.fast_top__DOT__u_draw__DOT__g_ghost__BRA__3__KET____DOT__dy) 
                                               << 7U))) 
@@ -1436,26 +1476,6 @@ VL_ATTR_COLD void Vfast_top___024root___stl_comb__TOP__0(Vfast_top___024root* vl
                                               - (::IData)(vlSelfRef.fast_top__DOT__u_draw__DOT__g_ghost__BRA__3__KET____DOT__dx)) 
                                              << 2U)));
     fast_top__DOT__u_draw__DOT__g_ci__BRA__3__KET__ 
-        = (0x0000000fU & (((0U == (0x0000001fU & __VExpandSel_Lsb_15))
-                            ? 0U : (Vfast_top__ConstPool__CONST_2
-                                    [(((::IData)(3U) 
-                                       + __VExpandSel_Lsb_15) 
-                                      >> 5U)] << ((::IData)(0x00000020U) 
-                                                  - 
-                                                  (0x0000001fU 
-                                                   & __VExpandSel_Lsb_15)))) 
-                          | (Vfast_top__ConstPool__CONST_2
-                             [(__VExpandSel_Lsb_15 
-                               >> 5U)] >> (0x0000001fU 
-                                           & __VExpandSel_Lsb_15))));
-    __VExpandSel_Lsb_16 = (((((::IData)(vlSelfRef.__Vdfg_Regularize_312)
-                               ? 4U : 2U) << 0x0000000cU) 
-                            | (0x00000f80U & ((::IData)(vlSelfRef.fast_top__DOT__u_draw__DOT__g_ghost__BRA__2__KET____DOT__dy) 
-                                              << 7U))) 
-                           + (0x0000007cU & (((::IData)(0x1fU) 
-                                              - (::IData)(vlSelfRef.fast_top__DOT__u_draw__DOT__g_ghost__BRA__2__KET____DOT__dx)) 
-                                             << 2U)));
-    fast_top__DOT__u_draw__DOT__g_ci__BRA__2__KET__ 
         = (0x0000000fU & (((0U == (0x0000001fU & __VExpandSel_Lsb_16))
                             ? 0U : (Vfast_top__ConstPool__CONST_2
                                     [(((::IData)(3U) 
@@ -1468,14 +1488,14 @@ VL_ATTR_COLD void Vfast_top___024root___stl_comb__TOP__0(Vfast_top___024root* vl
                              [(__VExpandSel_Lsb_16 
                                >> 5U)] >> (0x0000001fU 
                                            & __VExpandSel_Lsb_16))));
-    __VExpandSel_Lsb_17 = (((((::IData)(vlSelfRef.__Vdfg_Regularize_312)
-                               ? 4U : 1U) << 0x0000000cU) 
-                            | (0x00000f80U & ((::IData)(vlSelfRef.fast_top__DOT__u_draw__DOT__g_ghost__BRA__1__KET____DOT__dy) 
+    __VExpandSel_Lsb_17 = (((((::IData)(vlSelfRef.__Vdfg_Regularize_313)
+                               ? 4U : 2U) << 0x0000000cU) 
+                            | (0x00000f80U & ((::IData)(vlSelfRef.fast_top__DOT__u_draw__DOT__g_ghost__BRA__2__KET____DOT__dy) 
                                               << 7U))) 
                            + (0x0000007cU & (((::IData)(0x1fU) 
-                                              - (::IData)(vlSelfRef.fast_top__DOT__u_draw__DOT__g_ghost__BRA__1__KET____DOT__dx)) 
+                                              - (::IData)(vlSelfRef.fast_top__DOT__u_draw__DOT__g_ghost__BRA__2__KET____DOT__dx)) 
                                              << 2U)));
-    fast_top__DOT__u_draw__DOT__g_ci__BRA__1__KET__ 
+    fast_top__DOT__u_draw__DOT__g_ci__BRA__2__KET__ 
         = (0x0000000fU & (((0U == (0x0000001fU & __VExpandSel_Lsb_17))
                             ? 0U : (Vfast_top__ConstPool__CONST_2
                                     [(((::IData)(3U) 
@@ -1488,14 +1508,14 @@ VL_ATTR_COLD void Vfast_top___024root___stl_comb__TOP__0(Vfast_top___024root* vl
                              [(__VExpandSel_Lsb_17 
                                >> 5U)] >> (0x0000001fU 
                                            & __VExpandSel_Lsb_17))));
-    __VExpandSel_Lsb_18 = ((((::IData)(vlSelfRef.__Vdfg_Regularize_312) 
-                             << 0x0000000eU) | (0x00000f80U 
-                                                & ((::IData)(vlSelfRef.fast_top__DOT__u_draw__DOT__g_ghost__BRA__0__KET____DOT__dy) 
-                                                   << 7U))) 
+    __VExpandSel_Lsb_18 = (((((::IData)(vlSelfRef.__Vdfg_Regularize_313)
+                               ? 4U : 1U) << 0x0000000cU) 
+                            | (0x00000f80U & ((::IData)(vlSelfRef.fast_top__DOT__u_draw__DOT__g_ghost__BRA__1__KET____DOT__dy) 
+                                              << 7U))) 
                            + (0x0000007cU & (((::IData)(0x1fU) 
-                                              - (::IData)(vlSelfRef.fast_top__DOT__u_draw__DOT__g_ghost__BRA__0__KET____DOT__dx)) 
+                                              - (::IData)(vlSelfRef.fast_top__DOT__u_draw__DOT__g_ghost__BRA__1__KET____DOT__dx)) 
                                              << 2U)));
-    fast_top__DOT__u_draw__DOT__g_ci__BRA__0__KET__ 
+    fast_top__DOT__u_draw__DOT__g_ci__BRA__1__KET__ 
         = (0x0000000fU & (((0U == (0x0000001fU & __VExpandSel_Lsb_18))
                             ? 0U : (Vfast_top__ConstPool__CONST_2
                                     [(((::IData)(3U) 
@@ -1508,6 +1528,26 @@ VL_ATTR_COLD void Vfast_top___024root___stl_comb__TOP__0(Vfast_top___024root* vl
                              [(__VExpandSel_Lsb_18 
                                >> 5U)] >> (0x0000001fU 
                                            & __VExpandSel_Lsb_18))));
+    __VExpandSel_Lsb_19 = ((((::IData)(vlSelfRef.__Vdfg_Regularize_313) 
+                             << 0x0000000eU) | (0x00000f80U 
+                                                & ((::IData)(vlSelfRef.fast_top__DOT__u_draw__DOT__g_ghost__BRA__0__KET____DOT__dy) 
+                                                   << 7U))) 
+                           + (0x0000007cU & (((::IData)(0x1fU) 
+                                              - (::IData)(vlSelfRef.fast_top__DOT__u_draw__DOT__g_ghost__BRA__0__KET____DOT__dx)) 
+                                             << 2U)));
+    fast_top__DOT__u_draw__DOT__g_ci__BRA__0__KET__ 
+        = (0x0000000fU & (((0U == (0x0000001fU & __VExpandSel_Lsb_19))
+                            ? 0U : (Vfast_top__ConstPool__CONST_2
+                                    [(((::IData)(3U) 
+                                       + __VExpandSel_Lsb_19) 
+                                      >> 5U)] << ((::IData)(0x00000020U) 
+                                                  - 
+                                                  (0x0000001fU 
+                                                   & __VExpandSel_Lsb_19)))) 
+                          | (Vfast_top__ConstPool__CONST_2
+                             [(__VExpandSel_Lsb_19 
+                               >> 5U)] >> (0x0000001fU 
+                                           & __VExpandSel_Lsb_19))));
     fast_top__DOT__u_draw__DOT__u_pal__DOT__rgb = (0x00000fffU 
                                                    & Vfast_top__ConstPool__CONST_3
                                                    [
@@ -1521,7 +1561,7 @@ VL_ATTR_COLD void Vfast_top___024root___stl_comb__TOP__0(Vfast_top___024root* vl
                                                         ((::IData)(fast_top__DOT__u_draw__DOT__pellet_on)
                                                           ? (::IData)(vlSelfRef.fast_top__DOT__u_draw__DOT__u_ball__DOT__ci)
                                                           : (::IData)(vlSelfRef.fast_top__DOT__u_draw__DOT__icon_ci)))))]);
-    __Vdfg_Regularize_339 = ((0U != (::IData)(fast_top__DOT__u_draw__DOT__g_ci__BRA__2__KET__)) 
+    __Vdfg_Regularize_341 = ((0U != (::IData)(fast_top__DOT__u_draw__DOT__g_ci__BRA__2__KET__)) 
                              & (((::IData)(vlSelfRef.fast_top__DOT__u_logic__DOT__galive) 
                                  >> 2U) & (((::IData)(vlSelfRef.__VprimaryPorts.x) 
                                             >= (::IData)(vlSelfRef.fast_top__DOT__u_logic__DOT__gx__BRA__2__KET__)) 
@@ -1531,7 +1571,7 @@ VL_ATTR_COLD void Vfast_top___024root___stl_comb__TOP__0(Vfast_top___024root* vl
                                                   >= (::IData)(vlSelfRef.fast_top__DOT__u_logic__DOT__gy__BRA__2__KET__)) 
                                                  & (0x0020U 
                                                     > (::IData)(vlSelfRef.fast_top__DOT__u_draw__DOT__g_ghost__BRA__2__KET____DOT__dy)))))));
-    __Vdfg_Regularize_338 = ((0U != (::IData)(fast_top__DOT__u_draw__DOT__g_ci__BRA__1__KET__)) 
+    __Vdfg_Regularize_340 = ((0U != (::IData)(fast_top__DOT__u_draw__DOT__g_ci__BRA__1__KET__)) 
                              & (((::IData)(vlSelfRef.fast_top__DOT__u_logic__DOT__galive) 
                                  >> 1U) & (((::IData)(vlSelfRef.__VprimaryPorts.x) 
                                             >= (::IData)(vlSelfRef.fast_top__DOT__u_logic__DOT__gx__BRA__1__KET__)) 
@@ -1541,7 +1581,7 @@ VL_ATTR_COLD void Vfast_top___024root___stl_comb__TOP__0(Vfast_top___024root* vl
                                                   >= (::IData)(vlSelfRef.fast_top__DOT__u_logic__DOT__gy__BRA__1__KET__)) 
                                                  & (0x0020U 
                                                     > (::IData)(vlSelfRef.fast_top__DOT__u_draw__DOT__g_ghost__BRA__1__KET____DOT__dy)))))));
-    __Vdfg_Regularize_337 = ((0U != (::IData)(fast_top__DOT__u_draw__DOT__g_ci__BRA__0__KET__)) 
+    __Vdfg_Regularize_339 = ((0U != (::IData)(fast_top__DOT__u_draw__DOT__g_ci__BRA__0__KET__)) 
                              & ((::IData)(vlSelfRef.fast_top__DOT__u_logic__DOT__galive) 
                                 & (((::IData)(vlSelfRef.__VprimaryPorts.x) 
                                     >= (::IData)(vlSelfRef.fast_top__DOT__u_logic__DOT__gx__BRA__0__KET__)) 
@@ -1550,11 +1590,11 @@ VL_ATTR_COLD void Vfast_top___024root___stl_comb__TOP__0(Vfast_top___024root* vl
                                           >= (::IData)(vlSelfRef.fast_top__DOT__u_logic__DOT__gy__BRA__0__KET__)) 
                                          & (0x0020U 
                                             > (::IData)(vlSelfRef.fast_top__DOT__u_draw__DOT__g_ghost__BRA__0__KET____DOT__dy)))))));
-    __VExpandSel_Lsb_19 = (((((0x31U >= (0x0000003fU 
+    __VExpandSel_Lsb_20 = (((((0x31U >= (0x0000003fU 
                                          & ((::IData)(5U) 
                                             * ((::IData)(9U) 
                                                - (0x0000000fU 
-                                                  & VL_DIV_III(32, vlSelfRef.__Vdfg_Regularize_336, (::IData)(6U)))))))
+                                                  & VL_DIV_III(32, vlSelfRef.__Vdfg_Regularize_338, (::IData)(6U)))))))
                                ? (0x0000001fU & (::IData)(
                                                           (((::IData)(vlSelfRef.fast_top__DOT__u_draw__DOT__in_line1)
                                                              ? 
@@ -1580,7 +1620,7 @@ VL_ATTR_COLD void Vfast_top___024root___stl_comb__TOP__0(Vfast_top___024root* vl
                                                                ((::IData)(9U) 
                                                                 - 
                                                                 (0x0000000fU 
-                                                                 & VL_DIV_III(32, vlSelfRef.__Vdfg_Regularize_336, (::IData)(6U)))))))))
+                                                                 & VL_DIV_III(32, vlSelfRef.__Vdfg_Regularize_338, (::IData)(6U)))))))))
                                : 0U) << 8U) | (0x000000e0U 
                                                & (((::IData)(vlSelfRef.fast_top__DOT__u_draw__DOT__in_line1)
                                                     ? 
@@ -1595,15 +1635,15 @@ VL_ATTR_COLD void Vfast_top___024root___stl_comb__TOP__0(Vfast_top___024root* vl
                                                        >> 2U))) 
                                                   << 5U))) 
                            + (7U & ((::IData)(4U) - 
-                                    VL_MODDIV_III(32, vlSelfRef.__Vdfg_Regularize_336, (::IData)(6U)))));
-    __VExpandSel_Lsb_20 = ((0x000001e0U & ((((::IData)(vlSelfRef.__VprimaryPorts.y) 
+                                    VL_MODDIV_III(32, vlSelfRef.__Vdfg_Regularize_338, (::IData)(6U)))));
+    __VExpandSel_Lsb_21 = ((0x000001e0U & ((((::IData)(vlSelfRef.__VprimaryPorts.y) 
                                              >> 5U) 
                                             - (::IData)(1U)) 
                                            << 5U)) 
                            + (0x0000001fU & ((::IData)(0x13U) 
                                              - ((::IData)(vlSelfRef.__VprimaryPorts.x) 
                                                 >> 5U))));
-    __VExpandSel_Lsb_21 = ((0x000001e0U & (((::IData)(1U) 
+    __VExpandSel_Lsb_22 = ((0x000001e0U & (((::IData)(1U) 
                                             + ((::IData)(vlSelfRef.__VprimaryPorts.y) 
                                                >> 5U)) 
                                            << 5U)) 
@@ -1627,21 +1667,21 @@ VL_ATTR_COLD void Vfast_top___024root___stl_comb__TOP__0(Vfast_top___024root* vl
                                            | (::IData)(vlSelfRef.fast_top__DOT__u_draw__DOT__in_line1)) 
                                           & ((5U > 
                                               (7U & 
-                                               VL_MODDIV_III(32, vlSelfRef.__Vdfg_Regularize_336, (::IData)(6U)))) 
+                                               VL_MODDIV_III(32, vlSelfRef.__Vdfg_Regularize_338, (::IData)(6U)))) 
                                              & ((4U 
                                                  >= 
                                                  (7U 
                                                   & ((::IData)(4U) 
                                                      - 
-                                                     VL_MODDIV_III(32, vlSelfRef.__Vdfg_Regularize_336, (::IData)(6U))))) 
+                                                     VL_MODDIV_III(32, vlSelfRef.__Vdfg_Regularize_338, (::IData)(6U))))) 
                                                 && (1U 
                                                     & (Vfast_top__ConstPool__CONST_4
                                                        [
-                                                       (__VExpandSel_Lsb_19 
+                                                       (__VExpandSel_Lsb_20 
                                                         >> 5U)] 
                                                        >> 
                                                        (0x0000001fU 
-                                                        & __VExpandSel_Lsb_19)))))))
+                                                        & __VExpandSel_Lsb_20)))))))
                                        ? (((4U == (::IData)(vlSelfRef.__VprimaryPorts.state))
                                             ? 0x04f4U
                                             : ((5U 
@@ -1653,9 +1693,9 @@ VL_ATTR_COLD void Vfast_top___024root___stl_comb__TOP__0(Vfast_top___024root* vl
                                                           & (~ (::IData)(vlSelfRef.fast_top__DOT__u_draw__DOT__in_line1))))))
                                        : (((::IData)(fast_top__DOT__u_draw__DOT__p_pix)
                                             ? (::IData)(fast_top__DOT__u_draw__DOT__u_pal__DOT__rgb)
-                                            : (((::IData)(__Vdfg_Regularize_337) 
-                                                | ((::IData)(__Vdfg_Regularize_338) 
-                                                   | ((::IData)(__Vdfg_Regularize_339) 
+                                            : (((::IData)(__Vdfg_Regularize_339) 
+                                                | ((::IData)(__Vdfg_Regularize_340) 
+                                                   | ((::IData)(__Vdfg_Regularize_341) 
                                                       | ((0U 
                                                           != (::IData)(fast_top__DOT__u_draw__DOT__g_ci__BRA__3__KET__)) 
                                                          & (((::IData)(vlSelfRef.fast_top__DOT__u_logic__DOT__galive) 
@@ -1670,13 +1710,13 @@ VL_ATTR_COLD void Vfast_top___024root___stl_comb__TOP__0(Vfast_top___024root* vl
                                                                         > (::IData)(vlSelfRef.fast_top__DOT__u_draw__DOT__g_ghost__BRA__3__KET____DOT__dy))))))))))
                                                 ? Vfast_top__ConstPool__CONST_5
                                                [(0x07ffffffU 
-                                                 & ((::IData)(__Vdfg_Regularize_337)
+                                                 & ((::IData)(__Vdfg_Regularize_339)
                                                      ? (::IData)(fast_top__DOT__u_draw__DOT__g_ci__BRA__0__KET__)
                                                      : 
-                                                    ((::IData)(__Vdfg_Regularize_338)
+                                                    ((::IData)(__Vdfg_Regularize_340)
                                                       ? (::IData)(fast_top__DOT__u_draw__DOT__g_ci__BRA__1__KET__)
                                                       : 
-                                                     ((::IData)(__Vdfg_Regularize_339)
+                                                     ((::IData)(__Vdfg_Regularize_341)
                                                        ? (::IData)(fast_top__DOT__u_draw__DOT__g_ci__BRA__2__KET__)
                                                        : (::IData)(fast_top__DOT__u_draw__DOT__g_ci__BRA__3__KET__)))))]
                                                 : ((::IData)(vlSelfRef.fast_top__DOT__u_draw__DOT__crown_pix)
@@ -1711,11 +1751,11 @@ VL_ATTR_COLD void Vfast_top___024root___stl_comb__TOP__0(Vfast_top___024root* vl
                                                                  && (1U 
                                                                      & (Vfast_top__ConstPool__CONST_0
                                                                         [
-                                                                        (__VExpandSel_Lsb_20 
+                                                                        (__VExpandSel_Lsb_21 
                                                                          >> 5U)] 
                                                                         >> 
                                                                         (0x0000001fU 
-                                                                         & __VExpandSel_Lsb_20))))))) 
+                                                                         & __VExpandSel_Lsb_21))))))) 
                                                          & (3U 
                                                             > 
                                                             (0x0000001fU 
@@ -1736,11 +1776,11 @@ VL_ATTR_COLD void Vfast_top___024root___stl_comb__TOP__0(Vfast_top___024root* vl
                                                                   && (1U 
                                                                       & (Vfast_top__ConstPool__CONST_0
                                                                          [
-                                                                         (__VExpandSel_Lsb_21 
+                                                                         (__VExpandSel_Lsb_22 
                                                                           >> 5U)] 
                                                                          >> 
                                                                          (0x0000001fU 
-                                                                          & __VExpandSel_Lsb_21)))) 
+                                                                          & __VExpandSel_Lsb_22)))) 
                                                                  | (0x0eU 
                                                                     == 
                                                                     (0x0000000fU 
@@ -1975,8 +2015,8 @@ VL_ATTR_COLD void Vfast_top___024root___ctor_var_reset(Vfast_top___024root* vlSe
     vlSelf->fast_top__DOT__u_draw__DOT__u_m__DOT__row = 0;
     vlSelf->fast_top__DOT__u_draw__DOT__u_crown__DOT__ci = 0;
     vlSelf->fast_top__DOT__u_draw__DOT__u_ball__DOT__ci = 0;
-    vlSelf->__Vdfg_Regularize_312 = 0;
-    vlSelf->__Vdfg_Regularize_336 = 0;
+    vlSelf->__Vdfg_Regularize_313 = 0;
+    vlSelf->__Vdfg_Regularize_338 = 0;
     vlSelf->__VstlTriggered[0] = 0;
     VL_UNPACKED_FILL(vlSelf->__VstlTriggered.data(), sizeof(vlSelf->__VstlTriggered[0]), 1);
     vlSelf->__VicoTriggered[0] = 0;

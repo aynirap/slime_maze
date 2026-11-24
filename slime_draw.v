@@ -52,15 +52,15 @@ module slime_draw (
 
     // pellet : the "ball" picture, one in every path tile not eaten yet
     wire [8:0] tidx = {ty, 4'b0} + {ty, 2'b0} + tx;                     // ty*20 + tx
-    wire [3:0] ball_ci;
+    wire [4:0] ball_ci;
     art_ball u_ball (.row(fy), .col(fx), .ci(ball_ci));
-    wire       pellet_on = pellet[tidx] && !wall && (ball_ci != 4'd0);
+    wire       pellet_on = pellet[tidx] && !wall && (ball_ci != 5'd0);
 
     // crown item : 3 pictures, played 0 1 2 1 0 1 2 1 ... (about 8 per second)
     wire [1:0] crown_anim = (frame[4:3] == 2'd3) ? 2'd1 : frame[4:3];
-    wire [3:0] crown_ci;
+    wire [4:0] crown_ci;
     art_crown u_crown (.id(crown_anim), .row(fy), .col(fx), .ci(crown_ci));
-    wire crown_pix = crown_on && (tx == crown_tx) && (ty == crown_ty) && (crown_ci != 4'd0);
+    wire crown_pix = crown_on && (tx == crown_tx) && (ty == crown_ty) && (crown_ci != 5'd0);
 
     // icons on the top wall row :
     //   tiles 0, 1, 2 : one life icon each (8 x 8 picture drawn 2x, in the middle of the tile)
@@ -71,12 +71,12 @@ module slime_draw (
                                                           (fy >= 5'd8) && (fy < 5'd24);
     wire       life_lost   = (tx >= {3'b000, lives});
     wire [4:0] lx = fx - 5'd8, ly = fy - 5'd8;
-    wire [3:0] life_ci, king_ci;
+    wire [4:0] life_ci, king_ci;
     art_life u_life (.id(life_lost), .row(ly[3:1]), .col(lx[3:1]), .ci(life_ci));
     art_icon u_icon (.row(fy), .col(fx), .ci(king_ci));
     wire       icon_king   = (ty == 4'd0) && (tx == 5'd19) && (form == 2'd3) && !king_ending;
-    wire [3:0] icon_ci     = icon_life ? life_ci : icon_king ? king_ci : 4'd0;
-    wire       icon_pix    = (icon_ci != 4'd0);
+    wire [4:0] icon_ci     = icon_life ? life_ci : icon_king ? king_ci : 5'd0;
+    wire       icon_pix    = (icon_ci != 5'd0);
 
     //=========================================================================
     // Slime : 32 x 32 colour sprite.  The picture depends on the form and pose.
@@ -86,9 +86,9 @@ module slime_draw (
     wire [9:0] sy   = y - py;
     wire       p_in = (x >= px) && (sx < 10'd32) && (y >= py) && (sy < 10'd32);
     wire [1:0] p_form = (form == 2'd3 && king_ending && pose != 3'd3) ? 2'd2 : form;
-    wire [3:0] p_ci;
+    wire [4:0] p_ci;
     art_slime u_slime (.id({p_form - 2'd1, pose}), .row(sy[4:0]), .col(sx[4:0]), .ci(p_ci));
-    wire       p_pix = p_in && (p_ci != 4'd0);
+    wire       p_pix = p_in && (p_ci != 5'd0);
 
     //=========================================================================
     // Ghosts : 32 x 32 colour sprites, 4 ghosts
@@ -161,7 +161,7 @@ module slime_draw (
     // Priority multiplexer : the first layer that has a pixel here wins
     //=========================================================================
     // the colour sprite layers share one palette : pick the top one, then look it up
-    wire [3:0]  art_ci = p_pix     ? p_ci     :
+    wire [4:0]  art_ci = p_pix     ? p_ci     :
                          crown_pix ? crown_ci :
                          pellet_on ? ball_ci  : icon_ci;
     wire [11:0] art_rgb;
