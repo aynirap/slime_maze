@@ -29,10 +29,6 @@
 ### สถาปัตยกรรมระบบ
 
 ```mermaid
----
-config:
-  layout: hola
----
 flowchart LR
     CLK["CLK100MHZ<br/>100 MHz"] --> CG["clk_gen (MMCM)<br/>25 MHz pixel clock"]
     RST["CPU_RESETN"] --> RS["Reset sync<br/>2-FF"]
