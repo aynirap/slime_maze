@@ -1,0 +1,39 @@
+# macOS
+.DS_Store
+._*
+
+# IDEs / Editors
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Verilator simulation build outputs
+sim/obj_fast/
+sim/obj_exact/
+obj_dir/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+
+# Vivado build & log files
+*.jou
+*.log
+*.str
+*.bit
+*.bin
+*.ltx
+*.dcp
+.Xil/
+*.cache/
+*.hw/
+*.ip_user_files/
+*.runs/
+*.sim/
+*.gen/
+*.ioplanning/
