@@ -42,8 +42,18 @@
     BoldItalicFont = THSarabunNew-BoldItalic
 ]{THSarabunNew}
 
-\newfontfamily\englishfont[Scale=1.0]{Times New Roman}
-\newfontfamily\thaifonttt[Script=Thai, Scale=1.0]{Courier New}
+\IfFontExistsTF{Times New Roman}{%
+    \newfontfamily\englishfont[Scale=1.0]{Times New Roman}%
+}{%
+    \newfontfamily\englishfont[Scale=1.0]{Latin Modern Roman}%
+}
+\IfFontExistsTF{Courier New}{%
+    \newfontfamily\thaifonttt[Script=Thai, Scale=1.0]{Courier New}%
+    \setmonofont[Scale=0.95]{Courier New}%
+}{%
+    \newfontfamily\thaifonttt[Scale=1.0]{Latin Modern Mono}%
+    \setmonofont[Scale=0.95]{Latin Modern Mono}%
+}
 
 % การตัดคำภาษาไทยอัตโนมัติใน XeLaTeX
 \XeTeXlinebreaklocale "th"
@@ -51,14 +61,38 @@
 
 \usepackage{graphicx}
 % พาธสำหรับรูปภาพและสไปรต์ที่ scale up แล้วใน docs/images/ และ docs/images/sprite/
-\graphicspath{{images/}{images/sprite/}}
+\graphicspath{{images/}{images/sprite/}{../../}{./}}
 
+\usepackage{amsmath}
 \usepackage{booktabs}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{longtable}
+\usepackage{float}
+\usepackage{caption}
 \usepackage{enumitem}
 \usepackage{fancyhdr}
 \usepackage{titlesec}
 \usepackage{xcolor}
+\usepackage{listings}
 \usepackage{hyperref}
+
+\newcolumntype{L}{>{\raggedright\arraybackslash}X}
+\captionsetup{justification=centering}
+
+\lstset{
+    basicstyle=\ttfamily\small,
+    breaklines=true,
+    frame=single,
+    rulecolor=\color{gray!40},
+    backgroundcolor=\color{gray!5},
+    numbers=none,
+    tabsize=4,
+    showstringspaces=false,
+    columns=flexible,
+    xleftmargin=0.5em,
+    xrightmargin=0.5em
+}
 
 \hypersetup{
     colorlinks=true,
@@ -100,6 +134,47 @@
 
 % ข้อความรอเติมเนื้อหา (ลบออกได้เมื่อเริ่มเขียนเนื้อหาแต่ละหัวข้อ)
 \newcommand{\todo}[1]{\noindent\textcolor{gray}{\small\textit{[รอเพิ่มเนื้อหา: #1]}}\par\vspace{0.3em}}
+
+% กล่องแสดงตำแหน่งสำหรับใส่ภาพ (ใช้เมื่อยังไม่ได้วางไฟล์ภาพจริง)
+\newcommand{\imgplaceholder}[3]{%
+    \begin{center}
+        \fcolorbox{gray!60}{gray!6}{%
+            \parbox[c][#1][c]{0.92\linewidth}{%
+                \centering\small\color{gray!85!black}%
+                \textbf{[พื้นที่สำหรับใส่ภาพ: \texttt{\detokenize{#2}}]}\\[0.25em]
+                #3%
+            }%
+        }%
+    \end{center}%
+}
+
+% แทรกภาพอัตโนมัติจากพาธมาตรฐาน หากยังไม่มีไฟล์ภาพจะแสดงกล่องคำอธิบายแทน (ไม่ทำให้คอมไพล์พัง)
+\newcommand{\smartimage}[4]{%
+    \IfFileExists{images/#2}{%
+        \includegraphics[width=#1]{images/#2}%
+    }{%
+        \IfFileExists{images/sprite/#2}{%
+            \includegraphics[width=#1]{images/sprite/#2}%
+        }{%
+            \IfFileExists{../../#2}{%
+                \includegraphics[width=#1]{../../#2}%
+            }{%
+                \IfFileExists{#2}{%
+                    \includegraphics[width=#1]{#2}%
+                }{%
+                    \imgplaceholder{#3}{#2}{#4}%
+                }%
+            }%
+        }%
+    }%
+}
+
+% คำบรรยายรูปภาพภายใน longtable (หลีกเลี่ยง \caption ของ longtable ที่ชนกับ \captionof)
+\newcommand{\tablefigcap}[1]{%
+    \refstepcounter{figure}%
+    \addcontentsline{lof}{figure}{\protect\numberline{\thefigure}{\ignorespaces #1}}%
+    \par\vspace{0.3em}{\small\textbf{รูปที่ \thefigure}\ #1}\par%
+}
 
 \titleformat{\section}{\Large\bfseries}{}{0pt}{}
 \titleformat{\subsection}{\large\bfseries}{\thesubsection}{0.6em}{}

@@ -2,4 +2,118 @@
 \clearpage
 \mainsection{ผลลัพธ์การทำงาน}
 % ============================================================================
-\todo{ตารางผลลัพธ์การทำงานพร้อมภาพหน้าจอแต่ละสถานะ (Title, Form 1-3, King Mode, Pause, Win, Game Over) และภาพถ่ายบนบอร์ด Nexys A7-100T}
+
+จากการออกแบบ พัฒนา และทดสอบระบบเกม Slime Maze ทั้งในตัวจำลอง Verilator + SDL2 และการรันจริงบนบอร์ด Digilent Nexys A7-100T เชื่อมต่อออกทางจอมอนิเตอร์ VGA ได้ผลลัพธ์การทำงานครบถ้วนตามคุณสมบัติที่กำหนด ดังแสดงในตารางที่ \ref{tab:results}
+
+% [INSERT PICTURE: result_title.png, result_form1.png, result_form2_crown.png, result_king_mode.png, result_eat_ghost.png, result_pause.png, result_dead.png, result_win_over.png, result_board_hw.png]
+\begin{longtable}{@{}p{0.48\textwidth} >{\raggedright\arraybackslash}p{0.46\textwidth}@{}}
+    \caption{ผลลัพธ์การทำงานและการทดสอบระบบ}
+    \label{tab:results} \\
+    \toprule
+    \textbf{ภาพผลลัพธ์การทำงาน} & \textbf{คำอธิบาย} \\
+    \midrule
+    \endfirsthead
+
+    \multicolumn{2}{c}{\textit{(ต่อจากหน้าก่อน)}} \\
+    \toprule
+    \textbf{ภาพผลลัพธ์การทำงาน} & \textbf{คำอธิบาย} \\
+    \midrule
+    \endhead
+
+    \midrule
+    \multicolumn{2}{r}{\textit{(มีต่อหน้าถัดไป)}} \\
+    \bottomrule
+    \endfoot
+
+    \bottomrule
+    \endlastfoot
+
+    % --- แถวที่ 1: Title ---
+    \begin{minipage}[t]{\linewidth}
+        \centering
+        \smartimage{0.96\linewidth}{result_title.png}{3.2cm}{ภาพหน้าจอ VGA หรือจากตัวจำลองแสดงกรอบคำว่า ``SLIME MAZE'' สีเหลืองทอง และ ``PRESS BTNC'' กะพริบอยู่กลางเขาวงกต}
+        \tablefigcap{สาธิตการทำงานหน้าจอเริ่มต้น (\texttt{S\_TITLE})}
+    \end{minipage}
+    &
+    เมื่อจ่ายไฟและโปรแกรม Bitstream หรือกดปุ่ม \texttt{CPU\_RESETN} เกมจะเข้าสู่สถานะ \texttt{S\_TITLE} หน้าจอแสดงแผนที่เขาวงกต $20\times15$, เม็ดคะแนน, สไลม์ร่างที่ 1, ผีทั้ง 4 ตัว และกล่องข้อความ ``SLIME MAZE'' พร้อมคำสั่ง ``PRESS BTNC'' กะพริบเพื่อรอรับการกดปุ่มกลางเริ่มเกม \\
+    \midrule
+
+    % --- แถวที่ 2: Form 1 ---
+    \begin{minipage}[t]{\linewidth}
+        \centering
+        \smartimage{0.96\linewidth}{result_form1.png}{3.2cm}{ภาพขณะสไลม์ร่างที่ 1 กำลังเดินเก็บเม็ดในเขาวงกต มีเส้นทางที่เม็ดถูกกินไปแล้วบางส่วน และไอคอนชีวิต 3 ดวงมุมซ้ายบน}
+        \tablefigcap{สาธิตการทำงานขณะเล่นในร่างที่ 1 (Form 1)}
+    \end{minipage}
+    &
+    เมื่อกดปุ่ม \texttt{BTNC} เกมจะเข้าสู่สถานะ \texttt{S\_PLAY} ผู้เล่นควบคุมสไลม์ร่างที่ 1 เดินเก็บเม็ดคะแนน (+10 คะแนนต่อเม็ด) ด้วยปุ่ม \texttt{BTNU/D/L/R} โดยมีระบบกดเลี้ยวล่วงหน้า และหลบหลีกผีทั้ง 4 ตัว มุมซ้ายบนแสดงไอคอนชีวิต 3 ดวงเต็ม และ 7-Segment แสดงเลขร่าง ``1'' พร้อมคะแนนปัจจุบัน \\
+    \midrule
+
+    % --- แถวที่ 3: Form 2 + Crown ---
+    \begin{minipage}[t]{\linewidth}
+        \centering
+        \smartimage{0.96\linewidth}{result_form2_crown.png}{3.2cm}{ภาพขณะสไลม์เปลี่ยนเป็นร่างที่ 2 (Big Slime) และเห็นไอเทมมงกุฎปรากฏอยู่ที่มุมหนึ่งของเขาวงกต}
+        \tablefigcap{สาธิตการพัฒนาร่างเป็นร่างที่ 2 และการเกิดมงกุฎ}
+    \end{minipage}
+    &
+    เมื่อเก็บเม็ดคะแนนครบ 30 เม็ด (\texttt{N\_EVOLVE = 30}) สไลม์จะวิวัฒนาการเป็นร่างที่ 2 (Big Slime) ที่มีขนาดและรูปลักษณ์เปลี่ยนไป พร้อมกับการปรากฏของไอเทมมงกุฎแอนิเมชันที่มุมใดมุมหนึ่งของแผนที่ เพื่อรอให้ผู้เล่นเดินไปเก็บและเข้าสู่โหมดราชา \\
+    \midrule
+
+    % --- แถวที่ 4: King Mode ---
+    \begin{minipage}[t]{\linewidth}
+        \centering
+        \smartimage{0.96\linewidth}{result_king_mode.png}{3.2cm}{ภาพขณะสไลม์สวมมงกุฎ (ร่าง 3) ผีทุกตัวกลายเป็นสีฟ้า (\texttt{ghost\_scared}) และมุมขวาบนแสดงไอคอนรูปคิงโหมด (\texttt{kingmode})}
+        \tablefigcap{สาธิตโหมดราชา (Form 3) และผีในสถานะหวาดกลัว}
+    \end{minipage}
+    &
+    เมื่อเก็บมงกุฎได้ สไลม์จะเปลี่ยนเป็นร่างที่ 3 (King Slime) นาน 10 วินาที เดินเร็วขึ้น 2 เท่า ผีทุกตัวเปลี่ยนเป็นสไปรต์สีฟ้า (\texttt{ghost\_scared}) และวิ่งหนีออกจากสไลม์ ส่วนมุมขวาบนของจอภาพ (ช่อง \texttt{tx=19, ty=0}) จะแสดงไอคอน King Mode \\
+    \midrule
+
+    % --- แถวที่ 5: Eating Ghosts & Blinking ---
+    \begin{minipage}[t]{\linewidth}
+        \centering
+        \smartimage{0.96\linewidth}{result_eat_ghost.png}{3.2cm}{ภาพขณะผีบางตัวถูกกินหายไปแล้ว (เหลือผีน้อยกว่า 4 ตัว) หรือจังหวะที่ผีกะพริบสลับสีเดิมในช่วง 2 วินาทีสุดท้ายของคิงโหมด}
+        \tablefigcap{สาธิตการกินผีและการกะพริบเตือนท้ายโหมดราชา}
+    \end{minipage}
+    &
+    ขณะอยู่ในโหมดราชา เมื่อสไลม์วิ่งชนผี ผีตัวนั้นจะหายไปจากสนามทันที (\texttt{galive[k] = 0}) และได้รับโบนัส +200 คะแนนต่อตัว และเมื่อเหลือเวลา $\le 2$ วินาทีสุดท้าย ตัวสไลม์ ผี และไอคอนคิงโหมดจะกะพริบเตือนก่อนกลับสู่ร่างที่ 2 และมงกุฎจะเกิดใหม่ในอีก 3 วินาที \\
+    \midrule
+
+    % --- แถวที่ 6: Pause ---
+    \begin{minipage}[t]{\linewidth}
+        \centering
+        \smartimage{0.96\linewidth}{result_pause.png}{3.2cm}{ภาพหน้าจอกลางเขาวงกตแสดงข้อความ ``PAUSE'' สีเหลืองทอง โดยสไลม์และผีหยุดนิ่งอยู่กับที่}
+        \tablefigcap{สาธิตการทำงานขณะหยุดเกมชั่วคราว (\texttt{S\_PAUSE})}
+    \end{minipage}
+    &
+    เมื่อกดปุ่ม \texttt{BTNC} ระหว่างเล่นในสถานะ \texttt{S\_PLAY} เกมจะเข้าสู่สถานะ \texttt{S\_PAUSE} โดยหยุดการเคลื่อนที่ของสไลม์ ผี และตัวจับเวลาคิงโหมดทั้งหมด พร้อมแสดงกล่องข้อความ ``PAUSE'' และเมื่อกด \texttt{BTNC} อีกครั้งจะกลับมาเล่นต่อจากตำแหน่งเดิมทันที \\
+    \midrule
+
+    % --- แถวที่ 7: Dead ---
+    \begin{minipage}[t]{\linewidth}
+        \centering
+        \smartimage{0.96\linewidth}{result_dead.png}{3.2cm}{ภาพขณะสไลม์แสดงท่าตาย (\texttt{pose=3}) และไอคอนชีวิตมุมซ้ายบนลดลงจาก 3 ดวงเป็น 2 ดวง (มี \texttt{life\_died} ปรากฏ 1 ดวง)}
+        \tablefigcap{สาธิตการทำงานเมื่อสไลม์ชนผีและเสียชีวิต (\texttt{S\_DEAD})}
+    \end{minipage}
+    &
+    หากสไลม์ในร่างที่ 1 หรือ 2 ชนเข้ากับผี ระบบจะเข้าสู่สถานะ \texttt{S\_DEAD} หน่วงเกม 1.5 วินาที (90 เฟรม) แสดงสไปรต์สไลม์ท่าตาย (\texttt{slime*\_died}) และไอคอนชีวิตมุมซ้ายบนจะเปลี่ยนเป็นสีเทา (\texttt{life\_died}) ตามจำนวนชีวิตที่เสียไป \\
+    \midrule
+
+    % --- แถวที่ 8: Win & Over ---
+    \begin{minipage}[t]{\linewidth}
+        \centering
+        \smartimage{0.96\linewidth}{result_win_over.png}{3.2cm}{ภาพคู่เปรียบเทียบแสดงหน้าจอ ``YOU WIN'' สีเขียว และหน้าจอ ``GAME OVER'' สีแดง พร้อมข้อความ ``PRESS BTNC''}
+        \tablefigcap{สาธิตหน้าจอเมื่อชนะเกม (YOU WIN) และจบเกม (GAME OVER)}
+    \end{minipage}
+    &
+    เมื่อกินผีได้ครบทั้ง 4 ตัว เกมจะเข้าสู่สถานะ \texttt{S\_WIN} แสดงข้อความสีเขียว ``YOU WIN'' แต่หากพลังชีวิตลดลงจนเหลือ 0 เกมจะเข้าสู่สถานะ \texttt{S\_OVER} แสดงข้อความสีแดง ``GAME OVER'' ทั้งสองสถานะสามารถกดปุ่ม \texttt{BTNC} เพื่อกลับไปยังหน้าจอ \texttt{S\_TITLE} และเริ่มรอบใหม่ได้ \\
+    \midrule
+
+    % --- แถวที่ 9: Hardware Board ---
+    \begin{minipage}[t]{\linewidth}
+        \centering
+        \smartimage{0.96\linewidth}{result_board_hw.png}{3.2cm}{ภาพถ่ายบอร์ด Nexys A7-100T จริงขณะเล่นเกม โดยเฉพาะจังหวะที่อยู่ในโหมดราชา แสดงตัวเลขบน 7-Segment และไฟ LED แถบเวลา LD15--LD6 รวมถึง LD2--LD0}
+        \tablefigcap{ภาพการทำงานบนบอร์ดจริง แสดงผล 7-Segment และ LED}
+    \end{minipage}
+    &
+    บนบอร์ด Digilent Nexys A7-100T จริง จอแสดงผล 7-Segment แสดงร่างปัจจุบันที่หลักซ้ายสุด, เวลานับถอยหลังโหมดราชาที่หลัก 5--4 และคะแนน BCD 4 หลักขวาสุด ขณะเดียวกัน \texttt{LED[2:0]} แสดงจำนวนชีวิตที่เหลือ และ \texttt{LED[15:6]} แสดงแถบเวลาโหมดราชาลดลงทีละดวงทุกวินาทีอย่างถูกต้อง \\
+\end{longtable}

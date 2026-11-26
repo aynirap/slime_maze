@@ -1,0 +1,1065 @@
+% !TEX program = xelatex
+\documentclass[12pt,a4paper]{article}
+
+% ============================================================================
+% Packages & Language Setup (XeLaTeX + Thai)
+% ============================================================================
+\usepackage{geometry}
+\geometry{
+    a4paper,
+    top=2.5cm,
+    bottom=2.5cm,
+    left=2.5cm,
+    right=2.5cm,
+    headheight=16pt
+}
+
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\setdefaultlanguage{thai}
+\setotherlanguage{english}
+
+% ฟอนต์ภาษาไทยมาตรฐานรายงาน (รองรับการคอมไพล์ทั้งจากโฟลเดอร์ ./myVerilog/ และ ./myVerilog/slime_maze/docs/)
+\IfFileExists{slime_maze/docs/fonts/THSarabunNew.ttf}{%
+    \setmainfont[
+        Path = slime_maze/docs/fonts/,
+        Extension = .ttf,
+        Script = Thai,
+        Scale = 1.35,
+        UprightFont = THSarabunNew,
+        BoldFont = THSarabunNew-Bold,
+        ItalicFont = THSarabunNew-Italic,
+        BoldItalicFont = THSarabunNew-BoldItalic
+    ]{THSarabunNew}
+    \newfontfamily\thaifont[
+        Path = slime_maze/docs/fonts/,
+        Extension = .ttf,
+        Script = Thai,
+        Scale = 1.35,
+        UprightFont = THSarabunNew,
+        BoldFont = THSarabunNew-Bold,
+        ItalicFont = THSarabunNew-Italic,
+        BoldItalicFont = THSarabunNew-BoldItalic
+    ]{THSarabunNew}
+}{%
+    \setmainfont[
+        Path = fonts/,
+        Extension = .ttf,
+        Script = Thai,
+        Scale = 1.35,
+        UprightFont = THSarabunNew,
+        BoldFont = THSarabunNew-Bold,
+        ItalicFont = THSarabunNew-Italic,
+        BoldItalicFont = THSarabunNew-BoldItalic
+    ]{THSarabunNew}
+    \newfontfamily\thaifont[
+        Path = fonts/,
+        Extension = .ttf,
+        Script = Thai,
+        Scale = 1.35,
+        UprightFont = THSarabunNew,
+        BoldFont = THSarabunNew-Bold,
+        ItalicFont = THSarabunNew-Italic,
+        BoldItalicFont = THSarabunNew-BoldItalic
+    ]{THSarabunNew}
+}
+
+\IfFontExistsTF{Times New Roman}{%
+    \newfontfamily\englishfont[Scale=1.0]{Times New Roman}%
+}{%
+    \newfontfamily\englishfont[Scale=1.0]{Latin Modern Roman}%
+}
+\IfFontExistsTF{Courier New}{%
+    \newfontfamily\thaifonttt[Script=Thai, Scale=1.0]{Courier New}%
+    \setmonofont[Scale=0.95]{Courier New}%
+}{%
+    \newfontfamily\thaifonttt[Scale=1.0]{Latin Modern Mono}%
+    \setmonofont[Scale=0.95]{Latin Modern Mono}%
+}
+
+% การตัดคำภาษาไทยอัตโนมัติใน XeLaTeX
+\XeTeXlinebreaklocale "th"
+\XeTeXlinebreakskip = 0pt plus 1pt
+
+\usepackage{graphicx}
+% พาธสำหรับรูปภาพและสไปรต์ (รองรับทั้งจาก ./myVerilog/ และ ./myVerilog/slime_maze/docs/)
+\graphicspath{{slime_maze/docs/images/}{slime_maze/docs/images/sprite/}{images/}{images/sprite/}{./}}
+
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{longtable}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{hyperref}
+
+\newcolumntype{L}{>{\raggedright\arraybackslash}X}
+\captionsetup{justification=centering}
+
+\lstset{
+    basicstyle=\ttfamily\small,
+    breaklines=true,
+    frame=single,
+    rulecolor=\color{gray!40},
+    backgroundcolor=\color{gray!5},
+    numbers=none,
+    tabsize=4,
+    showstringspaces=false,
+    columns=flexible,
+    xleftmargin=0.5em,
+    xrightmargin=0.5em
+}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    urlcolor=blue,
+    pdftitle={รายงานผลการดำเนินการโครงงาน การพัฒนาเกม SLIME MAZE ด้วย FPGA},
+    pdfauthor={คณะผู้จัดทำโครงงาน CPE222}
+}
+
+% ============================================================================
+% Heading & TOC Numbering Style (ตามต้นแบบ docs/report.tex)
+%   - หัวข้อหลัก (Section): ไม่มีตัวเลขนำหน้า แต่แสดงในสารบัญ
+%   - หัวข้อย่อยระดับ 1 (Subsection): 1), 2), 3) ...
+%   - หัวข้อย่อยระดับ 2 (Subsubsection): 1.1), 1.2), ...
+%   - หัวข้อย่อยระดับ 3 (Paragraph): 1.1.1), 1.1.2), ...
+% ============================================================================
+\setcounter{secnumdepth}{4}
+\setcounter{tocdepth}{4}
+
+\renewcommand{\thesubsection}{\arabic{subsection})}
+\renewcommand{\thesubsubsection}{\arabic{subsection}.\arabic{subsubsection})}
+\renewcommand{\theparagraph}{\arabic{subsection}.\arabic{subsubsection}.\arabic{paragraph})}
+
+% ปรับระยะเยื้องในสารบัญให้พอดี ไม่ล้นขอบขวา
+\makeatletter
+\renewcommand*\l@section{\@dottedtocline{1}{0em}{0em}}
+\renewcommand*\l@subsection{\@dottedtocline{2}{1.2em}{2.0em}}
+\renewcommand*\l@subsubsection{\@dottedtocline{3}{2.8em}{2.8em}}
+\renewcommand*\l@paragraph{\@dottedtocline{4}{4.6em}{3.6em}}
+\makeatother
+
+% คำสั่งสำหรับหัวข้อหลักที่ไม่มีเลขนำหน้า แต่ขึ้นสารบัญและรีเซ็ตเลขหัวข้อย่อย
+\newcommand{\mainsection}[1]{%
+    \phantomsection
+    \stepcounter{section}%
+    \section*{#1}%
+    \addcontentsline{toc}{section}{#1}%
+}
+
+% กล่องแสดงตำแหน่งสำหรับใส่ภาพ (ใช้เมื่อยังไม่ได้วางไฟล์ภาพจริง)
+\newcommand{\imgplaceholder}[3]{%
+    \begin{center}
+        \fcolorbox{gray!60}{gray!6}{%
+            \parbox[c][#1][c]{0.92\linewidth}{%
+                \centering\small\color{gray!85!black}%
+                \textbf{[พื้นที่สำหรับใส่ภาพ: \texttt{\detokenize{#2}}]}\\[0.25em]
+                #3%
+            }%
+        }%
+    \end{center}%
+}
+
+% แทรกภาพอัตโนมัติจากพาธมาตรฐาน หากยังไม่มีไฟล์ภาพจะแสดงกล่องคำอธิบายแทน (ไม่ทำให้คอมไพล์พัง)
+\newcommand{\smartimage}[4]{%
+    \IfFileExists{slime_maze/docs/images/#2}{%
+        \includegraphics[width=#1]{slime_maze/docs/images/#2}%
+    }{%
+        \IfFileExists{slime_maze/docs/images/sprite/#2}{%
+            \includegraphics[width=#1]{slime_maze/docs/images/sprite/#2}%
+        }{%
+            \IfFileExists{images/#2}{%
+                \includegraphics[width=#1]{images/#2}%
+            }{%
+                \IfFileExists{images/sprite/#2}{%
+                    \includegraphics[width=#1]{images/sprite/#2}%
+                }{%
+                    \IfFileExists{#2}{%
+                        \includegraphics[width=#1]{#2}%
+                    }{%
+                        \imgplaceholder{#3}{#2}{#4}%
+                    }%
+                }%
+            }%
+        }%
+    }%
+}
+
+% คำบรรยายรูปภาพภายใน longtable (หลีกเลี่ยง \caption ของ longtable ที่ชนกับ \captionof)
+\newcommand{\tablefigcap}[1]{%
+    \refstepcounter{figure}%
+    \addcontentsline{lof}{figure}{\protect\numberline{\thefigure}{\ignorespaces #1}}%
+    \par\vspace{0.3em}{\small\textbf{รูปที่ \thefigure}\ #1}\par%
+}
+
+\titleformat{\section}{\Large\bfseries}{}{0pt}{}
+\titleformat{\subsection}{\large\bfseries}{\thesubsection}{0.6em}{}
+\titleformat{\subsubsection}{\normalsize\bfseries}{\thesubsubsection}{0.6em}{}
+\titleformat{\paragraph}[block]{\normalsize\bfseries}{\theparagraph}{0.6em}{}
+
+\titlespacing*{\section}{0pt}{1.2em}{0.4em}
+\titlespacing*{\subsection}{0pt}{0.8em}{0.2em}
+\titlespacing*{\subsubsection}{0.6cm}{0.6em}{0.2em}
+\titlespacing*{\paragraph}{1.2cm}{0.5em}{0.2em}
+
+% ชื่อสารบัญภาษาไทย (ตั้งค่าใน \captionsthai ของ polyglossia)
+\gappto\captionsthai{%
+    \renewcommand{\contentsname}{สารบัญ}%
+    \renewcommand{\listfigurename}{สารบัญรูปภาพ}%
+    \renewcommand{\listtablename}{สารบัญตาราง}%
+    \renewcommand{\figurename}{รูปที่}%
+    \renewcommand{\tablename}{ตาราง}%
+}
+
+% เลขหน้าอักษรไทย (ก, ข, ค, ...) สำหรับส่วนหน้า
+\makeatletter
+\def\@thaialph#1{%
+    \ifcase#1\or ก\or ข\or ค\or ง\or จ\or ฉ\or ช\or ซ\or ฌ\or ญ%
+    \or ฎ\or ฏ\or ฐ\or ฑ\or ฒ\or ณ\or ด\or ต\or ถ\or ท%
+    \or ธ\or น\or บ\or ป\or ผ\or ฝ\or พ\or ฟ\or ภ\or ม%
+    \else\@ctrerr\fi}
+\def\thaialph#1{\expandafter\@thaialph\csname c@#1\endcsname}
+\makeatother
+
+% Header / Footer (เลขหน้ามุมขวาบน ตามรูปแบบรายงานอ้างอิง)
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[R]{\thepage}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+\setlength{\parindent}{1.2cm}
+\setlength{\parskip}{0.3em}
+
+% ============================================================================
+% Document Start
+% ============================================================================
+\begin{document}
+
+% ----------------------------------------------------------------------------
+% หน้าปก (Cover Page - จาก chapters/00_cover.tex)
+% ----------------------------------------------------------------------------
+\begin{titlepage}
+    \centering
+    \vspace*{0.5cm}
+
+    % โลโก้มหาวิทยาลัย (ไฟล์ slime_maze/docs/images/KMUTT_Logo.png)
+    \smartimage{3.2cm}{KMUTT_Logo.png}{3.2cm}{ตราสัญลักษณ์มหาวิทยาลัยเทคโนโลยีพระจอมเกล้าธนบุรี}\\[0.8cm]
+
+    {\Large\bfseries รายงานผลการดำเนินการโครงงาน (Final Project)\\[0.3cm]
+    การพัฒนาเกม \textenglish{SLIME MAZE} ด้วย \textenglish{FPGA}\par}
+
+    \vspace{1.5cm}
+
+    {\large\bfseries คณะผู้จัดทำ\par}
+    \vspace{0.3cm}
+    \begin{tabular}{@{}ll@{}}
+        1. นาย กฤษติธี อัศวดิษฐเลิศ & \textenglish{68070501002} \\
+        2. นาย วรเมธ กิตติโชติรัตน์ & \textenglish{68070501045} \\
+        3. นาย อรรถเชษฐ์ อนันต์คูศรี & \textenglish{68070501059} \\
+        4. นาย ปริญญา เส็มเส็น & \textenglish{68070501073} \\
+        5. นาย พัชรพล ธรรมมล & \textenglish{68070501077} \\
+    \end{tabular}
+
+    \vspace{1.5cm}
+
+    {\large\bfseries เสนอ\par}
+    \vspace{0.2cm}
+    {\large [ชื่ออาจารย์ผู้สอน]\par}
+
+    \vfill
+
+    {\large
+    ภาคเรียนที่ 1 ปีการศึกษา 2569 \\
+    รายวิชา \textenglish{CPE222} อิเล็กทรอนิกส์ดิจิทัลและการออกแบบวงจรเชิงตรรกะ \\
+    \textenglish{(Digital Electronics and Logic Design)} \\
+    ภาควิชาวิศวกรรมคอมพิวเตอร์ คณะวิศวกรรมศาสตร์ \\
+    มหาวิทยาลัยเทคโนโลยีพระจอมเกล้าธนบุรี
+    \par}
+\end{titlepage}
+
+% ----------------------------------------------------------------------------
+% ส่วนหน้า: สารบัญ, สารบัญรูปภาพ, สารบัญตาราง (เลขหน้า ก, ข, ...)
+% ----------------------------------------------------------------------------
+\pagenumbering{thaialph}
+\setcounter{page}{1}
+
+\phantomsection
+\addcontentsline{toc}{section}{สารบัญ}
+\tableofcontents
+\clearpage
+
+\phantomsection
+\addcontentsline{toc}{section}{สารบัญรูปภาพ}
+\listoffigures
+\vspace{1.5cm}
+
+\phantomsection
+\addcontentsline{toc}{section}{สารบัญตาราง}
+\listoftables
+\clearpage
+
+% ----------------------------------------------------------------------------
+% ส่วนเนื้อหา (เลขหน้า 1, 2, 3, ...)
+% ----------------------------------------------------------------------------
+\pagenumbering{arabic}
+\setcounter{page}{1}
+
+% ============================================================================
+% บทที่ 1: บทนำ (จาก chapters/01_introduction.tex)
+% ============================================================================
+\mainsection{บทนำ (Introduction)}
+
+โครงงาน \textenglish{Slime Maze} คือโครงงานการประยุกต์ใช้ความรู้ในรายวิชา \textenglish{CPE222} อิเล็กทรอนิกส์ดิจิทัลและการออกแบบวงจรเชิงตรรกะ (Digital Electronics and Logic Design) มาออกแบบและพัฒนาชิ้นงานจริงบนฮาร์ดแวร์ FPGA โดยคณะผู้จัดทำมีความสนใจในการพัฒนาระบบเกมอาร์เคดที่มีแนวคิดต้นแบบมาจากเกมแนวเขาวงกตไล่ล่า (Maze-Chase Arcade Game) อย่าง \textenglish{Pac-Man} ผสานกับระบบการวิวัฒนาการของตัวละครสไลม์ 3 ขั้น (Slime Evolution) ที่พัฒนาด้วยภาษา Verilog HDL และแสดงผลผ่านพอร์ต VGA ความละเอียด $640\times480$ พิกเซล บนบอร์ด Digilent Nexys A7-100T โดยมีรายละเอียดพื้นฐานที่เกี่ยวข้องดังนี้
+
+\begin{figure}[H]
+    \centering
+    \smartimage{0.82\textwidth}{banner.png}{4.0cm}{ภาพแบนเนอร์แนะนำเกม Slime Maze (slime\_maze/docs/images/banner.png)}
+    \caption{ภาพแสดงผลหน้าปกและแนวคิดของเกม Slime Maze}
+\end{figure}
+
+\subsection{แนวคิดและแรงบันดาลใจของเกมเขาวงกต (Arcade Maze Game)}
+
+เกมแนวเขาวงกตไล่ล่า (Maze-Chase Game) เป็นเกมอาร์เคดคลาสสิกที่มีต้นแบบสำคัญมาจากเกม Pac-Man โดยผู้เล่นจะต้องบังคับตัวละครเคลื่อนที่ไปตามทางเดินในเขาวงกตแบบ 2 มิติ เพื่อเก็บเม็ดคะแนน (Pellets) ให้ครบตามเงื่อนไข พร้อมกับหลบหลีกศัตรู (Ghosts) ที่คอยไล่ล่าจากทิศทางต่างๆ แต่เมื่อเก็บไอเทมพิเศษได้ บทบาทจะพลิกกลับจาก ``ผู้ถูกล่า'' เป็น ``ผู้ล่า'' ทำให้สามารถไล่กินศัตรูเพื่อทำคะแนนโบนัสได้ชั่วคราว
+
+โครงงาน Slime Maze ได้นำแนวคิดดังกล่าวมายกระดับด้วยระบบวิวัฒนาการตัวละคร 3 ร่าง (Baby Slime $\rightarrow$ Big Slime $\rightarrow$ King Slime) โดยผู้เล่นต้องเก็บเม็ดพลังงานในเขาวงกตขนาด $20\times15$ ช่อง ให้ครบ 30 เม็ดเพื่อเติบโตจากร่างที่ 1 เป็นร่างที่ 2 จากนั้นมงกุฎ (Crown) จะปรากฏขึ้นตามมุมของแผนที่ เมื่อเก็บมงกุฎได้ สไลม์จะเข้าสู่ ``โหมดราชา'' (King Mode / ร่างที่ 3) เป็นเวลา 10 วินาที ซึ่งจะเดินเร็วขึ้น 2 เท่า และสามารถไล่กินผีทั้ง 4 ตัวเพื่อเอาชนะเกมได้ หากพลาดถูกผีจับตัวครบ 3 ครั้ง เกมจะจบลงทันที
+
+% [INSERT PICTURE: pacman_ref.png — ภาพหน้าจอเกม Pac-Man ต้นแบบเพื่อเปรียบเทียบแรงบันดาลใจ]
+\begin{figure}[H]
+    \centering
+    \smartimage{0.68\textwidth}{pacman_ref.png}{4.2cm}{ภาพหน้าจอ (Screenshot) ของเกม Pac-Man ต้นแบบ แสดงแผนที่เขาวงกต เม็ดคะแนน ตัวละครผู้เล่น และผี 4 ตัว เพื่อใช้อ้างอิงแรงบันดาลใจในการออกแบบ (เพิ่ม URL ที่มาในบรรณานุกรม)}
+    \caption{ตัวอย่างภาพแสดงผลเกมต้นแบบแนวเขาวงกตไล่ล่า (Pac-Man)}
+\end{figure}
+
+\subsection{Field Programmable Gate Array (FPGA)}
+
+FPGA เป็นอุปกรณ์วงจรรวม (Integrated Circuit) ที่ผู้ใช้สามารถเขียนโปรแกรมเพื่อกำหนดโครงสร้างวงจรดิจิทัลภายในได้ตามต้องการ ภายในชิป FPGA ประกอบด้วยหน่วยตรรกะพื้นฐานจำนวนมาก เช่น Look-Up Tables (LUTs), Flip-Flops, Block RAM (BRAM) และตัวจัดการสัญญาณนาฬิกา (Clock Management Tiles / MMCM) ที่สามารถเชื่อมต่อกันเป็นวงจรดิจิทัลเชิงตรรกะและวงจรลำดับได้อย่างหลากหลาย เช่น วงจรนับ (Counter), วงจรบวก, เครื่องสถานะจำกัด (Finite State Machine: FSM), หน่วยความจำแบบ ROM และวงจรสร้างสัญญาณภาพ (Video Controller)
+
+จุดเด่นสำคัญของ FPGA คือความสามารถในการประมวลผลแบบคู่ขนาน (Parallel Processing) ในระดับฮาร์ดแวร์โดยไม่ต้องพึ่งพาระบบปฏิบัติการหรือซีพียูแบบซอฟต์แวร์ การพัฒนาวงจรบน FPGA ใช้ภาษาคำอธิบายฮาร์ดแวร์ (Hardware Description Language: HDL) เช่น Verilog หรือ VHDL จากนั้นจึงนำโค้ดผ่านกระบวนการ Synthesis และ Implementation เพื่อสร้างไฟล์กำหนดค่าที่เรียกว่า Bitstream สำหรับโปรแกรมลงบนชิป FPGA ต่อไป
+
+\subsection{Digilent Nexys A7-100T Artix-7 FPGA Trainer Board}
+
+บอร์ดพัฒนา Digilent Nexys A7-100T เป็นบอร์ดฝึกปฏิบัติและพัฒนาวงจรดิจิทัลที่มาพร้อมกับชิป FPGA ตระกูล Xilinx Artix-7 รหัส \texttt{xc7a100tcsg324-1} ซึ่งเป็นรุ่นที่มีความจุทางตรรกะสูงเพียงพอต่อการออกแบบระบบเกมและกราฟิกแบบเต็มรูปแบบ บนตัวบอร์ดติดตั้งอุปกรณ์ต่อพ่วงพื้นฐานมาครบถ้วนพร้อมใช้งานทันทีโดยไม่ต้องต่อวงจรภายนอกเพิ่มเติม ได้แก่
+
+\begin{itemize}[leftmargin=1.5cm]
+    \item สัญญาณนาฬิกาหลักบนบอร์ด (On-board Oscillator) ความถี่ 100 MHz (ขา E3)
+    \item ปุ่มกดแบบ Pushbutton 5 ทิศทาง (\texttt{BTNU}, \texttt{BTND}, \texttt{BTNL}, \texttt{BTNR}, \texttt{BTNC}) และปุ่มรีเซ็ต \texttt{CPU\_RESETN} (Active-Low)
+    \item หลอดไฟ LED แสดงสถานะจำนวน 16 ดวง (\texttt{LED[15:0]})
+    \item จอแสดงผลตัวเลข 7-Segment แบบ Common Anode จำนวน 8 หลัก (\texttt{SEG[6:0]}, \texttt{DP}, \texttt{AN[7:0]})
+    \item พอร์ตเชื่อมต่อสัญญาณภาพ VGA แบบ 12-bit Color (4-bit Red, 4-bit Green, 4-bit Blue พร้อมสัญญาณ \texttt{VGA\_HS} และ \texttt{VGA\_VS}) ผ่านวงจร R-2R Ladder DAC บนบอร์ด
+    \item พอร์ต Micro-USB สำหรับจ่ายไฟเลี้ยงและโปรแกรม Bitstream ผ่านวงจร USB-JTAG
+\end{itemize}
+
+% ============================================================================
+% บทที่ 2: วัตถุประสงค์ (จาก chapters/02_objectives.tex)
+% ============================================================================
+\mainsection{วัตถุประสงค์}
+
+\begin{enumerate}[leftmargin=1.5cm]
+    \item เพื่อบูรณาการความรู้จากรายวิชา CPE222 อิเล็กทรอนิกส์ดิจิทัลและการออกแบบวงจรเชิงตรรกะ มาประยุกต์ใช้ในการออกแบบและสร้างระบบเกม Slime Maze ด้วยภาษา Verilog HDL บนบอร์ด FPGA รุ่น Digilent Nexys A7-100T
+    \item เพื่อเรียนรู้และฝึกปฏิบัติการออกแบบวงจรดิจิทัลที่ทำงานร่วมกันหลายระบบ ได้แก่ วงจรสร้างสัญญาณนาฬิกา (MMCM 100 MHz $\rightarrow$ 25 MHz), วงจรสร้างสัญญาณควบคุมจอภาพ VGA ($640\times480$ @ 60 Hz), การออกแบบ Finite State Machine (FSM) ทั้งระดับเกมและระดับวิวัฒนาการตัวละคร, การซิงโครไนซ์สัญญาณอินพุตเพื่อป้องกัน Metastability และ Bounce, การขับจอแสดงผล 7-Segment แบบ Time-Multiplexing และการเรนเดอร์สไปรต์สีด้วย Priority Multiplexer
+    \item เพื่อฝึกกระบวนการทวนสอบและจำลองการทำงานของวงจรดิจิทัล (Verification \& Simulation) ด้วยเครื่องมือ Verilator และ SDL2 ให้ถูกต้องสมบูรณ์ก่อนนำไปสังเคราะห์ลงบนฮาร์ดแวร์จริง
+\end{enumerate}
+
+% ============================================================================
+% บทที่ 3: อุปกรณ์ที่ใช้ (จาก chapters/03_equipment.tex)
+% ============================================================================
+\mainsection{อุปกรณ์ที่ใช้ (Equipment)}
+
+ในการดำเนินโครงงาน Slime Maze คณะผู้จัดทำได้เตรียมอุปกรณ์และเครื่องมือที่จำเป็นต่อการพัฒนา แบ่งออกเป็น 2 ส่วน ได้แก่ (1) ซอฟต์แวร์ (Software) และ (2) ฮาร์ดแวร์ (Hardware) ดังรายละเอียดต่อไปนี้
+
+\subsection{ซอฟต์แวร์ (Software)}
+
+เครื่องมือซอฟต์แวร์ที่ใช้ในการออกแบบวงจร, สร้างกราฟิกสไปรต์, แปลงข้อมูล และจำลองการทำงานของระบบเกม แสดงดังตารางที่ \ref{tab:software}
+
+\begin{table}[H]
+    \centering
+    \caption{รายการเครื่องมือซอฟต์แวร์ที่ใช้ในการพัฒนา}
+    \label{tab:software}
+    \begin{tabularx}{\textwidth}{@{}c L L@{}}
+        \toprule
+        \textbf{ลำดับที่} & \textbf{ซอฟต์แวร์ที่ใช้ในการพัฒนา} & \textbf{วัตถุประสงค์} \\
+        \midrule
+        1 & Xilinx Vivado\textsuperscript{\textregistered} Design Suite &
+        ใช้สำหรับเขียนโค้ด Verilog HDL, ตรวจสอบโครงสร้างวงจร, กำหนด Pin Constraints (\texttt{.xdc}), สังเคราะห์วงจร (Synthesis), Implementation และสร้างไฟล์ Bitstream ลงบอร์ด Nexys A7-100T \\
+        \addlinespace[0.4em]
+        2 & โปรแกรมออกแบบ Pixel Art (โฟลเดอร์ \texttt{art/}) &
+        ใช้สำหรับวาดภาพกราฟิกสไปรต์ภายในเกม เช่น สไลม์ 3 ร่าง ท่าทางละ 6 ท่า, ผี 4 ตัว, ผีตอนกลัว, มงกุฎ 3 เฟรม, เม็ดคะแนน และไอคอน โดยบันทึกเป็นไฟล์ \texttt{.png} ขนาด $32\times32$ และ $8\times8$ \\
+        \addlinespace[0.4em]
+        3 & Python 3 + ไลบรารี Pillow (สคริปต์ \texttt{gen\_art.py}) &
+        ใช้รันสคริปต์ \texttt{gen\_art.py} เพื่ออ่านไฟล์ \texttt{.png} จากโฟลเดอร์ \texttt{art/} แล้ว Quantize สีเป็น RGB444 (12-bit) และสร้างเป็นโมดูล Combinational ROM ในไฟล์ \texttt{slime\_art.v} อัตโนมัติ \\
+        \addlinespace[0.4em]
+        4 & Verilator + SDL2 + Make (โฟลเดอร์ \texttt{sim/}) &
+        ใช้จำลองการทำงานของโค้ด Verilog จริง (\texttt{slime\_logic.v}, \texttt{slime\_draw.v}, \texttt{vga\_sync.v}) บนคอมพิวเตอร์แบบโต้ตอบได้ทั้งโหมด 60 FPS (\texttt{fast\_top}) และโหมดจำลองทุกพิกเซล (\texttt{sim\_top}) \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+\subsection{ฮาร์ดแวร์ (Hardware)}
+
+อุปกรณ์ฮาร์ดแวร์ที่ใช้ในการทดสอบและนำเสนอผลงานจริง แสดงดังตารางที่ \ref{tab:hardware}
+
+% [INSERT PICTURE: nexys_a7_board.png, vga_cable.png, vga_monitor.png, micro_usb.png]
+\begin{table}[H]
+    \centering
+    \caption{รายการเครื่องมือฮาร์ดแวร์ที่ใช้ในการพัฒนา}
+    \label{tab:hardware}
+    \begin{tabularx}{\textwidth}{@{}c >{\centering\arraybackslash}p{0.46\textwidth} L@{}}
+        \toprule
+        \textbf{ลำดับที่} & \textbf{ภาพอุปกรณ์} & \textbf{ชื่ออุปกรณ์ / วัตถุประสงค์} \\
+        \midrule
+        1 &
+        \begin{minipage}[t]{\linewidth}
+            \centering
+            \smartimage{0.85\linewidth}{nexys_a7_board.png}{2.4cm}{ภาพถ่ายด้านบนของบอร์ด Digilent Nexys A7-100T ให้เห็นปุ่มกด 5 ทิศทาง, CPU\_RESETN, 16 LEDs, 7-Segment และพอร์ต VGA}
+            \captionof{figure}{บอร์ดพัฒนา Digilent Nexys A7-100T}
+        \end{minipage}
+        &
+        \textbf{อุปกรณ์:} Digilent Nexys A7-100T FPGA Trainer Board (Xilinx Artix-7 \texttt{xc7a100tcsg324-1}) \par\vspace{0.3em}
+        \textbf{วัตถุประสงค์:} ใช้เป็นหน่วยประมวลผลหลักของเกม รับคำสั่งจากปุ่มกด ประมวลผลตรรกะ และส่งสัญญาณภาพออกไปยังจอมอนิเตอร์ พร้อมแสดงสถานะบน 7-Segment และ LED \\
+        \midrule
+        2 &
+        \begin{minipage}[t]{\linewidth}
+            \centering
+            \smartimage{0.85\linewidth}{vga_cable.png}{2.1cm}{ภาพสาย VGA แบบ D-Sub 15 ขา (Male-to-Male)}
+            \captionof{figure}{สายเชื่อมต่อสัญญาณภาพ VGA}
+        \end{minipage}
+        &
+        \textbf{อุปกรณ์:} สาย VGA (D-Sub 15-pin) \par\vspace{0.3em}
+        \textbf{วัตถุประสงค์:} นำส่งสัญญาณภาพ RGB และสัญญาณซิงค์ HS/VS จากพอร์ต VGA บนบอร์ด FPGA ไปยังจอมอนิเตอร์ \\
+        \midrule
+        3 &
+        \begin{minipage}[t]{\linewidth}
+            \centering
+            \smartimage{0.85\linewidth}{vga_monitor.png}{2.1cm}{ภาพจอมอนิเตอร์ LCD ที่รองรับอินพุต VGA 60 Hz}
+            \captionof{figure}{จอมอนิเตอร์แสดงผลมาตรฐาน VGA}
+        \end{minipage}
+        &
+        \textbf{อุปกรณ์:} จอมอนิเตอร์ที่รองรับพอร์ต VGA ความละเอียด $640\times480$ @ 60 Hz \par\vspace{0.3em}
+        \textbf{วัตถุประสงค์:} แสดงผลภาพกราฟิกของเกม Slime Maze แบบเรียลไทม์ \\
+        \midrule
+        4 &
+        \begin{minipage}[t]{\linewidth}
+            \centering
+            \smartimage{0.85\linewidth}{micro_usb.png}{2.1cm}{ภาพสาย USB Type-A to Micro-B สำหรับโปรแกรมและจ่ายไฟให้บอร์ด}
+            \captionof{figure}{สาย Micro-USB สำหรับโปรแกรมบอร์ด FPGA}
+        \end{minipage}
+        &
+        \textbf{อุปกรณ์:} สาย Micro-USB \par\vspace{0.3em}
+        \textbf{วัตถุประสงค์:} เชื่อมต่อระหว่างคอมพิวเตอร์กับบอร์ด Nexys A7-100T เพื่อโปรแกรม Bitstream ผ่าน JTAG และจ่ายไฟเลี้ยงบอร์ด \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+% ============================================================================
+% บทที่ 4: ส่วนประกอบวงจร (จาก chapters/04_circuit_components.tex)
+% ============================================================================
+\mainsection{ส่วนประกอบวงจร}
+
+การพัฒนาระบบเกม Slime Maze บนบอร์ด Digilent Nexys A7-100T ถูกออกแบบให้ทุกส่วนทำงานประสานกันภายใต้สัญญาณนาฬิกาเดียวคือ 25 MHz Pixel Clock โดยมีองค์ประกอบหลักของระบบดังแสดงในรูปที่ \ref{fig:sys_overview}
+
+% NOTE: แผนภาพต้นแบบ slime_maze_block_diagram_simple.png ใน ./myVerilog/ ยังระบุข้อความว่า "3 ghosts"
+% ควรอัปเดตข้อความใน slime_maze_block_diagram_simple.dot เป็น "4 ghosts" แล้ว render ใหม่ให้ตรงกับโค้ดล่าสุด
+\begin{figure}[H]
+    \centering
+    \smartimage{0.96\textwidth}{slime_maze_block_diagram_simple.png}{5.0cm}{แผนภาพแสดงองค์ประกอบของวงจรและระบบโดยรวม (System Block Diagram)}
+    \caption{แผนภาพแสดงองค์ประกอบของวงจรและระบบโดยรวม (System Block Diagram)}
+    \label{fig:sys_overview}
+\end{figure}
+
+\subsection{Input Switch (ปุ่มกดควบคุมบนบอร์ด)}
+
+ระบบใช้ปุ่มกด Built-in Pushbuttons บนบอร์ด Nexys A7-100T เป็นอุปกรณ์รับคำสั่งจากผู้เล่น โดยกำหนดตำแหน่งขาพินในไฟล์ \texttt{slime\_nexys\_a7.xdc} (มาตรฐาน \texttt{LVCMOS33}) ดังนี้
+
+\begin{itemize}[leftmargin=1.5cm]
+    \item \texttt{BTNU} (ขา M18) : บังคับสไลม์เดินขึ้น (Up)
+    \item \texttt{BTND} (ขา P18) : บังคับสไลม์เดินลง (Down)
+    \item \texttt{BTNL} (ขา P17) : บังคับสไลม์เดินซ้าย (Left)
+    \item \texttt{BTNR} (ขา M17) : บังคับสไลม์เดินขวา (Right)
+    \item \texttt{BTNC} (ขา N17) : กดเริ่มเกม (จากหน้าจอ Title), หยุดเกมชั่วคราว/เล่นต่อ (Pause/Resume) หรือกลับสู่หน้าจอเริ่มต้นหลังจบเกม
+    \item \texttt{CPU\_RESETN} (ขา C12) : ปุ่มรีเซ็ตระบบทั้งหมดแบบ Active-Low (กดเมื่อต้องการเริ่มใหม่ทันที)
+\end{itemize}
+
+\subsection{Field Programmable Gate Array (FPGA)}
+
+ชิป FPGA ทำหน้าที่ประมวลผลตรรกะทั้งหมดของระบบเกมแบบคู่ขนาน โดยรับสัญญาณนาฬิกาตั้งต้นความถี่ 100 MHz (\texttt{CLK100MHZ} ขา E3) แล้วแปลงความถี่ผ่านโมดูล \texttt{clk\_gen} (\texttt{MMCME2\_BASE}) ให้ได้สัญญาณนาฬิกาพิกเซล 25 MHz (\texttt{clk}) เพื่อใช้ขับเคลื่อนทั้งส่วนการซิงโครไนซ์ปุ่มกด, วงจรสร้างสัญญาณ VGA, ตรรกะเกม (\texttt{slime\_logic}), วงจรวาดภาพ (\texttt{slime\_draw}) และวงจรขับ 7-Segment Display (\texttt{seg7x8}) ภายในโดเมนสัญญาณนาฬิกาเดียวกันทั้งหมด
+
+\subsection{Monitor Display ที่รองรับ VGA และส่วนแสดงผลบนบอร์ด}
+
+VGA (Video Graphics Array) เป็นมาตรฐานการส่งสัญญาณภาพแบบแอนะล็อกที่แยกสายสัญญาณสีแม่สีแดง เขียว น้ำเงิน (RGB) และสัญญาณควบคุมการกวาดภาพแนวนอน-แนวตั้ง (HSYNC, VSYNC) ออกจากกัน บนบอร์ด Nexys A7-100T ใช้สถาปัตยกรรมสีแบบ 12-bit (4 บิตต่อ 1 ช่องสี) แปลงระดับแรงดันผ่านวงจรตัวต้านทาน R-2R Ladder ให้แสดงสีได้สูงสุด 4,096 สี โดยกำหนดขาพินดังนี้
+
+\begin{itemize}[leftmargin=1.5cm]
+    \item \texttt{VGA\_R[3:0]} (ขา A4, C5, B4, A3) : สัญญาณสีแดง 4 บิต
+    \item \texttt{VGA\_G[3:0]} (ขา A6, B6, A5, C6) : สัญญาณสีเขียว 4 บิต
+    \item \texttt{VGA\_B[3:0]} (ขา D8, D7, C7, B7) : สัญญาณสีน้ำเงิน 4 บิต
+    \item \texttt{VGA\_HS} (ขา B11) และ \texttt{VGA\_VS} (ขา B12) : สัญญาณ Horizontal Sync และ Vertical Sync แบบ Active-Low
+\end{itemize}
+
+สำหรับการแสดงผลความละเอียด $640\times480$ ที่อัตรารีเฟรช 60 Hz ใช้สัญญาณนาฬิกาพิกเซล 25 MHz (คาบเวลา 40 ns ต่อพิกเซล) โดยใน 1 เฟรมประกอบด้วยจังหวะสัญญาณดังนี้
+\begin{itemize}[leftmargin=1.5cm]
+    \item \textbf{แนวนอน (Horizontal Timing)} รวม 800 พิกเซลต่อเส้น: ช่วงแสดงภาพ (Visible) 640 + Front Porch 16 + Sync Pulse 96 + Back Porch 48
+    \item \textbf{แนวตั้ง (Vertical Timing)} รวม 525 เส้นต่อเฟรม: ช่วงแสดงภาพ (Visible) 480 + Front Porch 10 + Sync Pulse 2 + Back Porch 33
+\end{itemize}
+เมื่อจอภาพได้รับสัญญาณ HSYNC และ VSYNC ลำแสงหรือวงจรสแกนภาพจะกวาดจากซ้ายไปขวาทีละบรรทัดจากบนลงล่าง โดยสัญญาณ \texttt{video\_on} จะมีค่าเป็น 1 เฉพาะเมื่อพิกัด $(x, y)$ อยู่ในช่วง $x < 640$ และ $y < 480$ เท่านั้น ส่วนช่วงเวลาที่อยู่นอกบริเวณภาพ (Blanking Time) สัญญาณ RGB จะถูกบังคับให้เป็นสีดำ (\texttt{12'h000}) ดังแสดงหลักการในรูปที่ \ref{fig:vga_timing}
+
+% [INSERT PICTURE: vga_timing.png — แผนภาพ VGA Timing 640x480 @ 60Hz]
+\begin{figure}[H]
+    \centering
+    \smartimage{0.78\textwidth}{vga_timing.png}{4.5cm}{แผนภาพ VGA Timing 640x480 @ 60 Hz แสดง Active Display Time (640 x 480), Front Porch, Sync Pulse, Back Porch และ Blanking Time ทั้งแกนแนวนอน (800 pixels) และแกนแนวตั้ง (525 lines)}
+    \caption{แผนภาพแสดงหลักการแสดงภาพและจังหวะสัญญาณของ VGA Monitor (640x480 @ 60 Hz)}
+    \label{fig:vga_timing}
+\end{figure}
+
+นอกจากหน้าจอ VGA แล้ว โครงงานยังใช้อุปกรณ์แสดงผลเสริมบนบอร์ด Nexys A7-100T เพื่อรายงานสถานะสำคัญของเกมแบบเรียลไทม์ ได้แก่
+
+\begin{itemize}[leftmargin=1.5cm]
+    \item \textbf{จอแสดงผล 7-Segment 8 หลัก (\texttt{SEG[6:0]}, \texttt{DP}, \texttt{AN[7:0]}):}
+    \begin{itemize}
+        \item หลักขวาสุด 4 หลัก (หลักที่ 3 ถึง 0): แสดงคะแนนปัจจุบันในรูปแบบเลขฐานสิบ BCD (0000 ถึง 9990)
+        \item หลักที่ 5 และ 4: แสดงตัวเลขนับถอยหลังเวลาของโหมดราชา (\texttt{ksec}: 10 ถึง 01 วินาที) และจะถูกปิด (Blank) เมื่อไม่ได้อยู่ในร่างที่ 3 (รวมถึงปิดหลักสิบเมื่อ $\texttt{ksec} < 10$)
+        \item หลักที่ 6: ปิดการแสดงผลเพื่อเว้นช่องว่างให้อ่านง่าย
+        \item หลักซ้ายสุด (หลักที่ 7): แสดงร่างปัจจุบันของสไลม์ (1, 2 หรือ 3)
+    \end{itemize}
+    \item \textbf{หลอดไฟ LED 16 ดวง (\texttt{LED[15:0]}):}
+    \begin{itemize}
+        \item \texttt{LD2} ถึง \texttt{LD0}: แสดงจำนวนชีวิตที่เหลืออยู่ (3 ดวง = 3 ชีวิต, ดับลงทีละดวงเมื่อเสียชีวิต)
+        \item \texttt{LD5} ถึง \texttt{LD3}: ปิดใช้งาน (\texttt{3'b000})
+        \item \texttt{LD15} ถึง \texttt{LD6}: แสดงเป็นแถบเวลานับถอยหลัง 10 ดวงของโหมดราชา (สว่างตามจำนวนวินาที \texttt{ksec} ที่เหลือ)
+    \end{itemize}
+\end{itemize}
+
+% ============================================================================
+% บทที่ 5: หลักการทำงาน (จาก chapters/05_working_principles.tex)
+% ============================================================================
+\clearpage
+\mainsection{หลักการทำงาน}
+
+\subsection{ระบบรูปแบบการเล่นเกม (Game Mechanics)}
+
+เกม Slime Maze เป็นเกมแนวเขาวงกตไล่ล่าบนกริดขนาด $20\times15$ ช่อง (ช่องละ $32\times32$ พิกเซล รวมเป็นความละเอียดเต็มจอ $640\times480$ พิกเซล) ผู้เล่นควบคุมตัวละครสไลม์เพื่อเดินเก็บเม็ดคะแนน, พัฒนาร่างผ่าน 3 ขั้น และใช้โหมดราชาไล่กำจัดผีทั้ง 4 ตัว โดยมีองค์ประกอบการเล่นดังนี้
+
+\subsubsection{การควบคุมตัวละคร (Character Control)}
+
+\paragraph{การเคลื่อนที่และการกดเลี้ยวล่วงหน้า (Movement \& Pre-turn Input)}
+ผู้เล่นใช้ปุ่มทิศทาง 4 ปุ่ม (\texttt{BTNU}, \texttt{BTND}, \texttt{BTNL}, \texttt{BTNR}) เพื่อสั่งให้สไลม์เคลื่อนที่ใน 4 ทิศทาง (UP, DOWN, LEFT, RIGHT) ที่ความเร็วปกติ 2 พิกเซลต่อเฟรม (120 พิกเซลต่อวินาที ที่ 60 Hz) ระบบการเดินใช้เทคนิค ``กดเลี้ยวล่วงหน้า'' (Pre-turn / Buffered Input) โดยบันทึกทิศทางล่าสุดที่ผู้เล่นต้องการลงในตัวแปร \texttt{want} (และ \texttt{want\_valid}) เมื่อสไลม์เคลื่อนที่มาอยู่ตรงตำแหน่งกึ่งกลางช่องพอดี (\texttt{p\_aligned}: \texttt{px[4:0] == 0} และ \texttt{py[4:0] == 0}) ระบบจึงจะตรวจสอบกับแผนที่ \texttt{maze\_rom} ว่าช่องถัดไปในทิศ \texttt{want} ไม่ใช่กำแพง หากเดินได้จะเลี้ยวทันทีเพื่อป้องกันไม่ให้สไลม์เดินชนทะลุขอบกำแพง อย่างไรก็ตาม หากผู้เล่นกดปุ่มทิศทางตรงข้ามกับทิศที่กำลังเดินอยู่ ($\texttt{want} == \texttt{pdir} \oplus \texttt{2'd1}$) ระบบอนุญาตให้กลับหลังหันได้ทันทีแม้ยังอยู่ระหว่างช่อง เพื่อให้ตอบสนองการหลบหลีกผีได้อย่างคล่องตัว
+
+\paragraph{การเริ่มเกม การหยุดชั่วคราว และการรีเซ็ต (Start, Pause \& Reset)}
+ปุ่ม \texttt{BTNC} ใช้สำหรับเริ่มเกมจากหน้าจอเริ่มต้น, หยุดเกมชั่วคราวหรือกลับมาเล่นต่อระหว่างเกม (Pause/Resume) และกลับสู่หน้าจอเริ่มต้นหลังจบเกมหรือชนะเกม ส่วนปุ่ม \texttt{CPU\_RESETN} เป็นปุ่มรีเซ็ตฮาร์ดแวร์สำหรับเริ่มระบบใหม่ทั้งหมดได้ทุกเมื่อ
+
+\subsubsection{ระบบการวิวัฒนาการของสไลม์ (Evolution \& King Mode)}
+
+ตัวละครสไลม์มีทั้งหมด 3 ร่าง ซึ่งมีความสามารถและภาพสไปรต์แตกต่างกัน (6 ท่าทางต่อร่าง ได้แก่ \texttt{idle}, \texttt{left}, \texttt{right}, \texttt{died}, \texttt{down}, \texttt{up})
+
+\paragraph{ร่างที่ 1 (Form 1: Small Slime)}
+เป็นร่างเริ่มต้นของเกม (\texttt{form = 2'd1}) มีขนาดเล็ก เดินด้วยความเร็ว 2 พิกเซลต่อเฟรม หน้าที่ของผู้เล่นในร่างนี้คือเดินเก็บเม็ดคะแนน (+10 คะแนนต่อเม็ด) และหลบหลีกผีทั้ง 4 ตัว เมื่อเก็บเม็ดคะแนนครบ \texttt{N\_EVOLVE = 30} เม็ด สไลม์จะวิวัฒนาการเป็นร่างที่ 2 โดยอัตโนมัติ
+
+\paragraph{ร่างที่ 2 (Form 2: Big Slime)}
+เมื่อเข้าสู่ร่างที่ 2 (\texttt{form = 2'd2}) ขนาดและรูปลักษณ์ของสไลม์จะโตขึ้น พร้อมทั้งปลดล็อกให้ไอเทมมงกุฎ (Crown) ปรากฏขึ้นบนแผนที่เพื่อรอให้ผู้เล่นเดินไปเก็บและเข้าสู่โหมดราชา
+
+\paragraph{ร่างที่ 3 (Form 3: King Mode)}
+เมื่อเดินไปชนมงกุฎในร่างที่ 2 สไลม์จะสวมมงกุฎเข้าสู่โหมดราชา (\texttt{form = 2'd3}) เป็นเวลา \texttt{KING\_SECONDS = 10} วินาที ในโหมดนี้สไลม์จะเดินเร็วขึ้นเป็น 2 เท่า (4 พิกเซลต่อเฟรม หรือ 240 พิกเซลต่อวินาที) และสามารถชนเพื่อ ``กินผี'' ได้โดยรับโบนัส +200 คะแนนต่อผี 1 ตัว ในช่วง 2 วินาทีสุดท้ายของโหมดราชา ($\texttt{ksec} \le 2$) สไปรต์สไลม์ ผีตอนกลัว และไอคอนมงกุฎจะกะพริบเตือนผู้เล่น ก่อนจะกลับคืนสู่ร่างที่ 2 เมื่อหมดเวลา
+
+\subsubsection{ระบบศัตรูและไอเทมภายในเขาวงกต (Enemies \& Items)}
+
+\paragraph{พฤติกรรมของผีทั้ง 4 ตัว (Ghost AI)}
+ภายในเขาวงกตมีผีทั้งหมด 4 ตัว (\texttt{ghost\_0} ถึง \texttt{ghost\_3}) เริ่มต้นที่พิกัดช่อง (1,1), (18,1), (10,3) และ (18,13) ตามลำดับ ผีทุกตัวเคลื่อนที่ด้วยความเร็วคงที่ 2 พิกเซลต่อเฟรม เมื่อเดินมาถึงกึ่งกลางช่อง (\texttt{gx[4:0] == 0} และ \texttt{gy[4:0] == 0}) วงจรตัดสินใจของผีแต่ละตัวจะตรวจสอบกำแพงทั้ง 4 ด้านรอบตัวผ่าน \texttt{maze\_rom} และห้ามกลับหลังหันในทางแยก (เว้นแต่เป็นทางตันจริงๆ) จากนั้นเลือกทิศทางเดินตามบุคลิกที่แตกต่างกันดังนี้
+\begin{itemize}[leftmargin=1.5cm]
+    \item \textbf{ผีตัวที่ 0 (\texttt{ghost\_0}):} โหมดไล่ล่าตลอดเวลา (Always Chase) โดยคำนวณระยะห่างแกน $X$ และแกน $Y$ เทียบกับตำแหน่งสไลม์ (\texttt{ptx}, \texttt{pty}) เพื่อเลือกเดินเข้าหาสไลม์ในแกนที่ห่างกว่าก่อน
+    \item \textbf{ผีตัวที่ 1 และ 3 (\texttt{ghost\_1}, \texttt{ghost\_3}):} สลับระหว่างโหมดไล่ล่าและโหมดสุ่มอย่างละครึ่ง (50\% Chase / 50\% Random) โดยอ้างอิงบิตสุ่มจาก LFSR (\texttt{lfsr[12]} และ \texttt{lfsr[3]})
+    \item \textbf{ผีตัวที่ 2 (\texttt{ghost\_2}):} โหมดเดินสุ่มตลอดเวลา (Always Random) โดยใช้ค่าสุ่ม 2 บิตจาก LFSR เลือกลำดับทิศทางเริ่มต้น
+\end{itemize}
+เมื่อสไลม์เข้าสู่ร่างที่ 3 (King Mode / \texttt{fright == 1}) ผีทุกตัวที่ยังมีชีวิตจะเปลี่ยนรูปเป็นสไปรต์ตอนหวาดกลัว (\texttt{ghost\_scared}) และกลับทิศทางการตัดสินใจจาก ``เข้าหาสไลม์'' เป็น ``วิ่งหนีออกจากสไลม์'' แทน
+
+\paragraph{เม็ดคะแนน (Pellets) และมงกุฎ (Crown)}
+ทางเดินทุกช่องที่ไม่ใช่กำแพงจะเริ่มต้นด้วยการมีเม็ดคะแนน (เก็บสถานะในเรจิสเตอร์ \texttt{pellet[299:0]}) เมื่อสไลม์เดินตรงช่องที่มีเม็ดอยู่จะเก็บเม็ดนั้นและได้รับ +10 คะแนน พร้อมเพิ่มตัวนับจำนวนเม็ดที่กินไปแล้ว (\texttt{pcount}) สำหรับมงกุฎจะปรากฏขึ้นเมื่อสไลม์อยู่ในร่างที่ 2 โดยหมุนเวียนตามมุมทั้ง 4 ของเขาวงกตตามลำดับตัวนับ \texttt{cidx} (2 บิต) ได้แก่ (1,13) $\rightarrow$ (18,1) $\rightarrow$ (1,1) $\rightarrow$ (18,13) สไปรต์ของมงกุฎมีแอนิเมชันเคลื่อนไหว 3 เฟรม (\texttt{king0}, \texttt{king1}, \texttt{king2}) เล่นวนที่ความเร็วประมาณ 8 เฟรมต่อวินาที และหลังจากจบโหมดราชา มงกุฎจะหน่วงเวลา \texttt{CROWN\_DELAY = 180} เฟรม (3 วินาที) ก่อนปรากฏขึ้นใหม่ในตำแหน่งถัดไป
+
+\subsubsection{ระบบคะแนน พลังชีวิต และเงื่อนไขการแพ้ชนะ (Scoring, Lives \& Win/Loss)}
+
+ระบบตรวจสอบการชนระหว่างสไลม์กับผีแต่ละตัวที่ยังมีชีวิตอยู่ด้วยระยะห่างแกน $X$ และแกน $Y$ น้อยกว่า 20 พิกเซล ($|px - gx| < 20$ และ $|py - gy| < 20$ หมายถึงสไปรต์ขนาด $32\times32$ ซ้อนทับกันมากกว่า 12 พิกเซล) โดยมีคะแนนสูงสุดสะสมในระบบ BCD 4 หลักที่ 9990 คะแนน และมีเงื่อนไขแพ้ชนะดังนี้
+\begin{itemize}[leftmargin=1.5cm]
+    \item \textbf{การสูญเสียชีวิตและแพ้ (Lose):} หากชนผีขณะอยู่ในร่างที่ 1 หรือร่างที่ 2 ชีวิตจะลดลง 1 ดวง (เริ่มเกมด้วย 3 ชีวิต) และเกมจะหยุดค้างชั่วคราวในสถานะ \texttt{S\_DEAD} นาน 90 เฟรม (1.5 วินาที) โดยแสดงท่าตายก่อนรีเซ็ตตำแหน่งสไลม์และผีเพื่อเล่นต่อ หากชีวิตลดลงเหลือ 0 ดวง จะเข้าสู่สถานะ \texttt{S\_OVER} (GAME OVER)
+    \item \textbf{เงื่อนไขการชนะ (Win):} หากสไลม์ในโหมดราชาสามารถกินผีได้ครบทั้ง 4 ตัว (\texttt{galive == 4'b0000}) เกมจะเข้าสู่สถานะ \texttt{S\_WIN} (YOU WIN) ทันที
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \begin{tabular}{@{}cccccc@{}}
+        \smartimage{1.15cm}{slime1_idle.png}{1.15cm}{slime1\_idle} &
+        \smartimage{1.15cm}{slime1_up.png}{1.15cm}{slime1\_up} &
+        \smartimage{1.15cm}{slime1_down.png}{1.15cm}{slime1\_down} &
+        \smartimage{1.15cm}{slime1_left.png}{1.15cm}{slime1\_left} &
+        \smartimage{1.15cm}{slime1_right.png}{1.15cm}{slime1\_right} &
+        \smartimage{1.15cm}{slime1_died.png}{1.15cm}{slime1\_died} \\
+        \small\texttt{slime1\_idle} & \small\texttt{slime1\_up} & \small\texttt{slime1\_down} & \small\texttt{slime1\_left} & \small\texttt{slime1\_right} & \small\texttt{slime1\_died} \\[0.6em]
+        \smartimage{1.15cm}{slime2_idle.png}{1.15cm}{slime2\_idle} &
+        \smartimage{1.15cm}{slime2_up.png}{1.15cm}{slime2\_up} &
+        \smartimage{1.15cm}{slime2_down.png}{1.15cm}{slime2\_down} &
+        \smartimage{1.15cm}{slime2_left.png}{1.15cm}{slime2\_left} &
+        \smartimage{1.15cm}{slime2_right.png}{1.15cm}{slime2\_right} &
+        \smartimage{1.15cm}{slime2_died.png}{1.15cm}{slime2\_died} \\
+        \small\texttt{slime2\_idle} & \small\texttt{slime2\_up} & \small\texttt{slime2\_down} & \small\texttt{slime2\_left} & \small\texttt{slime2\_right} & \small\texttt{slime2\_died} \\[0.6em]
+        \smartimage{1.15cm}{slime3_idle.png}{1.15cm}{slime3\_idle} &
+        \smartimage{1.15cm}{slime3_up.png}{1.15cm}{slime3\_up} &
+        \smartimage{1.15cm}{slime3_down.png}{1.15cm}{slime3\_down} &
+        \smartimage{1.15cm}{slime3_left.png}{1.15cm}{slime3\_left} &
+        \smartimage{1.15cm}{slime3_right.png}{1.15cm}{slime3\_right} &
+        \smartimage{1.15cm}{slime3_died.png}{1.15cm}{slime3\_died} \\
+        \small\texttt{slime3\_idle} & \small\texttt{slime3\_up} & \small\texttt{slime3\_down} & \small\texttt{slime3\_left} & \small\texttt{slime3\_right} & \small\texttt{slime3\_died} \\[0.6em]
+        \smartimage{1.15cm}{ghost_0.png}{1.15cm}{ghost\_0} &
+        \smartimage{1.15cm}{ghost_1.png}{1.15cm}{ghost\_1} &
+        \smartimage{1.15cm}{ghost_2.png}{1.15cm}{ghost\_2} &
+        \smartimage{1.15cm}{ghost_3.png}{1.15cm}{ghost\_3} &
+        \smartimage{1.15cm}{ghost_scared.png}{1.15cm}{ghost\_scared} &
+        \smartimage{1.15cm}{ball.png}{1.15cm}{ball} \\
+        \small\texttt{ghost\_0} & \small\texttt{ghost\_1} & \small\texttt{ghost\_2} & \small\texttt{ghost\_3} & \small\texttt{ghost\_scared} & \small\texttt{ball} \\[0.6em]
+        \smartimage{1.15cm}{king0.png}{1.15cm}{king0} &
+        \smartimage{1.15cm}{king1.png}{1.15cm}{king1} &
+        \smartimage{1.15cm}{king2.png}{1.15cm}{king2} &
+        \smartimage{1.15cm}{kingmode.png}{1.15cm}{kingmode} &
+        \smartimage{0.85cm}{life_alive.png}{0.85cm}{life\_alive} &
+        \smartimage{0.85cm}{life_died.png}{0.85cm}{life\_died} \\
+        \small\texttt{king0} & \small\texttt{king1} & \small\texttt{king2} & \small\texttt{kingmode} & \small\texttt{life\_alive} & \small\texttt{life\_died} \\
+    \end{tabular}
+    \caption{ดีไซน์สไปรต์ของตัวละครสไลม์ 3 ร่าง, ผีทั้ง 4 ตัว, ผีตอนกลัว, มงกุฎ, เม็ด และไอคอน HUD ทั้ง 30 ภาพ}
+    \label{fig:sprites}
+\end{figure}
+
+\subsection{ระบบภาพรวมการทำงาน (System Overview)}
+
+\subsubsection{สถาปัตยกรรมระดับบนสุด (\texttt{slime\_top.v})}
+
+โมดูล \texttt{slime\_top.v} ทำหน้าที่เชื่อมต่อระบบทั้งหมดบนบอร์ด Nexys A7-100T ตั้งแต่การรับสัญญาณนาฬิกา 100 MHz เข้าสู่ \texttt{clk\_gen}, การซิงโครไนซ์ปุ่มกดและรีเซ็ต, การสร้างพิกัดและสัญญาณจังหวะจาก \texttt{vga\_sync}, การประมวลผลเกมใน \texttt{slime\_logic}, การสร้างสีพิกเซลใน \texttt{slime\_draw} ไปจนถึงการส่งออก Output Register ไปยังพอร์ต VGA, ไฟ LED และตัวขับ 7-Segment (\texttt{seg7x8}) ดังแสดงในรูปที่ \ref{fig:block_diagram}
+
+% NOTE: แผนภาพต้นแบบ slime_maze_block_diagram.png ใน ./myVerilog/ ยังระบุข้อความรุ่น 3 ghosts (เช่น "Ghost AI x3", "x14", "gx_flat[29:0]")
+% ควรแก้ไขใน slime_maze_block_diagram.dot เป็น 4 ghosts ("Ghost AI x4", "x18", "gx_flat[39:0]", "galive[3:0]", "touch[3:0]") แล้ว render ใหม่
+\begin{figure}[H]
+    \centering
+    \smartimage{0.98\textwidth}{slime_maze_block_diagram.png}{5.5cm}{แผนภาพสถาปัตยกรรมภายในและการเชื่อมต่อสัญญาณระหว่างโมดูลทั้งหมดของเกมเอนจิน}
+    \caption{แผนภาพสถาปัตยกรรมภายในและการเชื่อมต่อสัญญาณระหว่างโมดูลของเกม SLIME MAZE}
+    \label{fig:block_diagram}
+\end{figure}
+
+\subsubsection{สถานะการทำงานของเกม (Game FSM ใน \texttt{slime\_logic.v})}
+
+การทำงานของเกมถูกควบคุมด้วยเครื่องสถานะจำกัดแบบ Moore (Moore FSM) จำนวน 2 ชุดทำงานควบคู่กันภายในโมดูล \texttt{slime\_logic.v} คือ Game FSM (\texttt{state[2:0]}) และ Evolution FSM (\texttt{form[1:0]}) ดังแสดงในรูปที่ \ref{fig:fsm}
+
+\begin{figure}[H]
+    \centering
+    \smartimage{0.92\textwidth}{slime_maze_fsm.png}{5.0cm}{แผนภาพ Finite State Machine แสดง Game FSM (6 สถานะ) และ Evolution FSM (3 ร่าง)}
+    \caption{แผนภาพ Finite State Machine (Game FSM และ Evolution FSM) ใน \texttt{slime\_logic.v}}
+    \label{fig:fsm}
+\end{figure}
+
+\paragraph{Title State (\texttt{S\_TITLE = 3'd0})}
+สถานะหน้าจอเริ่มต้น แสดงแผนที่เขาวงกตพร้อมข้อความ ``SLIME MAZE'' และข้อความกะพริบ ``PRESS BTNC'' เมื่อผู้เล่นกดปุ่ม \texttt{BTNC} ระบบจะรีเซ็ตคะแนน, พลังชีวิต (= 3), ร่าง (= 1), เม็ดคะแนนทั้งหมด, ผีทั้ง 4 ตัว และเข้าสู่สถานะ \texttt{S\_PLAY}
+
+\paragraph{Play State (\texttt{S\_PLAY = 3'd1})}
+สถานะหลักของการเล่นเกม ระบบประมวลผลการเดินของสไลม์และผี, การเก็บเม็ด, การเกิดและเก็บมงกุฎ, การนับเวลา King Mode, การตรวจจับการชน และการสะสมคะแนน หากกด \texttt{BTNC} จะเปลี่ยนไป \texttt{S\_PAUSE}, หากชนผีขณะไม่ได้เป็นร่าง 3 จะเปลี่ยนไป \texttt{S\_DEAD} และหากกินผีครบ 4 ตัวจะเปลี่ยนไป \texttt{S\_WIN}
+
+\paragraph{Pause State (\texttt{S\_PAUSE = 3'd2})}
+สถานะหยุดเกมชั่วคราวเมื่อกด \texttt{BTNC} ระหว่างเล่น ตำแหน่งวัตถุและตัวนับเวลาทุกอย่างจะถูกหยุดนิ่ง พร้อมแสดงกรอบข้อความ ``PAUSE'' บนหน้าจอ เมื่อกดปุ่ม \texttt{BTNC} อีกครั้งจะกลับสู่ \texttt{S\_PLAY}
+
+\paragraph{Dead State (\texttt{S\_DEAD = 3'd3})}
+สถานะหน่วงเวลาหลังสไลม์ถูกผีจับได้ (Freeze Frame 90 เฟรม หรือ 1.5 วินาที) เพื่อแสดงท่าทางสไลม์ตาย (\texttt{pose = 3}) เมื่อครบเวลาหากยังมีชีวิตเหลือ ($\texttt{lives} > 0$) จะรีเซ็ตตำแหน่งสไลม์และผีกลับจุดเริ่มต้นแล้วเข้าสู่ \texttt{S\_PLAY} แต่หาก $\texttt{lives} == 0$ จะเข้าสู่ \texttt{S\_OVER}
+
+\paragraph{Win State (\texttt{S\_WIN = 3'd4})}
+สถานะชนะเกม เกิดขึ้นเมื่อกินผีครบทั้ง 4 ตัว หน้าจอแสดงข้อความสีเขียว ``YOU WIN'' และ ``PRESS BTNC'' กด \texttt{BTNC} เพื่อกลับสู่หน้าจอ \texttt{S\_TITLE}
+
+\paragraph{Game Over State (\texttt{S\_OVER = 3'd5})}
+สถานะจบเกม เกิดขึ้นเมื่อพลังชีวิตหมด หน้าจอแสดงข้อความสีแดง ``GAME OVER'' และ ``PRESS BTNC'' กด \texttt{BTNC} เพื่อกลับสู่หน้าจอ \texttt{S\_TITLE}
+
+นอกจากนี้ยังมี \textbf{Evolution FSM (\texttt{form[1:0]})} ที่ทำงานภายในสถานะ \texttt{S\_PLAY} เพื่อเปลี่ยนจากร่าง 1 $\rightarrow$ ร่าง 2 เมื่อเก็บเม็ดครบ 30 เม็ด, เปลี่ยนจากร่าง 2 $\rightarrow$ ร่าง 3 เมื่อเก็บมงกุฎ (\texttt{crown\_hit}) และกลับจากร่าง 3 $\rightarrow$ ร่าง 2 เมื่อนับถอยหลัง 10 วินาทีครบกำหนด
+
+\subsection{ระบบฮาร์ดแวร์และสัญญาณควบคุม (Hardware System)}
+
+\subsubsection{สัญญาณนาฬิกาและวงจรรีเซ็ต (\texttt{clk\_gen.v} และ Reset Sync)}
+
+โมดูล \texttt{clk\_gen.v} ใช้วงจร Mixed-Mode Clock Manager (\texttt{MMCME2\_BASE}) บนชิป Artix-7 รับสัญญาณนาฬิกา 100 MHz (คาบ 10 ns) ทำการคูณความถี่ VCO เป็น $100 \times 8 = 800\text{ MHz}$ แล้วหารด้วย 32 เพื่อสร้างสัญญาณนาฬิกาพิกเซล 25 MHz ที่เที่ยงตรง ส่งผ่านบัฟเฟอร์ \texttt{BUFG} ไปยังทุกโมดูล สำหรับสัญญาณรีเซ็ตใช้สัญญาณ \texttt{\textasciitilde{}(locked \& CPU\_RESETN)} ผ่านวงจร 2-Flip-Flop Synchronizer (\texttt{rst\_1}, \texttt{rst}) บนสัญญาณนาฬิกา 25 MHz เพื่อให้การรีเซ็ตเป็นแบบ Synchronous Active-High และป้องกันปัญหารีเซ็ตไม่พร้อมกันระหว่างช่วง MMCM กำลังล็อกความถี่
+
+\subsubsection{การซิงโครไนซ์ปุ่มกด (2-FF Button Synchronizer)}
+
+สัญญาณจากปุ่มกดทั้ง 5 ปุ่ม (\texttt{BTNC}, \texttt{BTNR}, \texttt{BTNL}, \texttt{BTND}, \texttt{BTNU}) เป็นสัญญาณ Asynchronous จากภายนอกชิป จึงถูกส่งผ่านวงจร 2-Flip-Flop Synchronizer (\texttt{btn\_1}, \texttt{btn}) ใน \texttt{slime\_top.v} เพื่อป้องกันปัญหา Metastability ก่อนส่งต่อเข้าสู่ \texttt{slime\_logic.v} นอกจากนี้ สำหรับปุ่ม \texttt{BTNC} ที่ทำหน้าที่สลับสถานะ Start/Pause ซึ่งไวต่อการกดซ้ำจากการกระเด้งเชิงกลของหน้าสัมผัส (Switch Bounce) ได้ออกแบบให้ตรวจจับขอบขาขึ้นเฉพาะที่จังหวะสัญญาณ \texttt{tick} ความถี่ 60 Hz (ทุกๆ $\approx 16.67\text{ ms}$) ผ่านเงื่อนไข \texttt{wire start\_press = tick \&\& btn\_c \&\& !btnc\_q;} ซึ่งทำหน้าที่เป็นทั้งตัวกรอง Bounce (Debouncing) และ Edge Detector ในตัวเดียวกัน ส่วนปุ่มทิศทางทั้ง 4 ปุ่มจะถูกเก็บผ่าน Priority Encoder ลงในเรจิสเตอร์ \texttt{want} อย่างปลอดภัย
+
+\subsubsection{การสร้างสัญญาณภาพ VGA (\texttt{vga\_sync.v} และ Output Register)}
+
+โมดูล \texttt{vga\_sync.v} ใช้ตัวนับแนวนอน \texttt{x} (MOD-800: 0..799) และแนวตั้ง \texttt{y} (MOD-525: 0..524) ในการสร้างสัญญาณ \texttt{hsync}, \texttt{vsync} และ \texttt{video\_on} ตามมาตรฐาน $640\times480$ @ 60 Hz จุดเด่นของการเชื่อมต่อระหว่าง \texttt{vga\_sync} และตรรกะเกมใน \texttt{slime\_top.v} คือการสร้างสัญญาณ Tick 2 จังหวะภายในช่วง Vertical Blanking (หลังวาดเส้นที่ 479 เสร็จสิ้นแล้ว):
+\begin{itemize}[leftmargin=1.5cm]
+    \item \texttt{tick = (x == 10'd0) \&\& (y == 10'd480)} : เกิดขึ้น 1 รอบสัญญาณนาฬิกาต่อเฟรม (60 Hz) ใช้ขับเคลื่อนการเดินของสไลม์และผี, ตัวนับเวลา และแอนิเมชันทั้งหมด
+    \item \texttt{tick2 = (x == 10'd0) \&\& (y == 10'd500)} : เกิดขึ้นอีกครั้งในช่วง Blanking ใช้เป็นก้าวเดินเสริมเฉพาะเมื่อสไลม์อยู่ในร่างที่ 3 (\texttt{ptick = tick || (tick2 \&\& form == 2'd3)}) ทำให้สไลม์เดิน 2 ก้าว (4 พิกเซล) ต่อเฟรมโดยไม่เกิดภาพฉีกขาดขณะกำลังสแกนจอภาพ
+\end{itemize}
+จากนั้นผลลัพธ์สี \texttt{rgb} จากโมดูล \texttt{slime\_draw} จะถูกส่งผ่าน Output Register 1 ขั้นที่ขอบขาขึ้นของ \texttt{clk} (พร้อมกับ \texttt{hsync} และ \texttt{vsync}) และบังคับให้เป็นสีดำ \texttt{12'h000} เมื่อ \texttt{video\_on == 0} เพื่อลดสัญญาณรบกวน (Glitch) ก่อนส่งออกขา VGA ดังตัวอย่างโค้ดด้านล่าง
+
+\begin{lstlisting}[language=Verilog, caption={การสร้างสัญญาณ tick/tick2 และ Output Register ภายใน slime\_top.v}]
+// game ticks : once per frame during vertical blanking
+wire tick  = (x == 10'd0) && (y == 10'd480);
+wire tick2 = (x == 10'd0) && (y == 10'd500);
+
+// output registers : black outside the picture
+always @(posedge clk) begin
+    {VGA_R, VGA_G, VGA_B} <= video_on ? rgb : 12'h000;
+    VGA_HS <= hsync;
+    VGA_VS <= vsync;
+end
+\end{lstlisting}
+
+% [INSERT PICTURE: vivado_waveform.png — รูปคลื่นสัญญาณจำลองจาก Vivado Simulator]
+\begin{figure}[H]
+    \centering
+    \smartimage{0.92\textwidth}{vivado_waveform.png}{3.8cm}{ภาพ Timing Waveform จาก Vivado Simulator แสดงสัญญาณ VGA\_HS (Active-Low ช่วง x=656..751), VGA\_VS (Active-Low ช่วง y=490..491), video\_on และพัลส์ของ tick (y=480) กับ tick2 (y=500) ในช่วง Vertical Blanking}
+    \caption{รูปคลื่นสัญญาณจำลองของ \texttt{VGA\_HS}, \texttt{VGA\_VS}, \texttt{video\_on}, \texttt{tick} และ \texttt{tick2}}
+\end{figure}
+
+\subsubsection{การแสดงผลบน 7-Segment 8 หลัก (\texttt{seg7x8.v}) และ LEDs}
+
+โมดูล \texttt{seg7x8.v} ใช้ตัวนับ 17 บิต (\texttt{cnt}) ที่ความถี่ 25 MHz โดยนำบิตบนสุด 3 บิต (\texttt{cnt[16:14]}) มาเลือกเปิดแสดงผลทีละ 1 หลักจากทั้งหมด 8 หลัก (สลับหลักด้วยความถี่ประมาณ 1.5 kHz และรีเฟรชครบทุกหลัก $\approx 190\text{ Hz}$ ทำให้สายตามองเห็นติดพร้อมกันโดยไม่กะพริบ) ผ่าน 8-to-1 Multiplexer, 3-to-8 Active-Low Decoder (กำหนดขั้ว \texttt{AN[7:0]} ตามบิต \texttt{blank}) และ BCD-to-7-Segment Decoder (กำหนดสัญญาณ \texttt{SEG[6:0]} แบบ Active-Low) ส่วนไฟ LED ทั้ง 16 ดวงเชื่อมต่อตรงแบบ Combinational Logic จากค่า \texttt{lives} (\texttt{LD2}--\texttt{LD0}) และ \texttt{ksec} (\texttt{LD15}--\texttt{LD6})
+
+\subsection{ระบบตรรกะเกม (Game Logic System — \texttt{slime\_logic.v})}
+
+\subsubsection{การสร้างตัวเลขสุ่มด้วย 16-bit LFSR}
+
+โมดูล \texttt{slime\_logic.v} สร้างเลขสุ่มเทียมด้วยวงจร 16-bit Linear Feedback Shift Register (LFSR) ที่ตั้งค่าเริ่มต้น \texttt{16'hACE1} และป้อนกลับด้วยสมการ XOR (\texttt{lfsr[15] \textasciicircum{} lfsr[13] \textasciicircum{} lfsr[12] \textasciicircum{} lfsr[10]}) ในทุกขอบขาขึ้นของ \texttt{clk} ค่าจาก LFSR นี้ถูกนำไปใช้ตัดสินใจเลือกโหมดการเดินและทิศทางสุ่มของผี (\texttt{ghost\_1}, \texttt{ghost\_2}, \texttt{ghost\_3}) ทำให้พฤติกรรมของผีไม่ซ้ำซาก ส่วนตำแหน่งเกิดของมงกุฎจะหมุนเวียนสลับไปตามมุมทั้ง 4 ของแผนที่อย่างเป็นระบบด้วยตัวนับ \texttt{cidx} (2 บิต)
+
+\subsubsection{การเดินบนตารางและการตรวจกำแพง (Tile Alignment \& \texttt{maze\_rom})}
+
+ตำแหน่งของสไลม์และผีทุกตัวเก็บในหน่วยพิกเซล (\texttt{px}, \texttt{py}, \texttt{gx}, \texttt{gy}) ซึ่งเป็นพิกัดมุมซ้ายบนของสไปรต์ขนาด $32\times32$ โดยแปลงเป็นตำแหน่งช่องบนกริดด้วยบิตบน (\texttt{ptx = px[9:5]}, \texttt{pty = py[8:5]}) ภายใน \texttt{slime\_logic.v} เรียกใช้ \texttt{maze\_rom} รวม 18 ชุด (2 ชุดผ่านฟังก์ชัน \texttt{next\_tx}/\texttt{next\_ty} สำหรับผู้เล่น และ 16 ชุดสำหรับตรวจสอบกำแพง 4 ด้านรอบตัวผีทั้ง 4 ตัว) โดยอนุญาตให้เลี้ยวที่ทางแยกได้เฉพาะเมื่อตัวละครอยู่ตรงกึ่งกลางช่อง (\texttt{p\_aligned}) เท่านั้น
+
+\subsubsection{ระบบคะแนนแบบ BCD (\texttt{bcd\_add10}) และตัวจับเวลา King Mode}
+
+เพื่อให้แสดงคะแนนบนจอ 7-Segment ได้โดยตรงโดยไม่ต้องมีวงจรหารแปลงเลขฐาน ระบบเก็บคะแนนในรูปแบบ BCD 4 หลัก (\texttt{score[15:0]}) และใช้คิวรอเพิ่มคะแนน \texttt{pend[6:0]} (หน่วยละ 10 คะแนน) ร่วมกับฟังก์ชัน \texttt{bcd\_add10} เพื่อทยอยบวกคะแนนทีละ 10 ต่อ 1 รอบสัญญาณนาฬิกา 25 MHz (เช่น เมื่อกินผีได้ +200 คะแนน จะส่งค่า 20 เข้าคิว \texttt{pend} และบวกเสร็จสิ้นภายใน 20 รอบนาฬิกา หรือ 0.8 ไมโครวินาที) ส่วนตัวจับเวลาของโหมดราชาใช้ตัวนับเฟรม \texttt{kframe} นับครบ 60 เฟรม (0..59) เพื่อลดค่า \texttt{ksec} ลงทีละ 1 วินาที จนหมดเวลา 10 วินาที
+
+\subsubsection{การตรวจจับการชน (Collision Detection)}
+
+การชนระหว่างสไลม์กับผีตรวจสอบแบบ Bounding-Box Overlap โดยคำนวณผลต่างพิกัดสัมบูรณ์ทั้งแกน $X$ และแกน $Y$ (\texttt{ddx < 20 \&\& ddy < 20}) การเก็บเม็ดคะแนนตรวจสอบเมื่อ \texttt{p\_aligned \&\& pellet[pidx]} และการเก็บมงกุฎตรวจสอบจากจุดกึ่งกลางตัวสไลม์ (\texttt{px + 16}, \texttt{py + 16}) เทียบกับช่องของมงกุฎ (\texttt{crown\_tx}, \texttt{crown\_ty})
+
+\subsection{ระบบกราฟิกและการจัดการหน่วยความจำ (Graphic System)}
+
+\subsubsection{แผนที่เขาวงกตและฟอนต์ (\texttt{slime\_roms.v})}
+
+ไฟล์ \texttt{slime\_roms.v} ประกอบด้วยโมดูล ROM แบบ Combinational ได้แก่ \texttt{maze\_rom} เก็บแผนที่เขาวงกตขนาด $20\times15$ ช่อง (ค่า 1 = กำแพง, 0 = ทางเดิน), \texttt{font\_rom} เก็บตัวอักษรภาษาอังกฤษตัวพิมพ์ใหญ่ขนาด $5\times7$ พิกเซล จำนวน 19 ตัวอักษร (สำหรับคำว่า \texttt{SLIME MAZE}, \texttt{PAUSE}, \texttt{YOU WIN}, \texttt{GAME OVER} และ \texttt{PRESS BTNC}) และ \texttt{sprite\_rom} (โครงสร้างสไปรต์ขาว-ดำขนาด $16\times16$ ต้นแบบก่อนอัปเกรดเป็นสไปรต์สีเต็มรูปแบบใน \texttt{slime\_art.v})
+
+\subsubsection{ระบบสไปรต์และพาเลตสี (\texttt{gen\_art.py} และ \texttt{slime\_art.v})}
+
+เพื่อความสะดวกในการปรับแก้กราฟิกและประหยัดทรัพยากร LUT บน FPGA สคริปต์ Python \texttt{gen\_art.py} จะอ่านไฟล์ PNG ทั้ง 30 ภาพจากโฟลเดอร์ \texttt{art/} แล้ว Quantize สีเป็น RGB 12-bit แบ่งออกเป็น 2 พาเลตแยกกัน (รหัสสี \texttt{0} ใช้เป็นสีโปร่งใส) และตัดแถวที่โปร่งใสทั้งหมดออกจากเคสของ ROM ดังสรุปในตารางที่ \ref{tab:palettes}
+
+\begin{table}[H]
+    \centering
+    \caption{สรุปโครงสร้างโมดูลสไปรต์และพาเลตสีใน \texttt{slime\_art.v}}
+    \label{tab:palettes}
+    \begin{tabularx}{\textwidth}{@{}l c c L@{}}
+        \toprule
+        \textbf{พาเลตสี} & \textbf{บิต/พิกเซล} & \textbf{จำนวนสีที่ใช้} & \textbf{โมดูล ROM และสไปรต์ที่ใช้งาน} \\
+        \midrule
+        \texttt{art\_palette} & 5-bit & 17 จาก 31 สี &
+        \texttt{art\_slime} (3 ร่าง $\times$ 6 ท่า), \texttt{art\_crown} (3 เฟรม), \texttt{art\_ball} (เม็ดคะแนน), \texttt{art\_icon} (ไอคอนคิงโหมด), \texttt{art\_life} ($8\times8$ ชีวิต 2 สถานะ) \\
+        \addlinespace[0.3em]
+        \texttt{ghost\_palette} & 4-bit & 6 จาก 15 สี &
+        \texttt{art\_ghost} (\texttt{ghost\_0} ถึง \texttt{ghost\_3} และ \texttt{ghost\_scared}) \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+\subsubsection{การวาดภาพแบบ Priority Multiplexer (\texttt{slime\_draw.v})}
+
+โมดูล \texttt{slime\_draw.v} ทำหน้าที่เป็น Combinational Pixel Generator ที่รับพิกัด $(x, y)$ และสถานะเกมมาคำนวณสี 12-bit \texttt{rgb} ทันภายใน 1 รอบสัญญาณนาฬิกา (40 ns ที่ 25 MHz) โดย:
+\begin{itemize}[leftmargin=1.5cm]
+    \item แยกพิกัดช่อง \texttt{tx = x[9:5]}, \texttt{ty = y[8:5]} และพิกัดภายในช่อง \texttt{fx = x[4:0]}, \texttt{fy = y[4:0]} พร้อมเรียก \texttt{maze\_rom} 5 ชุดเพื่อวาดขอบกำแพง (\texttt{C\_EDGE = 12'hB96}), เนื้อกำแพง (\texttt{C\_WALL = 12'h321}) และพื้น (\texttt{C\_FLOOR = 12'h011})
+    \item วาดแถบ HUD บนกำแพงแถวบนสุด (\texttt{ty == 0}) ได้แก่ ไอคอนชีวิตขยาย 2 เท่าที่ช่อง 0--2 และไอคอนคิงโหมดที่ช่อง 19 รวมถึงขยายฟอนต์ $5\times7$ เป็นขนาด $8\times$ และ $4\times$ สำหรับข้อความกลางหน้าจอ (บรรทัดที่ 2 กะพริบด้วย \texttt{frame[4]})
+    \item จัดการแอนิเมชันมงกุฎ (\texttt{frame[4:3]}) และจังหวะกะพริบเตือนในช่วง 2 วินาทีสุดท้ายของโหมดราชา (\texttt{king\_ending = (ksec <= 4'd2) \&\& frame[3]})
+    \item จัดลำดับชั้นการซ้อนทับของภาพจากชั้นบนสุดลงสู่พื้นหลังด้วย Priority Multiplexer: \\
+    \textbf{Message Text $>$ Panel $>$ Slime $>$ Ghosts $>$ Crown $>$ Pellet $>$ HUD Icons $>$ Wall $>$ Floor}
+\end{itemize}
+
+\begin{lstlisting}[language=Verilog, caption={การคัดเลือกสีด้วย Priority Multiplexer และ Palette Lookup ใน slime\_draw.v}]
+wire [4:0]  art_ci = p_pix     ? p_ci     :
+                     crown_pix ? crown_ci :
+                     pellet_on ? ball_ci  : icon_ci;
+wire [11:0] art_rgb;
+art_palette u_pal (.ci(art_ci), .rgb(art_rgb));
+
+always @* begin
+    if      (text_pix)                    rgb = text_col;
+    else if (show_msg && in_panel)        rgb = 12'h000;
+    else if (p_pix)                       rgb = art_rgb;
+    else if (g_pix != 4'b0000)            rgb = ghost_rgb;
+    else if (crown_pix)                   rgb = art_rgb;
+    else if (pellet_on)                   rgb = art_rgb;
+    else if (icon_pix)                    rgb = art_rgb;
+    else if (wall)                        rgb = wall_edge ? C_EDGE : C_WALL;
+    else                                  rgb = C_FLOOR;
+end
+\end{lstlisting}
+
+\subsection{ระบบจำลองการทำงานบนคอมพิวเตอร์ (Simulation System — Verilator + SDL2)}
+
+เพื่อเพิ่มความรวดเร็วในการทดสอบระบบเกมและตรวจสอบความถูกต้องของกราฟิกโดยไม่ต้องรอกระบวนการ Synthesis บน Vivado ทุกครั้งที่แก้โค้ด คณะผู้จัดทำได้พัฒนาชุดจำลองในโฟลเดอร์ \texttt{sim/} โดยใช้ Verilator แปลงโค้ด Verilog ชุดเดียวกับที่ใช้บนบอร์ดจริงร่วมกับไลบรารี SDL2 แบ่งออกเป็น 2 โหมด ได้แก่
+
+\subsubsection{โหมดจำลอง 60 FPS (\texttt{fast\_top.v}, \texttt{sim\_fast.cpp})}
+
+สั่งงานผ่าน \texttt{make run} จำลองการทำงานของ \texttt{slime\_logic.v} และ \texttt{slime\_draw.v} ด้วยความเร็ว 60 เฟรมต่อวินาทีแบบเรียลไทม์ โดยโปรแกรม C++ จะจำลองการส่งสัญญาณ \texttt{tick} และ \texttt{tick2} (64 Clocks ต่อเฟรม) แทน \texttt{vga\_sync} และแสดงค่า \texttt{state}, \texttt{score}, \texttt{lives}, \texttt{form} และเวลา \texttt{ksec} บนแถบชื่อหน้าต่าง
+
+\subsubsection{โหมดจำลองสัญญาณ VGA (\texttt{sim\_top.v}, \texttt{sim\_main.cpp})}
+
+สั่งงานผ่าน \texttt{make run-exact} จำลองการทำงานของโมดูล \texttt{vga\_sync.v} ร่วมด้วยแบบครบ $800\times525$ Clock Cycles ต่อ 1 เฟรม เพื่อยืนยันความถูกต้องของจังหวะสัญญาณ VGA และตำแหน่งของ \texttt{tick}/\texttt{tick2} อย่างแม่นยำเสมือนการทำงานบนบอร์ดจริง
+
+% ============================================================================
+% บทที่ 6: ผลลัพธ์การทำงาน (จาก chapters/06_results.tex)
+% ============================================================================
+\clearpage
+\mainsection{ผลลัพธ์การทำงาน}
+
+จากการออกแบบ พัฒนา และทดสอบระบบเกม Slime Maze ทั้งในตัวจำลอง Verilator + SDL2 และการรันจริงบนบอร์ด Digilent Nexys A7-100T เชื่อมต่อออกทางจอมอนิเตอร์ VGA ได้ผลลัพธ์การทำงานครบถ้วนตามคุณสมบัติที่กำหนด ดังแสดงในตารางที่ \ref{tab:results}
+
+% [INSERT PICTURE: result_title.png, result_form1.png, result_form2_crown.png, result_king_mode.png, result_eat_ghost.png, result_pause.png, result_dead.png, result_win_over.png, result_board_hw.png]
+\begin{longtable}{@{}p{0.48\textwidth} >{\raggedright\arraybackslash}p{0.46\textwidth}@{}}
+    \caption{ผลลัพธ์การทำงานและการทดสอบระบบ}
+    \label{tab:results} \\
+    \toprule
+    \textbf{ภาพผลลัพธ์การทำงาน} & \textbf{คำอธิบาย} \\
+    \midrule
+    \endfirsthead
+
+    \multicolumn{2}{c}{\textit{(ต่อจากหน้าก่อน)}} \\
+    \toprule
+    \textbf{ภาพผลลัพธ์การทำงาน} & \textbf{คำอธิบาย} \\
+    \midrule
+    \endhead
+
+    \midrule
+    \multicolumn{2}{r}{\textit{(มีต่อหน้าถัดไป)}} \\
+    \bottomrule
+    \endfoot
+
+    \bottomrule
+    \endlastfoot
+
+    % --- แถวที่ 1: Title ---
+    \begin{minipage}[t]{\linewidth}
+        \centering
+        \smartimage{0.96\linewidth}{result_title.png}{3.2cm}{ภาพหน้าจอ VGA หรือจากตัวจำลองแสดงกรอบคำว่า ``SLIME MAZE'' สีเหลืองทอง และ ``PRESS BTNC'' กะพริบอยู่กลางเขาวงกต}
+        \tablefigcap{สาธิตการทำงานหน้าจอเริ่มต้น (\texttt{S\_TITLE})}
+    \end{minipage}
+    &
+    เมื่อจ่ายไฟและโปรแกรม Bitstream หรือกดปุ่ม \texttt{CPU\_RESETN} เกมจะเข้าสู่สถานะ \texttt{S\_TITLE} หน้าจอแสดงแผนที่เขาวงกต $20\times15$, เม็ดคะแนน, สไลม์ร่างที่ 1, ผีทั้ง 4 ตัว และกล่องข้อความ ``SLIME MAZE'' พร้อมคำสั่ง ``PRESS BTNC'' กะพริบเพื่อรอรับการกดปุ่มกลางเริ่มเกม \\
+    \midrule
+
+    % --- แถวที่ 2: Form 1 ---
+    \begin{minipage}[t]{\linewidth}
+        \centering
+        \smartimage{0.96\linewidth}{result_form1.png}{3.2cm}{ภาพขณะสไลม์ร่างที่ 1 กำลังเดินเก็บเม็ดในเขาวงกต มีเส้นทางที่เม็ดถูกกินไปแล้วบางส่วน และไอคอนชีวิต 3 ดวงมุมซ้ายบน}
+        \tablefigcap{สาธิตการทำงานขณะเล่นในร่างที่ 1 (Form 1)}
+    \end{minipage}
+    &
+    เมื่อกดปุ่ม \texttt{BTNC} เกมจะเข้าสู่สถานะ \texttt{S\_PLAY} ผู้เล่นควบคุมสไลม์ร่างที่ 1 เดินเก็บเม็ดคะแนน (+10 คะแนนต่อเม็ด) ด้วยปุ่ม \texttt{BTNU/D/L/R} โดยมีระบบกดเลี้ยวล่วงหน้า และหลบหลีกผีทั้ง 4 ตัว มุมซ้ายบนแสดงไอคอนชีวิต 3 ดวงเต็ม และ 7-Segment แสดงเลขร่าง ``1'' พร้อมคะแนนปัจจุบัน \\
+    \midrule
+
+    % --- แถวที่ 3: Form 2 + Crown ---
+    \begin{minipage}[t]{\linewidth}
+        \centering
+        \smartimage{0.96\linewidth}{result_form2_crown.png}{3.2cm}{ภาพขณะสไลม์เปลี่ยนเป็นร่างที่ 2 (Big Slime) และเห็นไอเทมมงกุฎปรากฏอยู่ที่มุมหนึ่งของเขาวงกต}
+        \tablefigcap{สาธิตการพัฒนาร่างเป็นร่างที่ 2 และการเกิดมงกุฎ}
+    \end{minipage}
+    &
+    เมื่อเก็บเม็ดคะแนนครบ 30 เม็ด (\texttt{N\_EVOLVE = 30}) สไลม์จะวิวัฒนาการเป็นร่างที่ 2 (Big Slime) ที่มีขนาดและรูปลักษณ์เปลี่ยนไป พร้อมกับการปรากฏของไอเทมมงกุฎแอนิเมชันที่มุมใดมุมหนึ่งของแผนที่ เพื่อรอให้ผู้เล่นเดินไปเก็บและเข้าสู่โหมดราชา \\
+    \midrule
+
+    % --- แถวที่ 4: King Mode ---
+    \begin{minipage}[t]{\linewidth}
+        \centering
+        \smartimage{0.96\linewidth}{result_king_mode.png}{3.2cm}{ภาพขณะสไลม์สวมมงกุฎ (ร่าง 3) ผีทุกตัวกลายเป็นสีฟ้า (\texttt{ghost\_scared}) และมุมขวาบนแสดงไอคอนรูปคิงโหมด (\texttt{kingmode})}
+        \tablefigcap{สาธิตโหมดราชา (Form 3) และผีในสถานะหวาดกลัว}
+    \end{minipage}
+    &
+    เมื่อเก็บมงกุฎได้ สไลม์จะเปลี่ยนเป็นร่างที่ 3 (King Slime) นาน 10 วินาที เดินเร็วขึ้น 2 เท่า ผีทุกตัวเปลี่ยนเป็นสไปรต์สีฟ้า (\texttt{ghost\_scared}) และวิ่งหนีออกจากสไลม์ ส่วนมุมขวาบนของจอภาพ (ช่อง \texttt{tx=19, ty=0}) จะแสดงไอคอน King Mode \\
+    \midrule
+
+    % --- แถวที่ 5: Eating Ghosts & Blinking ---
+    \begin{minipage}[t]{\linewidth}
+        \centering
+        \smartimage{0.96\linewidth}{result_eat_ghost.png}{3.2cm}{ภาพขณะผีบางตัวถูกกินหายไปแล้ว (เหลือผีน้อยกว่า 4 ตัว) หรือจังหวะที่ผีกะพริบสลับสีเดิมในช่วง 2 วินาทีสุดท้ายของคิงโหมด}
+        \tablefigcap{สาธิตการกินผีและการกะพริบเตือนท้ายโหมดราชา}
+    \end{minipage}
+    &
+    ขณะอยู่ในโหมดราชา เมื่อสไลม์วิ่งชนผี ผีตัวนั้นจะหายไปจากสนามทันที (\texttt{galive[k] = 0}) และได้รับโบนัส +200 คะแนนต่อตัว และเมื่อเหลือเวลา $\le 2$ วินาทีสุดท้าย ตัวสไลม์ ผี และไอคอนคิงโหมดจะกะพริบเตือนก่อนกลับสู่ร่างที่ 2 และมงกุฎจะเกิดใหม่ในอีก 3 วินาที \\
+    \midrule
+
+    % --- แถวที่ 6: Pause ---
+    \begin{minipage}[t]{\linewidth}
+        \centering
+        \smartimage{0.96\linewidth}{result_pause.png}{3.2cm}{ภาพหน้าจอกลางเขาวงกตแสดงข้อความ ``PAUSE'' สีเหลืองทอง โดยสไลม์และผีหยุดนิ่งอยู่กับที่}
+        \tablefigcap{สาธิตการทำงานขณะหยุดเกมชั่วคราว (\texttt{S\_PAUSE})}
+    \end{minipage}
+    &
+    เมื่อกดปุ่ม \texttt{BTNC} ระหว่างเล่นในสถานะ \texttt{S\_PLAY} เกมจะเข้าสู่สถานะ \texttt{S\_PAUSE} โดยหยุดการเคลื่อนที่ของสไลม์ ผี และตัวจับเวลาคิงโหมดทั้งหมด พร้อมแสดงกล่องข้อความ ``PAUSE'' และเมื่อกด \texttt{BTNC} อีกครั้งจะกลับมาเล่นต่อจากตำแหน่งเดิมทันที \\
+    \midrule
+
+    % --- แถวที่ 7: Dead ---
+    \begin{minipage}[t]{\linewidth}
+        \centering
+        \smartimage{0.96\linewidth}{result_dead.png}{3.2cm}{ภาพขณะสไลม์แสดงท่าตาย (\texttt{pose=3}) และไอคอนชีวิตมุมซ้ายบนลดลงจาก 3 ดวงเป็น 2 ดวง (มี \texttt{life\_died} ปรากฏ 1 ดวง)}
+        \tablefigcap{สาธิตการทำงานเมื่อสไลม์ชนผีและเสียชีวิต (\texttt{S\_DEAD})}
+    \end{minipage}
+    &
+    หากสไลม์ในร่างที่ 1 หรือ 2 ชนเข้ากับผี ระบบจะเข้าสู่สถานะ \texttt{S\_DEAD} หน่วงเกม 1.5 วินาที (90 เฟรม) แสดงสไปรต์สไลม์ท่าตาย (\texttt{slime*\_died}) และไอคอนชีวิตมุมซ้ายบนจะเปลี่ยนเป็นสีเทา (\texttt{life\_died}) ตามจำนวนชีวิตที่เสียไป \\
+    \midrule
+
+    % --- แถวที่ 8: Win & Over ---
+    \begin{minipage}[t]{\linewidth}
+        \centering
+        \smartimage{0.96\linewidth}{result_win_over.png}{3.2cm}{ภาพคู่เปรียบเทียบแสดงหน้าจอ ``YOU WIN'' สีเขียว และหน้าจอ ``GAME OVER'' สีแดง พร้อมข้อความ ``PRESS BTNC''}
+        \tablefigcap{สาธิตหน้าจอเมื่อชนะเกม (YOU WIN) และจบเกม (GAME OVER)}
+    \end{minipage}
+    &
+    เมื่อกินผีได้ครบทั้ง 4 ตัว เกมจะเข้าสู่สถานะ \texttt{S\_WIN} แสดงข้อความสีเขียว ``YOU WIN'' แต่หากพลังชีวิตลดลงจนเหลือ 0 เกมจะเข้าสู่สถานะ \texttt{S\_OVER} แสดงข้อความสีแดง ``GAME OVER'' ทั้งสองสถานะสามารถกดปุ่ม \texttt{BTNC} เพื่อกลับไปยังหน้าจอ \texttt{S\_TITLE} และเริ่มรอบใหม่ได้ \\
+    \midrule
+
+    % --- แถวที่ 9: Hardware Board ---
+    \begin{minipage}[t]{\linewidth}
+        \centering
+        \smartimage{0.96\linewidth}{result_board_hw.png}{3.2cm}{ภาพถ่ายบอร์ด Nexys A7-100T จริงขณะเล่นเกม โดยเฉพาะจังหวะที่อยู่ในโหมดราชา แสดงตัวเลขบน 7-Segment และไฟ LED แถบเวลา LD15--LD6 รวมถึง LD2--LD0}
+        \tablefigcap{ภาพการทำงานบนบอร์ดจริง แสดงผล 7-Segment และ LED}
+    \end{minipage}
+    &
+    บนบอร์ด Digilent Nexys A7-100T จริง จอแสดงผล 7-Segment แสดงร่างปัจจุบันที่หลักซ้ายสุด, เวลานับถอยหลังโหมดราชาที่หลัก 5--4 และคะแนน BCD 4 หลักขวาสุด ขณะเดียวกัน \texttt{LED[2:0]} แสดงจำนวนชีวิตที่เหลือ และ \texttt{LED[15:6]} แสดงแถบเวลาโหมดราชาลดลงทีละดวงทุกวินาทีอย่างถูกต้อง \\
+\end{longtable}
+
+% ============================================================================
+% บทที่ 7: ปัญหาอุปสรรคที่พบและแนวทางการแก้ไข (จาก chapters/07_problems_solutions.tex)
+% ============================================================================
+\mainsection{ปัญหาอุปสรรคที่พบและแนวทางการแก้ไข}
+
+ในระหว่างการออกแบบและพัฒนาโครงงาน Slime Maze บนฮาร์ดแวร์ FPGA คณะผู้จัดทำได้พบปัญหาทางเทคนิคหลายประการและได้ดำเนินการแก้ไขดังรายละเอียดต่อไปนี้
+
+\subsection{ปัญหาภาพฉีกขาดและการเคลื่อนที่ความเร็ว 2 เท่าในโหมดราชา}
+\begin{itemize}[leftmargin=1.5cm]
+    \item \textbf{ปัญหาที่พบ:} หากอัปเดตตำแหน่งของสไลม์และผีระหว่างที่วงจร VGA กำลังสแกนส่งภาพออกหน้าจอ จะเกิดอาการภาพฉีกขาด (Screen Tearing) หรือวัตถุเคลื่อนที่ครึ่งๆ กลางๆ ใน 1 เฟรม นอกจากนี้ เมื่อสไลม์เข้าสู่ร่างที่ 3 (King Mode) ซึ่งต้องเดินเร็วขึ้น 2 เท่า หากใช้วิธีเปลี่ยนระยะก้าวจาก 2 พิกเซลเป็น 4 พิกเซลต่อเฟรม อาจทำให้พิกัดสไลม์ไม่ตรงกึ่งกลางช่องที่หารด้วย 32 ลงตัว (ซึ่งเงื่อนไขการเลี้ยวและเก็บเม็ดตรวจสอบทุก 32 พิกเซล) จนอาจติดขัดหรือไม่สามารถเลี้ยวได้
+    \item \textbf{สาเหตุ:} การอัปเดตสถานะเกมไม่สัมพันธ์กับจังหวะ Vertical Blanking และการเพิ่มระยะก้าวต่อเฟรมแบบข้ามพิกัด
+    \item \textbf{แนวทางการแก้ไข:} กำหนดให้สัญญาณ \texttt{tick} เกิดขึ้นเฉพาะที่พิกัด (\texttt{x=0, y=480}) ซึ่งเป็นจุดเริ่มต้นช่วง Vertical Blanking หลังวาดเฟรมเสร็จแล้ว และสร้างสัญญาณ \texttt{tick2} ที่ (\texttt{x=0, y=500}) เพื่อให้ร่างที่ 3 เดินทีละ 2 พิกเซล จำนวน 2 ครั้งต่อเฟรม (\texttt{ptick = tick || (tick2 \&\& form == 2'd3)}) วิธีนี้ทำให้ทั้งภาพนิ่งสมบูรณ์ใน 1 เฟรมและยังคงตรวจสอบการตรงช่อง (\texttt{p\_aligned}) รวมถึงการกินเม็ดที่กึ่งกลางช่องได้แม่นยำทุกร่าง
+\end{itemize}
+
+\subsection{ปัญหา Metastability, สัญญาณรบกวนจากปุ่มกด และการกดเลี้ยวไม่ทันทางแยก}
+\begin{itemize}[leftmargin=1.5cm]
+    \item \textbf{ปัญหาที่พบ:} ปุ่มกด Pushbutton เป็นสัญญาณภายนอกที่ไม่สัมพันธ์กับสัญญาณนาฬิกา 25 MHz ทำให้เสี่ยงต่อการเกิด Metastability และมีอาการกระเด้งเชิงกล (Mechanical Bounce) ส่งผลให้การกด \texttt{BTNC} เพียงครั้งเดียวอาจสลับสถานะเข้า Pause แล้วเด้งกลับ Play ทันที นอกจากนี้ ในจังหวะการเล่นจริงผู้เล่นมักกดปุ่มเลี้ยวก่อนถึงหัวมุมทางแยกเล็กน้อย หากรับคำสั่งเฉพาะตอนตรงช่องพอดีจะทำให้ควบคุมยากและเลี้ยวไม่ทัน
+    \item \textbf{สาเหตุ:} ขาดวงจร Synchronizer ที่ขอบขาขึ้นของสัญญาณนาฬิกา, ไม่มี Debounce สำหรับปุ่มสลับสถานะ และตรรกะการเลี้ยวรับเฉพาะอินพุต ณ เฟรมที่ตรงช่อง
+    \item \textbf{แนวทางการแก้ไข:} ส่งสัญญาณปุ่มกดทั้ง 5 ปุ่มผ่าน 2-Flip-Flop Synchronizer ใน \texttt{slime\_top.v}, ตรวจจับขอบขาขึ้นของปุ่ม \texttt{BTNC} เฉพาะที่จังหวะ \texttt{tick} ความถี่ 60 Hz (ทุก $\approx 16.67\text{ ms}$) เพื่อกรอง Bounce โดยอัตโนมัติ และสร้างเรจิสเตอร์ \texttt{want} สำหรับจดจำทิศทางล่าสุดที่ผู้เล่นกดค้างไว้ล่วงหน้า (Pre-turn) เพื่อให้สไลม์เลี้ยวทันทีเมื่อเดินถึงทางแยก
+\end{itemize}
+
+\subsection{ปัญหาข้อจำกัดด้านทรัพยากร LUT จากการจัดเก็บสไปรต์สีจำนวนมาก}
+\begin{itemize}[leftmargin=1.5cm]
+    \item \textbf{ปัญหาที่พบ:} เกมมีภาพสไปรต์สีขนาด $32\times32$ พิกเซลจำนวนถึง 30 ภาพ หากเก็บข้อมูลสี 12-bit RGB โดยตรงทุกพิกเซลจะต้องใช้ข้อมูลมากถึง $32 \times 32 \times 12 = 12,288$ บิตต่อภาพ ซึ่งสิ้นเปลืองทรัพยากร LUT ของ FPGA และเสี่ยงต่อการเกิดปัญหา Routing Congestion หรือ Timing Violation
+    \item \textbf{สาเหตุ:} การจัดเก็บสีตรงๆ แบบ Uncompressed 12-bit RGB และเก็บข้อมูลแถวที่โปร่งใสทั้งหมดไว้
+    \item \textbf{แนวทางการแก้ไข:} เขียนสคริปต์ \texttt{gen\_art.py} ด้วย Python เพื่อแปลงภาพเป็นรูปแบบ Indexed Color Palette แยกเป็น 2 พาเลต คือ \texttt{art\_palette} (5-bit/pixel ใช้ 17 สี) และ \texttt{ghost\_palette} (4-bit/pixel ใช้ 6 สี) ลดขนาดข้อมูลลงเกือบ 3 เท่า พร้อมทั้งสั่งให้สคริปต์ข้ามการเขียนแถวที่โปร่งใสทั้งหมด (\texttt{default = 0}) ส่งผลให้สังเคราะห์ลงใน FPGA ได้อย่างกระชับและผ่าน Timing ที่ 25 MHz ได้อย่างสบาย
+\end{itemize}
+
+\subsection{ปัญหาความซับซ้อนของวงจรบวกคะแนน BCD เมื่อได้คะแนนมากในรอบเดียว}
+\begin{itemize}[leftmargin=1.5cm]
+    \item \textbf{ปัญหาที่พบ:} คะแนนในเกมแสดงผลบนจอ 7-Segment ในรูปแบบ BCD 4 หลัก แต่ในโหมดราชาสไลม์อาจชนกินผีได้พร้อมกันมากกว่า 1 ตัวในเฟรมเดียว (ตัวละ +200 คะแนน) การคำนวณบวกเลขฐานสิบหลายร้อยพร้อมการทดหลักหลายหลักภายใน Combinational Logic เพียง 1 Clock Cycle ทำให้วงจรซับซ้อนโดยไม่จำเป็น
+    \item \textbf{สาเหตุ:} การพยายามคำนวณผลบวก BCD จำนวนมากแบบเบ็ดเสร็จใน Clock เดียว
+    \item \textbf{แนวทางการแก้ไข:} ออกแบบคิวรอเพิ่มคะแนน \texttt{pend[6:0]} (เก็บค่าเป็นจำนวนสิบ เช่น +10 = 1, +200 = 20) แล้วใช้วงจรบวกอย่างง่าย \texttt{bcd\_add10} ทยอยบวกคะแนนเข้าสู่เรจิสเตอร์ \texttt{score} ทีละ 10 คะแนนต่อ 1 รอบสัญญาณนาฬิกา 25 MHz ซึ่งใช้เวลาเพียงหลักไมโครวินาที (เร็วกว่า 1 เฟรมมาก) แต่ช่วยให้วงจรสั้น เรียบง่าย และประหยัดพื้นที่ตรรกะ
+\end{itemize}
+
+\subsection{ปัญหาความล่าช้าในการคอมไพล์และทดสอบบนบอร์ดจริงผ่าน Vivado}
+\begin{itemize}[leftmargin=1.5cm]
+    \item \textbf{ปัญหาที่พบ:} การปรับแก้กติกาเกม, พฤติกรรม AI ของผี หรือตำแหน่งพิกเซลกราฟิกแล้วต้องรอ Synthesize และ Generate Bitstream ใน Vivado ทุกครั้งใช้เวลานานหลายนาทีต่อรอบ ทำให้การพัฒนาและแก้ไขบั๊กล่าช้า
+    \item \textbf{สาเหตุ:} การพึ่งพาเครื่องมือ Build ของ FPGA เพียงอย่างเดียวในการทดสอบตรรกะระดับเกมเพลย์
+    \item \textbf{แนวทางการแก้ไข:} พัฒนาระบบจำลองในโฟลเดอร์ \texttt{sim/} โดยใช้ Verilator คอมไพล์ไฟล์ Verilog จริงของเกมร่วมกับ SDL2 (\texttt{fast\_top.v} และ \texttt{sim\_top.v}) ทำให้สามารถทดสอบเล่นเกมจริงผ่านคีย์บอร์ดได้ภายในไม่กี่วินาทีหลังแก้โค้ด ก่อนนำโค้ดที่เสถียรแล้วไป Generate Bitstream ลงบนบอร์ด Nexys A7-100T จริง
+\end{itemize}
+
+% ============================================================================
+% บทที่ 8: สรุป (จาก chapters/08_conclusion.tex)
+% ============================================================================
+\mainsection{สรุป}
+
+จากการดำเนินโครงงาน Slime Maze คณะผู้จัดทำสามารถพัฒนาเกมอาร์เคดแนวเขาวงกตไล่ล่าที่มีระบบวิวัฒนาการตัวละคร 3 ร่าง และโหมดราชาให้ทำงานได้อย่างสมบูรณ์บนบอร์ด FPGA Digilent Nexys A7-100T (Xilinx Artix-7) ทั้งการแสดงผลกราฟิกสไปรต์สี 12-bit ผ่านพอร์ต VGA ความละเอียด $640\times480$ @ 60 Hz, การแสดงคะแนนและเวลานับถอยหลังบนจอ 7-Segment 8 หลัก และการแสดงพลังชีวิตและแถบเวลาด้วยหลอดไฟ LED 16 ดวง รวมถึงสามารถทวนสอบการทำงานผ่านตัวจำลอง Verilator + SDL2 ได้ตรงกันกับฮาร์ดแวร์จริง
+
+นอกจากนี้ คณะผู้จัดทำยังได้บูรณาการความรู้จากรายวิชา CPE222 ทั้งด้านการออกแบบ Finite State Machine, การซิงโครไนซ์สัญญาณข้ามโดเมนและปุ่มกด, การบริหารจัดการทรัพยากรหน่วยความจำด้วย Indexed Color Palette และการใช้เครื่องมือ Python/Verilator มาช่วยเร่งกระบวนการพัฒนา จนเกิดเป็นชิ้นงานฮาร์ดแวร์เกมที่ทำงานได้เสถียรและมีประสิทธิภาพตามวัตถุประสงค์ทุกประการ
+
+% ============================================================================
+% บทที่ 9: บรรณานุกรม (จาก chapters/09_references.tex)
+% ============================================================================
+\clearpage
+\mainsection{บรรณานุกรม}
+
+\begin{list}{}{%
+    \setlength{\leftmargin}{1.2cm}%
+    \setlength{\itemindent}{-1.2cm}%
+    \setlength{\itemsep}{0.6em}%
+    \setlength{\parsep}{0pt}%
+}
+    \item Digilent Inc. (2018). \textit{Nexys A7 Reference Manual}. [ออนไลน์]. เข้าถึงได้จาก: \\
+    \url{https://digilent.com/reference/programmable-logic/nexys-a7/reference-manual}
+
+    \item Digilent Inc. (ม.ป.ป.). \textit{Nexys A7-100T Master XDC File}. [ออนไลน์]. เข้าถึงได้จาก: \\
+    \url{https://github.com/Digilent/digilent-xdc/blob/master/Nexys-A7-100T-Master.xdc}
+
+    \item AMD Xilinx. (ม.ป.ป.). \textit{7 Series FPGAs Clocking Resources User Guide (UG472)}. [ออนไลน์]. เข้าถึงได้จาก: \\
+    \url{https://docs.amd.com/r/en-US/ug472_7Series_Clocking}
+
+    \item TinyVGA / Project F. (ม.ป.ป.). \textit{VGA Signal Timing 640x480 @ 60 Hz Industry Standard}. [ออนไลน์]. เข้าถึงได้จาก: \\
+    \url{http://tinyvga.com/vga-timing/640x480@60Hz}
+
+    \item Veripool. (ม.ป.ป.). \textit{Verilator: Open-Source SystemVerilog Simulator}. [ออนไลน์]. เข้าถึงได้จาก: \\
+    \url{https://www.veripool.org/verilator/}
+
+    \item Simple DirectMedia Layer (SDL2). (ม.ป.ป.). \textit{SDL2 Documentation}. [ออนไลน์]. เข้าถึงได้จาก: \\
+    \url{https://wiki.libsdl.org/SDL2/FrontPage}
+
+    \item Python Software Foundation \& Pillow Contributors. (ม.ป.ป.). \textit{Pillow (PIL Fork) Documentation}. [ออนไลน์]. เข้าถึงได้จาก: \\
+    \url{https://pillow.readthedocs.io/}
+\end{list}
+
+% หมายเหตุ: หากนำภาพตัวอย่างเกม Pac-Man (pacman_ref.png) หรือภาพแผนภาพ VGA (vga_timing.png)
+% มาจากแหล่งเว็บไซต์ภายนอก กรุณาเพิ่มรายการอ้างอิง URL ของภาพเหล่านั้นในบรรณานุกรมด้านบนด้วย
+
+% ============================================================================
+% บทที่ 10: ภาคผนวก (จาก chapters/10_appendix.tex)
+% ============================================================================
+\clearpage
+\mainsection{ภาคผนวก}
+
+\noindent\textbf{Verilog Code Repository:} \url{https://github.com/aynirap/slime_maze}
+
+% [INSERT PICTURE: github_repo.png — ภาพหน้าต่าง GitHub Repository ของโครงงาน Slime Maze]
+\begin{figure}[H]
+    \centering
+    \smartimage{0.88\textwidth}{github_repo.png}{4.2cm}{ภาพถ่ายหน้าจอ (Screenshot) หน้าแรกของ Repository บน GitHub (\texttt{https://github.com/aynirap/slime\_maze}) ให้เห็นรายชื่อไฟล์โค้ด \texttt{.v}, โฟลเดอร์ \texttt{art/}, โฟลเดอร์ \texttt{sim/} และสัดส่วนภาษาที่ใช้พัฒนา}
+    \caption{ภาพหน้าต่าง GitHub Repository ของโครงงาน Slime Maze}
+\end{figure}
+
+\noindent\textbf{รายการไฟล์หลักในโครงงาน (โฟลเดอร์ \texttt{slime\_maze/}):}
+
+\begin{table}[H]
+    \centering
+    \begin{tabularx}{\textwidth}{@{}l L@{}}
+        \toprule
+        \textbf{ชื่อไฟล์ / โฟลเดอร์} & \textbf{หน้าที่การทำงาน} \\
+        \midrule
+        \texttt{slime\_top.v} & Top-level module เชื่อมต่อขา I/O ของบอร์ด Nexys A7-100T \\
+        \texttt{clk\_gen.v} & วงจร MMCM แปลงสัญญาณนาฬิกา 100 MHz $\rightarrow$ 25 MHz \\
+        \texttt{vga\_sync.v} & ตัวสร้างสัญญาณซิงโครไนซ์ VGA $640\times480$ @ 60 Hz \\
+        \texttt{slime\_logic.v} & ตรรกะเกม, FSM, การเดิน, AI ผี 4 ตัว, ชน, คะแนน, ชีวิต \\
+        \texttt{slime\_draw.v} & วงจรวาดภาพแบบ Priority Multiplexer และ Palette Lookup \\
+        \texttt{slime\_roms.v} & ตาราง ROM แผนที่เขาวงกต $20\times15$, ฟอนต์ $5\times7$, สไปรต์ต้นแบบ \\
+        \texttt{slime\_art.v} & ตารางสไปรต์สีและพาเลต (สร้างอัตโนมัติจาก \texttt{gen\_art.py}) \\
+        \texttt{seg7x8.v} & ตัวขับจอแสดงผล 7-Segment 8 หลักแบบ Time-Multiplexing \\
+        \texttt{slime\_nexys\_a7.xdc} & ไฟล์กำหนดขาพินสำหรับบอร์ด Digilent Nexys A7-100T \\
+        \texttt{gen\_art.py} & สคริปต์ Python แปลงไฟล์ PNG ใน \texttt{art/} เป็น \texttt{slime\_art.v} \\
+        \texttt{art/} & ไฟล์ภาพสไปรต์ PNG ต้นฉบับ (30 ภาพ) \\
+        \texttt{sim/} & ตัวจำลอง Verilator + SDL2 (\texttt{fast\_top.v}, \texttt{sim\_top.v}) \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+\noindent\textbf{Demonstration Videos (วิดีโอสาธิตการทำงาน):}
+\begin{itemize}[leftmargin=1.5cm]
+    \item การควบคุมและระบบเกม (Controls \& Gameplay Demo): [ใส่ลิงก์หรือชื่อไฟล์วิดีโอสาธิต เช่น \texttt{Controls.mp4}]
+    \item การทดสอบการทำงานบนบอร์ดจริง (Hardware Demonstration): [ใส่ลิงก์หรือชื่อไฟล์วิดีโอสาธิต เช่น \texttt{GameplayAndMechanic.mp4}]
+\end{itemize}
+
+\end{document}

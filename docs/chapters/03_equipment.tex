@@ -2,8 +2,87 @@
 \mainsection{อุปกรณ์ที่ใช้ (Equipment)}
 % ============================================================================
 
+ในการดำเนินโครงงาน Slime Maze คณะผู้จัดทำได้เตรียมอุปกรณ์และเครื่องมือที่จำเป็นต่อการพัฒนา แบ่งออกเป็น 2 ส่วน ได้แก่ (1) ซอฟต์แวร์ (Software) และ (2) ฮาร์ดแวร์ (Hardware) ดังรายละเอียดต่อไปนี้
+
 \subsection{ซอฟต์แวร์ (Software)}
-\todo{ตารางซอฟต์แวร์ เช่น Vivado Design Suite, Verilator + SDL2, Python 3 (Pillow), โปรแกรมวาดสไปรต์}
+
+เครื่องมือซอฟต์แวร์ที่ใช้ในการออกแบบวงจร, สร้างกราฟิกสไปรต์, แปลงข้อมูล และจำลองการทำงานของระบบเกม แสดงดังตารางที่ \ref{tab:software}
+
+\begin{table}[H]
+    \centering
+    \caption{รายการเครื่องมือซอฟต์แวร์ที่ใช้ในการพัฒนา}
+    \label{tab:software}
+    \begin{tabularx}{\textwidth}{@{}c L L@{}}
+        \toprule
+        \textbf{ลำดับที่} & \textbf{ซอฟต์แวร์ที่ใช้ในการพัฒนา} & \textbf{วัตถุประสงค์} \\
+        \midrule
+        1 & Xilinx Vivado\textsuperscript{\textregistered} Design Suite &
+        ใช้สำหรับเขียนโค้ด Verilog HDL, ตรวจสอบโครงสร้างวงจร, กำหนด Pin Constraints (\texttt{.xdc}), สังเคราะห์วงจร (Synthesis), Implementation และสร้างไฟล์ Bitstream ลงบอร์ด Nexys A7-100T \\
+        \addlinespace[0.4em]
+        2 & โปรแกรมออกแบบ Pixel Art (โฟลเดอร์ \texttt{art/}) &
+        ใช้สำหรับวาดภาพกราฟิกสไปรต์ภายในเกม เช่น สไลม์ 3 ร่าง ท่าทางละ 6 ท่า, ผี 4 ตัว, ผีตอนกลัว, มงกุฎ 3 เฟรม, เม็ดคะแนน และไอคอน โดยบันทึกเป็นไฟล์ \texttt{.png} ขนาด $32\times32$ และ $8\times8$ \\
+        \addlinespace[0.4em]
+        3 & Python 3 + ไลบรารี Pillow (สคริปต์ \texttt{gen\_art.py}) &
+        ใช้รันสคริปต์ \texttt{gen\_art.py} เพื่ออ่านไฟล์ \texttt{.png} จากโฟลเดอร์ \texttt{art/} แล้ว Quantize สีเป็น RGB444 (12-bit) และสร้างเป็นโมดูล Combinational ROM ในไฟล์ \texttt{slime\_art.v} อัตโนมัติ \\
+        \addlinespace[0.4em]
+        4 & Verilator + SDL2 + Make (โฟลเดอร์ \texttt{sim/}) &
+        ใช้จำลองการทำงานของโค้ด Verilog จริง (\texttt{slime\_logic.v}, \texttt{slime\_draw.v}, \texttt{vga\_sync.v}) บนคอมพิวเตอร์แบบโต้ตอบได้ทั้งโหมด 60 FPS (\texttt{fast\_top}) และโหมดจำลองทุกพิกเซล (\texttt{sim\_top}) \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
 
 \subsection{ฮาร์ดแวร์ (Hardware)}
-\todo{ตารางฮาร์ดแวร์ เช่น Digilent Nexys A7-100T, สาย VGA, จอภาพรองรับ VGA 640x480 @ 60 Hz}
+
+อุปกรณ์ฮาร์ดแวร์ที่ใช้ในการทดสอบและนำเสนอผลงานจริง แสดงดังตารางที่ \ref{tab:hardware}
+
+% [INSERT PICTURE: nexys_a7_board.png, vga_cable.png, vga_monitor.png, micro_usb.png]
+\begin{table}[H]
+    \centering
+    \caption{รายการเครื่องมือฮาร์ดแวร์ที่ใช้ในการพัฒนา}
+    \label{tab:hardware}
+    \begin{tabularx}{\textwidth}{@{}c >{\centering\arraybackslash}p{0.46\textwidth} L@{}}
+        \toprule
+        \textbf{ลำดับที่} & \textbf{ภาพอุปกรณ์} & \textbf{ชื่ออุปกรณ์ / วัตถุประสงค์} \\
+        \midrule
+        1 &
+        \begin{minipage}[t]{\linewidth}
+            \centering
+            \smartimage{0.85\linewidth}{nexys_a7_board.png}{2.4cm}{ภาพถ่ายด้านบนของบอร์ด Digilent Nexys A7-100T ให้เห็นปุ่มกด 5 ทิศทาง, CPU\_RESETN, 16 LEDs, 7-Segment และพอร์ต VGA}
+            \captionof{figure}{บอร์ดพัฒนา Digilent Nexys A7-100T}
+        \end{minipage}
+        &
+        \textbf{อุปกรณ์:} Digilent Nexys A7-100T FPGA Trainer Board (Xilinx Artix-7 \texttt{xc7a100tcsg324-1}) \par\vspace{0.3em}
+        \textbf{วัตถุประสงค์:} ใช้เป็นหน่วยประมวลผลหลักของเกม รับคำสั่งจากปุ่มกด ประมวลผลตรรกะ และส่งสัญญาณภาพออกไปยังจอมอนิเตอร์ พร้อมแสดงสถานะบน 7-Segment และ LED \\
+        \midrule
+        2 &
+        \begin{minipage}[t]{\linewidth}
+            \centering
+            \smartimage{0.85\linewidth}{vga_cable.png}{2.1cm}{ภาพสาย VGA แบบ D-Sub 15 ขา (Male-to-Male)}
+            \captionof{figure}{สายเชื่อมต่อสัญญาณภาพ VGA}
+        \end{minipage}
+        &
+        \textbf{อุปกรณ์:} สาย VGA (D-Sub 15-pin) \par\vspace{0.3em}
+        \textbf{วัตถุประสงค์:} นำส่งสัญญาณภาพ RGB และสัญญาณซิงค์ HS/VS จากพอร์ต VGA บนบอร์ด FPGA ไปยังจอมอนิเตอร์ \\
+        \midrule
+        3 &
+        \begin{minipage}[t]{\linewidth}
+            \centering
+            \smartimage{0.85\linewidth}{vga_monitor.png}{2.1cm}{ภาพจอมอนิเตอร์ LCD ที่รองรับอินพุต VGA 60 Hz}
+            \captionof{figure}{จอมอนิเตอร์แสดงผลมาตรฐาน VGA}
+        \end{minipage}
+        &
+        \textbf{อุปกรณ์:} จอมอนิเตอร์ที่รองรับพอร์ต VGA ความละเอียด $640\times480$ @ 60 Hz \par\vspace{0.3em}
+        \textbf{วัตถุประสงค์:} แสดงผลภาพกราฟิกของเกม Slime Maze แบบเรียลไทม์ \\
+        \midrule
+        4 &
+        \begin{minipage}[t]{\linewidth}
+            \centering
+            \smartimage{0.85\linewidth}{micro_usb.png}{2.1cm}{ภาพสาย USB Type-A to Micro-B สำหรับโปรแกรมและจ่ายไฟให้บอร์ด}
+            \captionof{figure}{สาย Micro-USB สำหรับโปรแกรมบอร์ด FPGA}
+        \end{minipage}
+        &
+        \textbf{อุปกรณ์:} สาย Micro-USB \par\vspace{0.3em}
+        \textbf{วัตถุประสงค์:} เชื่อมต่อระหว่างคอมพิวเตอร์กับบอร์ด Nexys A7-100T เพื่อโปรแกรม Bitstream ผ่าน JTAG และจ่ายไฟเลี้ยงบอร์ด \\
+        \bottomrule
+    \end{tabularx}
+\end{table}

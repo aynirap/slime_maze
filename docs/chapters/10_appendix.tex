@@ -2,4 +2,42 @@
 \clearpage
 \mainsection{ภาคผนวก}
 % ============================================================================
-\todo{ลิงก์ซอร์สโค้ด Verilog (GitHub Repository) และวิดีโอสาธิตการทำงาน}
+
+\noindent\textbf{Verilog Code Repository:} \url{https://github.com/aynirap/slime_maze}
+
+% [INSERT PICTURE: github_repo.png — ภาพหน้าต่าง GitHub Repository ของโครงงาน Slime Maze]
+\begin{figure}[H]
+    \centering
+    \smartimage{0.88\textwidth}{github_repo.png}{4.2cm}{ภาพถ่ายหน้าจอ (Screenshot) หน้าแรกของ Repository บน GitHub (\texttt{https://github.com/aynirap/slime\_maze}) ให้เห็นรายชื่อไฟล์โค้ด \texttt{.v}, โฟลเดอร์ \texttt{art/}, โฟลเดอร์ \texttt{sim/} และสัดส่วนภาษาที่ใช้พัฒนา}
+    \caption{ภาพหน้าต่าง GitHub Repository ของโครงงาน Slime Maze}
+\end{figure}
+
+\noindent\textbf{รายการไฟล์หลักในโครงงาน (โฟลเดอร์ \texttt{slime\_maze/}):}
+
+\begin{table}[H]
+    \centering
+    \begin{tabularx}{\textwidth}{@{}l L@{}}
+        \toprule
+        \textbf{ชื่อไฟล์ / โฟลเดอร์} & \textbf{หน้าที่การทำงาน} \\
+        \midrule
+        \texttt{slime\_top.v} & Top-level module เชื่อมต่อขา I/O ของบอร์ด Nexys A7-100T \\
+        \texttt{clk\_gen.v} & วงจร MMCM แปลงสัญญาณนาฬิกา 100 MHz $\rightarrow$ 25 MHz \\
+        \texttt{vga\_sync.v} & ตัวสร้างสัญญาณซิงโครไนซ์ VGA $640\times480$ @ 60 Hz \\
+        \texttt{slime\_logic.v} & ตรรกะเกม, FSM, การเดิน, AI ผี 4 ตัว, ชน, คะแนน, ชีวิต \\
+        \texttt{slime\_draw.v} & วงจรวาดภาพแบบ Priority Multiplexer และ Palette Lookup \\
+        \texttt{slime\_roms.v} & ตาราง ROM แผนที่เขาวงกต $20\times15$, ฟอนต์ $5\times7$, สไปรต์ต้นแบบ \\
+        \texttt{slime\_art.v} & ตารางสไปรต์สีและพาเลต (สร้างอัตโนมัติจาก \texttt{gen\_art.py}) \\
+        \texttt{seg7x8.v} & ตัวขับจอแสดงผล 7-Segment 8 หลักแบบ Time-Multiplexing \\
+        \texttt{slime\_nexys\_a7.xdc} & ไฟล์กำหนดขาพินสำหรับบอร์ด Digilent Nexys A7-100T \\
+        \texttt{gen\_art.py} & สคริปต์ Python แปลงไฟล์ PNG ใน \texttt{art/} เป็น \texttt{slime\_art.v} \\
+        \texttt{art/} & ไฟล์ภาพสไปรต์ PNG ต้นฉบับ (30 ภาพ) \\
+        \texttt{sim/} & ตัวจำลอง Verilator + SDL2 (\texttt{fast\_top.v}, \texttt{sim\_top.v}) \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+\noindent\textbf{Demonstration Videos (วิดีโอสาธิตการทำงาน):}
+\begin{itemize}[leftmargin=1.5cm]
+    \item การควบคุมและระบบเกม (Controls \& Gameplay Demo): [ใส่ลิงก์หรือชื่อไฟล์วิดีโอสาธิต เช่น \texttt{Controls.mp4}]
+    \item การทดสอบการทำงานบนบอร์ดจริง (Hardware Demonstration): [ใส่ลิงก์หรือชื่อไฟล์วิดีโอสาธิต เช่น \texttt{GameplayAndMechanic.mp4}]
+\end{itemize}

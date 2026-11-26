@@ -1,13 +1,75 @@
 % ============================================================================
 \mainsection{ส่วนประกอบวงจร}
 % ============================================================================
-\todo{แผนภาพบล็อกส่วนประกอบของระบบโดยรวม}
+
+การพัฒนาระบบเกม Slime Maze บนบอร์ด Digilent Nexys A7-100T ถูกออกแบบให้ทุกส่วนทำงานประสานกันภายใต้สัญญาณนาฬิกาเดียวคือ 25 MHz Pixel Clock โดยมีองค์ประกอบหลักของระบบดังแสดงในรูปที่ \ref{fig:sys_overview}
+
+% NOTE: แผนภาพต้นแบบ slime_maze_block_diagram_simple.png ใน ./myVerilog/ ยังระบุข้อความว่า "3 ghosts"
+% ควรอัปเดตข้อความใน slime_maze_block_diagram_simple.dot เป็น "4 ghosts" แล้ว render ใหม่ให้ตรงกับโค้ดล่าสุด
+\begin{figure}[H]
+    \centering
+    \smartimage{0.96\textwidth}{slime_maze_block_diagram_simple.png}{5.0cm}{แผนภาพแสดงองค์ประกอบของวงจรและระบบโดยรวม (System Block Diagram)}
+    \caption{แผนภาพแสดงองค์ประกอบของวงจรและระบบโดยรวม (System Block Diagram)}
+    \label{fig:sys_overview}
+\end{figure}
 
 \subsection{Input Switch (ปุ่มกดควบคุมบนบอร์ด)}
-\todo{ปุ่ม BTNU, BTND, BTNL, BTNR, BTNC และ CPU\_RESETN}
+
+ระบบใช้ปุ่มกด Built-in Pushbuttons บนบอร์ด Nexys A7-100T เป็นอุปกรณ์รับคำสั่งจากผู้เล่น โดยกำหนดตำแหน่งขาพินในไฟล์ \texttt{slime\_nexys\_a7.xdc} (มาตรฐาน \texttt{LVCMOS33}) ดังนี้
+
+\begin{itemize}[leftmargin=1.5cm]
+    \item \texttt{BTNU} (ขา M18) : บังคับสไลม์เดินขึ้น (Up)
+    \item \texttt{BTND} (ขา P18) : บังคับสไลม์เดินลง (Down)
+    \item \texttt{BTNL} (ขา P17) : บังคับสไลม์เดินซ้าย (Left)
+    \item \texttt{BTNR} (ขา M17) : บังคับสไลม์เดินขวา (Right)
+    \item \texttt{BTNC} (ขา N17) : กดเริ่มเกม (จากหน้าจอ Title), หยุดเกมชั่วคราว/เล่นต่อ (Pause/Resume) หรือกลับสู่หน้าจอเริ่มต้นหลังจบเกม
+    \item \texttt{CPU\_RESETN} (ขา C12) : ปุ่มรีเซ็ตระบบทั้งหมดแบบ Active-Low (กดเมื่อต้องการเริ่มใหม่ทันที)
+\end{itemize}
 
 \subsection{Field Programmable Gate Array (FPGA)}
-\todo{การทำงานของชิป Artix-7 บนบอร์ด Nexys A7-100T}
+
+ชิป FPGA ทำหน้าที่ประมวลผลตรรกะทั้งหมดของระบบเกมแบบคู่ขนาน โดยรับสัญญาณนาฬิกาตั้งต้นความถี่ 100 MHz (\texttt{CLK100MHZ} ขา E3) แล้วแปลงความถี่ผ่านโมดูล \texttt{clk\_gen} (\texttt{MMCME2\_BASE}) ให้ได้สัญญาณนาฬิกาพิกเซล 25 MHz (\texttt{clk}) เพื่อใช้ขับเคลื่อนทั้งส่วนการซิงโครไนซ์ปุ่มกด, วงจรสร้างสัญญาณ VGA, ตรรกะเกม (\texttt{slime\_logic}), วงจรวาดภาพ (\texttt{slime\_draw}) และวงจรขับ 7-Segment Display (\texttt{seg7x8}) ภายในโดเมนสัญญาณนาฬิกาเดียวกันทั้งหมด
 
 \subsection{Monitor Display ที่รองรับ VGA และส่วนแสดงผลบนบอร์ด}
-\todo{หลักการแสดงผล VGA (12-bit RGB, H-Sync, V-Sync), 7-Segment 8 หลัก และ LEDs}
+
+VGA (Video Graphics Array) เป็นมาตรฐานการส่งสัญญาณภาพแบบแอนะล็อกที่แยกสายสัญญาณสีแม่สีแดง เขียว น้ำเงิน (RGB) และสัญญาณควบคุมการกวาดภาพแนวนอน-แนวตั้ง (HSYNC, VSYNC) ออกจากกัน บนบอร์ด Nexys A7-100T ใช้สถาปัตยกรรมสีแบบ 12-bit (4 บิตต่อ 1 ช่องสี) แปลงระดับแรงดันผ่านวงจรตัวต้านทาน R-2R Ladder ให้แสดงสีได้สูงสุด 4,096 สี โดยกำหนดขาพินดังนี้
+
+\begin{itemize}[leftmargin=1.5cm]
+    \item \texttt{VGA\_R[3:0]} (ขา A4, C5, B4, A3) : สัญญาณสีแดง 4 บิต
+    \item \texttt{VGA\_G[3:0]} (ขา A6, B6, A5, C6) : สัญญาณสีเขียว 4 บิต
+    \item \texttt{VGA\_B[3:0]} (ขา D8, D7, C7, B7) : สัญญาณสีน้ำเงิน 4 บิต
+    \item \texttt{VGA\_HS} (ขา B11) และ \texttt{VGA\_VS} (ขา B12) : สัญญาณ Horizontal Sync และ Vertical Sync แบบ Active-Low
+\end{itemize}
+
+สำหรับการแสดงผลความละเอียด $640\times480$ ที่อัตรารีเฟรช 60 Hz ใช้สัญญาณนาฬิกาพิกเซล 25 MHz (คาบเวลา 40 ns ต่อพิกเซล) โดยใน 1 เฟรมประกอบด้วยจังหวะสัญญาณดังนี้
+\begin{itemize}[leftmargin=1.5cm]
+    \item \textbf{แนวนอน (Horizontal Timing)} รวม 800 พิกเซลต่อเส้น: ช่วงแสดงภาพ (Visible) 640 + Front Porch 16 + Sync Pulse 96 + Back Porch 48
+    \item \textbf{แนวตั้ง (Vertical Timing)} รวม 525 เส้นต่อเฟรม: ช่วงแสดงภาพ (Visible) 480 + Front Porch 10 + Sync Pulse 2 + Back Porch 33
+\end{itemize}
+เมื่อจอภาพได้รับสัญญาณ HSYNC และ VSYNC ลำแสงหรือวงจรสแกนภาพจะกวาดจากซ้ายไปขวาทีละบรรทัดจากบนลงล่าง โดยสัญญาณ \texttt{video\_on} จะมีค่าเป็น 1 เฉพาะเมื่อพิกัด $(x, y)$ อยู่ในช่วง $x < 640$ และ $y < 480$ เท่านั้น ส่วนช่วงเวลาที่อยู่นอกบริเวณภาพ (Blanking Time) สัญญาณ RGB จะถูกบังคับให้เป็นสีดำ (\texttt{12'h000}) ดังแสดงหลักการในรูปที่ \ref{fig:vga_timing}
+
+% [INSERT PICTURE: vga_timing.png — แผนภาพ VGA Timing 640x480 @ 60Hz]
+\begin{figure}[H]
+    \centering
+    \smartimage{0.78\textwidth}{vga_timing.png}{4.5cm}{แผนภาพ VGA Timing 640x480 @ 60 Hz แสดง Active Display Time (640 x 480), Front Porch, Sync Pulse, Back Porch และ Blanking Time ทั้งแกนแนวนอน (800 pixels) และแกนแนวตั้ง (525 lines)}
+    \caption{แผนภาพแสดงหลักการแสดงภาพและจังหวะสัญญาณของ VGA Monitor (640x480 @ 60 Hz)}
+    \label{fig:vga_timing}
+\end{figure}
+
+นอกจากหน้าจอ VGA แล้ว โครงงานยังใช้อุปกรณ์แสดงผลเสริมบนบอร์ด Nexys A7-100T เพื่อรายงานสถานะสำคัญของเกมแบบเรียลไทม์ ได้แก่
+
+\begin{itemize}[leftmargin=1.5cm]
+    \item \textbf{จอแสดงผล 7-Segment 8 หลัก (\texttt{SEG[6:0]}, \texttt{DP}, \texttt{AN[7:0]}):}
+    \begin{itemize}
+        \item หลักขวาสุด 4 หลัก (หลักที่ 3 ถึง 0): แสดงคะแนนปัจจุบันในรูปแบบเลขฐานสิบ BCD (0000 ถึง 9990)
+        \item หลักที่ 5 และ 4: แสดงตัวเลขนับถอยหลังเวลาของโหมดราชา (\texttt{ksec}: 10 ถึง 01 วินาที) และจะถูกปิด (Blank) เมื่อไม่ได้อยู่ในร่างที่ 3 (รวมถึงปิดหลักสิบเมื่อ $\texttt{ksec} < 10$)
+        \item หลักที่ 6: ปิดการแสดงผลเพื่อเว้นช่องว่างให้อ่านง่าย
+        \item หลักซ้ายสุด (หลักที่ 7): แสดงร่างปัจจุบันของสไลม์ (1, 2 หรือ 3)
+    \end{itemize}
+    \item \textbf{หลอดไฟ LED 16 ดวง (\texttt{LED[15:0]}):}
+    \begin{itemize}
+        \item \texttt{LD2} ถึง \texttt{LD0}: แสดงจำนวนชีวิตที่เหลืออยู่ (3 ดวง = 3 ชีวิต, ดับลงทีละดวงเมื่อเสียชีวิต)
+        \item \texttt{LD5} ถึง \texttt{LD3}: ปิดใช้งาน (\texttt{3'b000})
+        \item \texttt{LD15} ถึง \texttt{LD6}: แสดงเป็นแถบเวลานับถอยหลัง 10 ดวงของโหมดราชา (สว่างตามจำนวนวินาที \texttt{ksec} ที่เหลือ)
+    \end{itemize}
+\end{itemize}
