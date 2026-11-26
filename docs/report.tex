@@ -48,11 +48,11 @@
     \newfontfamily\englishfont[Scale=1.0]{Latin Modern Roman}%
 }
 \IfFontExistsTF{Courier New}{%
-    \newfontfamily\thaifonttt[Script=Thai, Scale=1.0]{Courier New}%
-    \setmonofont[Scale=0.95]{Courier New}%
+    \newfontfamily\thaifonttt[Script=Thai, Scale=0.85]{Courier New}%
+    \setmonofont[Scale=0.85]{Courier New}%
 }{%
-    \newfontfamily\thaifonttt[Scale=1.0]{Latin Modern Mono}%
-    \setmonofont[Scale=0.95]{Latin Modern Mono}%
+    \newfontfamily\thaifonttt[Scale=0.85]{Latin Modern Mono}%
+    \setmonofont[Scale=0.85]{Latin Modern Mono}%
 }
 
 % การตัดคำภาษาไทยอัตโนมัติใน XeLaTeX
@@ -75,6 +75,7 @@
 \usepackage{titlesec}
 \usepackage{xcolor}
 \usepackage{listings}
+\PassOptionsToPackage{hyphens}{url}
 \usepackage{hyperref}
 
 \newcolumntype{L}{>{\raggedright\arraybackslash}X}
@@ -110,7 +111,7 @@
 %   - หัวข้อย่อยระดับ 3 (Paragraph): 1.1.1), 1.1.2), ...
 % ============================================================================
 \setcounter{secnumdepth}{4}
-\setcounter{tocdepth}{4}
+\setcounter{tocdepth}{3}
 
 \renewcommand{\thesubsection}{\arabic{subsection})}
 \renewcommand{\thesubsubsection}{\arabic{subsection}.\arabic{subsubsection})}
@@ -214,6 +215,7 @@
 
 \setlength{\parindent}{1.2cm}
 \setlength{\parskip}{0.3em}
+\setlength{\emergencystretch}{1.5em}
 
 % ============================================================================
 % Document Start
@@ -236,12 +238,13 @@
 
 \phantomsection
 \addcontentsline{toc}{section}{สารบัญรูปภาพ}
+{\setlength{\parskip}{0.12em}
 \listoffigures
-\vspace{1.5cm}
+\vspace{0.45cm}
 
 \phantomsection
 \addcontentsline{toc}{section}{สารบัญตาราง}
-\listoftables
+\listoftables}
 \clearpage
 
 % ----------------------------------------------------------------------------

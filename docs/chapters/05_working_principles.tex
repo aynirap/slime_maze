@@ -10,7 +10,7 @@
 \subsubsection{การควบคุมตัวละคร (Character Control)}
 
 \paragraph{การเคลื่อนที่และการกดเลี้ยวล่วงหน้า (Movement \& Pre-turn Input)}
-ผู้เล่นใช้ปุ่มทิศทาง 4 ปุ่ม (\texttt{BTNU}, \texttt{BTND}, \texttt{BTNL}, \texttt{BTNR}) เพื่อสั่งให้สไลม์เคลื่อนที่ใน 4 ทิศทาง (UP, DOWN, LEFT, RIGHT) ที่ความเร็วปกติ 2 พิกเซลต่อเฟรม (120 พิกเซลต่อวินาที ที่ 60 Hz) ระบบการเดินใช้เทคนิค ``กดเลี้ยวล่วงหน้า'' (Pre-turn / Buffered Input) โดยบันทึกทิศทางล่าสุดที่ผู้เล่นต้องการลงในตัวแปร \texttt{want} (และ \texttt{want\_valid}) เมื่อสไลม์เคลื่อนที่มาอยู่ตรงตำแหน่งกึ่งกลางช่องพอดี (\texttt{p\_aligned}: \texttt{px[4:0] == 0} และ \texttt{py[4:0] == 0}) ระบบจึงจะตรวจสอบกับแผนที่ \texttt{maze\_rom} ว่าช่องถัดไปในทิศ \texttt{want} ไม่ใช่กำแพง หากเดินได้จะเลี้ยวทันทีเพื่อป้องกันไม่ให้สไลม์เดินชนทะลุขอบกำแพง อย่างไรก็ตาม หากผู้เล่นกดปุ่มทิศทางตรงข้ามกับทิศที่กำลังเดินอยู่ ($\texttt{want} == \texttt{pdir} \oplus \texttt{2'd1}$) ระบบอนุญาตให้กลับหลังหันได้ทันทีแม้ยังอยู่ระหว่างช่อง เพื่อให้ตอบสนองการหลบหลีกผีได้อย่างคล่องตัว
+ผู้เล่นใช้ปุ่มทิศทาง 4 ปุ่ม (\texttt{BTNU}, \texttt{BTND}, \texttt{BTNL}, \texttt{BTNR}) เพื่อสั่งให้สไลม์เคลื่อนที่ใน 4 ทิศทาง (UP, DOWN, LEFT, RIGHT) ที่ความเร็วปกติ 2 พิกเซลต่อเฟรม (120 พิกเซลต่อวินาที ที่ 60 Hz) ระบบการเดินใช้เทคนิค “กดเลี้ยวล่วงหน้า” (Pre-turn / Buffered Input) โดยบันทึกทิศทางล่าสุดที่ผู้เล่นต้องการลงในตัวแปร \texttt{want} (และ \texttt{want\_valid}) เมื่อสไลม์เคลื่อนที่มาอยู่ตรงตำแหน่งกึ่งกลางช่องพอดี (\texttt{p\_aligned}: \texttt{px[4:0] == 0} และ \texttt{py[4:0] == 0}) ระบบจึงจะตรวจสอบกับแผนที่ \texttt{maze\_rom} ว่าช่องถัดไปในทิศ \texttt{want} ไม่ใช่กำแพง หากเดินได้จะเลี้ยวทันทีเพื่อป้องกันไม่ให้สไลม์เดินชนทะลุขอบกำแพง อย่างไรก็ตาม หากผู้เล่นกดปุ่มทิศทางตรงข้ามกับทิศที่กำลังเดินอยู่ ($\texttt{want} == \texttt{pdir} \oplus \texttt{2'd1}$) ระบบอนุญาตให้กลับหลังหันได้ทันทีแม้ยังอยู่ระหว่างช่อง เพื่อให้ตอบสนองการหลบหลีกผีได้อย่างคล่องตัว
 
 \paragraph{การเริ่มเกม การหยุดชั่วคราว และการรีเซ็ต (Start, Pause \& Reset)}
 ปุ่ม \texttt{BTNC} ใช้สำหรับเริ่มเกมจากหน้าจอเริ่มต้น, หยุดเกมชั่วคราวหรือกลับมาเล่นต่อระหว่างเกม (Pause/Resume) และกลับสู่หน้าจอเริ่มต้นหลังจบเกมหรือชนะเกม ส่วนปุ่ม \texttt{CPU\_RESETN} เป็นปุ่มรีเซ็ตฮาร์ดแวร์สำหรับเริ่มระบบใหม่ทั้งหมดได้ทุกเมื่อ
@@ -26,7 +26,7 @@
 เมื่อเข้าสู่ร่างที่ 2 (\texttt{form = 2'd2}) ขนาดและรูปลักษณ์ของสไลม์จะโตขึ้น พร้อมทั้งปลดล็อกให้ไอเทมมงกุฎ (Crown) ปรากฏขึ้นบนแผนที่เพื่อรอให้ผู้เล่นเดินไปเก็บและเข้าสู่โหมดราชา
 
 \paragraph{ร่างที่ 3 (Form 3: King Mode)}
-เมื่อเดินไปชนมงกุฎในร่างที่ 2 สไลม์จะสวมมงกุฎเข้าสู่โหมดราชา (\texttt{form = 2'd3}) เป็นเวลา \texttt{KING\_SECONDS = 10} วินาที ในโหมดนี้สไลม์จะเดินเร็วขึ้นเป็น 2 เท่า (4 พิกเซลต่อเฟรม หรือ 240 พิกเซลต่อวินาที) และสามารถชนเพื่อ ``กินผี'' ได้โดยรับโบนัส +200 คะแนนต่อผี 1 ตัว ในช่วง 2 วินาทีสุดท้ายของโหมดราชา ($\texttt{ksec} \le 2$) สไปรต์สไลม์ ผีตอนกลัว และไอคอนมงกุฎจะกะพริบเตือนผู้เล่น ก่อนจะกลับคืนสู่ร่างที่ 2 เมื่อหมดเวลา
+เมื่อเดินไปชนมงกุฎในร่างที่ 2 สไลม์จะสวมมงกุฎเข้าสู่โหมดราชา (\texttt{form = 2'd3}) เป็นเวลา \texttt{KING\_SECONDS = 10} วินาที ในโหมดนี้สไลม์จะเดินเร็วขึ้นเป็น 2 เท่า (4 พิกเซลต่อเฟรม หรือ 240 พิกเซลต่อวินาที) และสามารถชนเพื่อ “กินผี” ได้โดยรับโบนัส +200 คะแนนต่อผี 1 ตัว ในช่วง 2 วินาทีสุดท้ายของโหมดราชา ($\texttt{ksec} \le 2$) สไปรต์สไลม์ ผีตอนกลัว และไอคอนมงกุฎจะกะพริบเตือนผู้เล่น ก่อนจะกลับคืนสู่ร่างที่ 2 เมื่อหมดเวลา
 
 \subsubsection{ระบบศัตรูและไอเทมภายในเขาวงกต (Enemies \& Items)}
 
@@ -37,7 +37,7 @@
     \item \textbf{ผีตัวที่ 1 และ 3 (\texttt{ghost\_1}, \texttt{ghost\_3}):} สลับระหว่างโหมดไล่ล่าและโหมดสุ่มอย่างละครึ่ง (50\% Chase / 50\% Random) โดยอ้างอิงบิตสุ่มจาก LFSR (\texttt{lfsr[12]} และ \texttt{lfsr[3]})
     \item \textbf{ผีตัวที่ 2 (\texttt{ghost\_2}):} โหมดเดินสุ่มตลอดเวลา (Always Random) โดยใช้ค่าสุ่ม 2 บิตจาก LFSR เลือกลำดับทิศทางเริ่มต้น
 \end{itemize}
-เมื่อสไลม์เข้าสู่ร่างที่ 3 (King Mode / \texttt{fright == 1}) ผีทุกตัวที่ยังมีชีวิตจะเปลี่ยนรูปเป็นสไปรต์ตอนหวาดกลัว (\texttt{ghost\_scared}) และกลับทิศทางการตัดสินใจจาก ``เข้าหาสไลม์'' เป็น ``วิ่งหนีออกจากสไลม์'' แทน
+เมื่อสไลม์เข้าสู่ร่างที่ 3 (King Mode / \texttt{fright == 1}) ผีทุกตัวที่ยังมีชีวิตจะเปลี่ยนรูปเป็นสไปรต์ตอนหวาดกลัว (\texttt{ghost\_scared}) และกลับทิศทางการตัดสินใจจาก “เข้าหาสไลม์” เป็น “วิ่งหนีออกจากสไลม์” แทน
 
 \paragraph{เม็ดคะแนน (Pellets) และมงกุฎ (Crown)}
 ทางเดินทุกช่องที่ไม่ใช่กำแพงจะเริ่มต้นด้วยการมีเม็ดคะแนน (เก็บสถานะในเรจิสเตอร์ \texttt{pellet[299:0]}) เมื่อสไลม์เดินตรงช่องที่มีเม็ดอยู่จะเก็บเม็ดนั้นและได้รับ +10 คะแนน พร้อมเพิ่มตัวนับจำนวนเม็ดที่กินไปแล้ว (\texttt{pcount}) สำหรับมงกุฎจะปรากฏขึ้นเมื่อสไลม์อยู่ในร่างที่ 2 โดยหมุนเวียนตามมุมทั้ง 4 ของเขาวงกตตามลำดับตัวนับ \texttt{cidx} (2 บิต) ได้แก่ (1,13) $\rightarrow$ (18,1) $\rightarrow$ (1,1) $\rightarrow$ (18,13) สไปรต์ของมงกุฎมีแอนิเมชันเคลื่อนไหว 3 เฟรม (\texttt{king0}, \texttt{king1}, \texttt{king2}) เล่นวนที่ความเร็วประมาณ 8 เฟรมต่อวินาที และหลังจากจบโหมดราชา มงกุฎจะหน่วงเวลา \texttt{CROWN\_DELAY = 180} เฟรม (3 วินาที) ก่อนปรากฏขึ้นใหม่ในตำแหน่งถัดไป
@@ -52,42 +52,43 @@
 
 \begin{figure}[H]
     \centering
+    \setlength{\tabcolsep}{4pt}
     \begin{tabular}{@{}cccccc@{}}
-        \smartimage{1.15cm}{slime1_idle.png}{1.15cm}{slime1\_idle} &
-        \smartimage{1.15cm}{slime1_up.png}{1.15cm}{slime1\_up} &
-        \smartimage{1.15cm}{slime1_down.png}{1.15cm}{slime1\_down} &
-        \smartimage{1.15cm}{slime1_left.png}{1.15cm}{slime1\_left} &
-        \smartimage{1.15cm}{slime1_right.png}{1.15cm}{slime1\_right} &
-        \smartimage{1.15cm}{slime1_died.png}{1.15cm}{slime1\_died} \\
-        \small\texttt{slime1\_idle} & \small\texttt{slime1\_up} & \small\texttt{slime1\_down} & \small\texttt{slime1\_left} & \small\texttt{slime1\_right} & \small\texttt{slime1\_died} \\[0.6em]
-        \smartimage{1.15cm}{slime2_idle.png}{1.15cm}{slime2\_idle} &
-        \smartimage{1.15cm}{slime2_up.png}{1.15cm}{slime2\_up} &
-        \smartimage{1.15cm}{slime2_down.png}{1.15cm}{slime2\_down} &
-        \smartimage{1.15cm}{slime2_left.png}{1.15cm}{slime2\_left} &
-        \smartimage{1.15cm}{slime2_right.png}{1.15cm}{slime2\_right} &
-        \smartimage{1.15cm}{slime2_died.png}{1.15cm}{slime2\_died} \\
-        \small\texttt{slime2\_idle} & \small\texttt{slime2\_up} & \small\texttt{slime2\_down} & \small\texttt{slime2\_left} & \small\texttt{slime2\_right} & \small\texttt{slime2\_died} \\[0.6em]
-        \smartimage{1.15cm}{slime3_idle.png}{1.15cm}{slime3\_idle} &
-        \smartimage{1.15cm}{slime3_up.png}{1.15cm}{slime3\_up} &
-        \smartimage{1.15cm}{slime3_down.png}{1.15cm}{slime3\_down} &
-        \smartimage{1.15cm}{slime3_left.png}{1.15cm}{slime3\_left} &
-        \smartimage{1.15cm}{slime3_right.png}{1.15cm}{slime3\_right} &
-        \smartimage{1.15cm}{slime3_died.png}{1.15cm}{slime3\_died} \\
-        \small\texttt{slime3\_idle} & \small\texttt{slime3\_up} & \small\texttt{slime3\_down} & \small\texttt{slime3\_left} & \small\texttt{slime3\_right} & \small\texttt{slime3\_died} \\[0.6em]
-        \smartimage{1.15cm}{ghost_0.png}{1.15cm}{ghost\_0} &
-        \smartimage{1.15cm}{ghost_1.png}{1.15cm}{ghost\_1} &
-        \smartimage{1.15cm}{ghost_2.png}{1.15cm}{ghost\_2} &
-        \smartimage{1.15cm}{ghost_3.png}{1.15cm}{ghost\_3} &
-        \smartimage{1.15cm}{ghost_scared.png}{1.15cm}{ghost\_scared} &
-        \smartimage{1.15cm}{ball.png}{1.15cm}{ball} \\
-        \small\texttt{ghost\_0} & \small\texttt{ghost\_1} & \small\texttt{ghost\_2} & \small\texttt{ghost\_3} & \small\texttt{ghost\_scared} & \small\texttt{ball} \\[0.6em]
-        \smartimage{1.15cm}{king0.png}{1.15cm}{king0} &
-        \smartimage{1.15cm}{king1.png}{1.15cm}{king1} &
-        \smartimage{1.15cm}{king2.png}{1.15cm}{king2} &
-        \smartimage{1.15cm}{kingmode.png}{1.15cm}{kingmode} &
+        \smartimage{1.1cm}{slime1_idle.png}{1.1cm}{slime1\_idle} &
+        \smartimage{1.1cm}{slime1_up.png}{1.1cm}{slime1\_up} &
+        \smartimage{1.1cm}{slime1_down.png}{1.1cm}{slime1\_down} &
+        \smartimage{1.1cm}{slime1_left.png}{1.1cm}{slime1\_left} &
+        \smartimage{1.1cm}{slime1_right.png}{1.1cm}{slime1\_right} &
+        \smartimage{1.1cm}{slime1_died.png}{1.1cm}{slime1\_died} \\
+        \footnotesize\texttt{slime1\_idle} & \footnotesize\texttt{slime1\_up} & \footnotesize\texttt{slime1\_down} & \footnotesize\texttt{slime1\_left} & \footnotesize\texttt{slime1\_right} & \footnotesize\texttt{slime1\_died} \\[0.6em]
+        \smartimage{1.1cm}{slime2_idle.png}{1.1cm}{slime2\_idle} &
+        \smartimage{1.1cm}{slime2_up.png}{1.1cm}{slime2\_up} &
+        \smartimage{1.1cm}{slime2_down.png}{1.1cm}{slime2\_down} &
+        \smartimage{1.1cm}{slime2_left.png}{1.1cm}{slime2\_left} &
+        \smartimage{1.1cm}{slime2_right.png}{1.1cm}{slime2\_right} &
+        \smartimage{1.1cm}{slime2_died.png}{1.1cm}{slime2\_died} \\
+        \footnotesize\texttt{slime2\_idle} & \footnotesize\texttt{slime2\_up} & \footnotesize\texttt{slime2\_down} & \footnotesize\texttt{slime2\_left} & \footnotesize\texttt{slime2\_right} & \footnotesize\texttt{slime2\_died} \\[0.6em]
+        \smartimage{1.1cm}{slime3_idle.png}{1.1cm}{slime3\_idle} &
+        \smartimage{1.1cm}{slime3_up.png}{1.1cm}{slime3\_up} &
+        \smartimage{1.1cm}{slime3_down.png}{1.1cm}{slime3\_down} &
+        \smartimage{1.1cm}{slime3_left.png}{1.1cm}{slime3\_left} &
+        \smartimage{1.1cm}{slime3_right.png}{1.1cm}{slime3\_right} &
+        \smartimage{1.1cm}{slime3_died.png}{1.1cm}{slime3\_died} \\
+        \footnotesize\texttt{slime3\_idle} & \footnotesize\texttt{slime3\_up} & \footnotesize\texttt{slime3\_down} & \footnotesize\texttt{slime3\_left} & \footnotesize\texttt{slime3\_right} & \footnotesize\texttt{slime3\_died} \\[0.6em]
+        \smartimage{1.1cm}{ghost_0.png}{1.1cm}{ghost\_0} &
+        \smartimage{1.1cm}{ghost_1.png}{1.1cm}{ghost\_1} &
+        \smartimage{1.1cm}{ghost_2.png}{1.1cm}{ghost\_2} &
+        \smartimage{1.1cm}{ghost_3.png}{1.1cm}{ghost\_3} &
+        \smartimage{1.1cm}{ghost_scared.png}{1.1cm}{ghost\_scared} &
+        \smartimage{1.1cm}{ball.png}{1.1cm}{ball} \\
+        \footnotesize\texttt{ghost\_0} & \footnotesize\texttt{ghost\_1} & \footnotesize\texttt{ghost\_2} & \footnotesize\texttt{ghost\_3} & \footnotesize\texttt{ghost\_scared} & \footnotesize\texttt{ball} \\[0.6em]
+        \smartimage{1.1cm}{king0.png}{1.1cm}{king0} &
+        \smartimage{1.1cm}{king1.png}{1.1cm}{king1} &
+        \smartimage{1.1cm}{king2.png}{1.1cm}{king2} &
+        \smartimage{1.1cm}{kingmode.png}{1.1cm}{kingmode} &
         \smartimage{0.85cm}{life_alive.png}{0.85cm}{life\_alive} &
         \smartimage{0.85cm}{life_died.png}{0.85cm}{life\_died} \\
-        \small\texttt{king0} & \small\texttt{king1} & \small\texttt{king2} & \small\texttt{kingmode} & \small\texttt{life\_alive} & \small\texttt{life\_died} \\
+        \footnotesize\texttt{king0} & \footnotesize\texttt{king1} & \footnotesize\texttt{king2} & \footnotesize\texttt{kingmode} & \footnotesize\texttt{life\_alive} & \footnotesize\texttt{life\_died} \\
     \end{tabular}
     \caption{ดีไซน์สไปรต์ของตัวละครสไลม์ 3 ร่าง, ผีทั้ง 4 ตัว, ผีตอนกลัว, มงกุฎ, เม็ด และไอคอน HUD ทั้ง 30 ภาพ}
     \label{fig:sprites}
@@ -99,45 +100,50 @@
 
 โมดูล \texttt{slime\_top.v} ทำหน้าที่เชื่อมต่อระบบทั้งหมดบนบอร์ด Nexys A7-100T ตั้งแต่การรับสัญญาณนาฬิกา 100 MHz เข้าสู่ \texttt{clk\_gen}, การซิงโครไนซ์ปุ่มกดและรีเซ็ต, การสร้างพิกัดและสัญญาณจังหวะจาก \texttt{vga\_sync}, การประมวลผลเกมใน \texttt{slime\_logic}, การสร้างสีพิกเซลใน \texttt{slime\_draw} ไปจนถึงการส่งออก Output Register ไปยังพอร์ต VGA, ไฟ LED และตัวขับ 7-Segment (\texttt{seg7x8}) ดังแสดงในรูปที่ \ref{fig:block_diagram}
 
-% NOTE: แผนภาพต้นแบบ slime_maze_block_diagram.png ใน ./myVerilog/ ยังระบุข้อความรุ่น 3 ghosts (เช่น "Ghost AI x3", "x14", "gx_flat[29:0]")
-% ควรแก้ไขใน slime_maze_block_diagram.dot เป็น 4 ghosts ("Ghost AI x4", "x18", "gx_flat[39:0]", "galive[3:0]", "touch[3:0]") แล้ว render ใหม่
 \begin{figure}[H]
     \centering
-    \smartimage{0.98\textwidth}{slime_maze_block_diagram.png}{5.5cm}{แผนภาพสถาปัตยกรรมภายในและการเชื่อมต่อสัญญาณระหว่างโมดูลทั้งหมดของเกมเอนจิน}
+    \smartimage{0.86\textwidth}{slime_maze_block_diagram.png}{5.5cm}{แผนภาพสถาปัตยกรรมภายในและการเชื่อมต่อสัญญาณระหว่างโมดูลทั้งหมดของเกมเอนจิน}
     \caption{แผนภาพสถาปัตยกรรมภายในและการเชื่อมต่อสัญญาณระหว่างโมดูลของเกม SLIME MAZE}
     \label{fig:block_diagram}
 \end{figure}
 
 \subsubsection{สถานะการทำงานของเกม (Game FSM ใน \texttt{slime\_logic.v})}
 
-การทำงานของเกมถูกควบคุมด้วยเครื่องสถานะจำกัดแบบ Moore (Moore FSM) จำนวน 2 ชุดทำงานควบคู่กันภายในโมดูล \texttt{slime\_logic.v} คือ Game FSM (\texttt{state[2:0]}) และ Evolution FSM (\texttt{form[1:0]}) ดังแสดงในรูปที่ \ref{fig:fsm}
+การทำงานของเกมถูกควบคุมด้วยเครื่องสถานะจำกัดแบบ Moore (Moore FSM) จำนวน 2 ชุดทำงานควบคู่กันภายในโมดูล \texttt{slime\_logic.v} คือ Game FSM (\texttt{state[2:0]}) และ Evolution FSM (\texttt{form[1:0]}) ดังแสดงในรูปที่ \ref{fig:game_fsm}
 
 \begin{figure}[H]
     \centering
-    \smartimage{0.92\textwidth}{slime_maze_fsm.png}{5.0cm}{แผนภาพ Finite State Machine แสดง Game FSM (6 สถานะ) และ Evolution FSM (3 ร่าง)}
-    \caption{แผนภาพ Finite State Machine (Game FSM และ Evolution FSM) ใน \texttt{slime\_logic.v}}
-    \label{fig:fsm}
+    \smartimage{0.92\textwidth}{game_fsm.png}{5.0cm}{แผนภาพ Finite State Machine แสดง Game FSM (6 สถานะ)}
+    \caption{แผนภาพ Finite State Machine (Game FSM) ใน \texttt{slime\_logic.v}}
+    \label{fig:game_fsm}
 \end{figure}
 
 \paragraph{Title State (\texttt{S\_TITLE = 3'd0})}
-สถานะหน้าจอเริ่มต้น แสดงแผนที่เขาวงกตพร้อมข้อความ ``SLIME MAZE'' และข้อความกะพริบ ``PRESS BTNC'' เมื่อผู้เล่นกดปุ่ม \texttt{BTNC} ระบบจะรีเซ็ตคะแนน, พลังชีวิต (= 3), ร่าง (= 1), เม็ดคะแนนทั้งหมด, ผีทั้ง 4 ตัว และเข้าสู่สถานะ \texttt{S\_PLAY}
+สถานะหน้าจอเริ่มต้น แสดงแผนที่เขาวงกตพร้อมข้อความ “SLIME MAZE” และข้อความกะพริบ “PRESS BTNC” เมื่อผู้เล่นกดปุ่ม \texttt{BTNC} ระบบจะรีเซ็ตคะแนน, พลังชีวิต (= 3), ร่าง (= 1), เม็ดคะแนนทั้งหมด, ผีทั้ง 4 ตัว และเข้าสู่สถานะ \texttt{S\_PLAY}
 
 \paragraph{Play State (\texttt{S\_PLAY = 3'd1})}
 สถานะหลักของการเล่นเกม ระบบประมวลผลการเดินของสไลม์และผี, การเก็บเม็ด, การเกิดและเก็บมงกุฎ, การนับเวลา King Mode, การตรวจจับการชน และการสะสมคะแนน หากกด \texttt{BTNC} จะเปลี่ยนไป \texttt{S\_PAUSE}, หากชนผีขณะไม่ได้เป็นร่าง 3 จะเปลี่ยนไป \texttt{S\_DEAD} และหากกินผีครบ 4 ตัวจะเปลี่ยนไป \texttt{S\_WIN}
 
 \paragraph{Pause State (\texttt{S\_PAUSE = 3'd2})}
-สถานะหยุดเกมชั่วคราวเมื่อกด \texttt{BTNC} ระหว่างเล่น ตำแหน่งวัตถุและตัวนับเวลาทุกอย่างจะถูกหยุดนิ่ง พร้อมแสดงกรอบข้อความ ``PAUSE'' บนหน้าจอ เมื่อกดปุ่ม \texttt{BTNC} อีกครั้งจะกลับสู่ \texttt{S\_PLAY}
+สถานะหยุดเกมชั่วคราวเมื่อกด \texttt{BTNC} ระหว่างเล่น ตำแหน่งวัตถุและตัวนับเวลาทุกอย่างจะถูกหยุดนิ่ง พร้อมแสดงกรอบข้อความ “PAUSE” บนหน้าจอ เมื่อกดปุ่ม \texttt{BTNC} อีกครั้งจะกลับสู่ \texttt{S\_PLAY}
 
 \paragraph{Dead State (\texttt{S\_DEAD = 3'd3})}
 สถานะหน่วงเวลาหลังสไลม์ถูกผีจับได้ (Freeze Frame 90 เฟรม หรือ 1.5 วินาที) เพื่อแสดงท่าทางสไลม์ตาย (\texttt{pose = 3}) เมื่อครบเวลาหากยังมีชีวิตเหลือ ($\texttt{lives} > 0$) จะรีเซ็ตตำแหน่งสไลม์และผีกลับจุดเริ่มต้นแล้วเข้าสู่ \texttt{S\_PLAY} แต่หาก $\texttt{lives} == 0$ จะเข้าสู่ \texttt{S\_OVER}
 
 \paragraph{Win State (\texttt{S\_WIN = 3'd4})}
-สถานะชนะเกม เกิดขึ้นเมื่อกินผีครบทั้ง 4 ตัว หน้าจอแสดงข้อความสีเขียว ``YOU WIN'' และ ``PRESS BTNC'' กด \texttt{BTNC} เพื่อกลับสู่หน้าจอ \texttt{S\_TITLE}
+สถานะชนะเกม เกิดขึ้นเมื่อกินผีครบทั้ง 4 ตัว หน้าจอแสดงข้อความสีเขียว “YOU WIN” และ “PRESS BTNC” กด \texttt{BTNC} เพื่อกลับสู่หน้าจอ \texttt{S\_TITLE}
 
 \paragraph{Game Over State (\texttt{S\_OVER = 3'd5})}
-สถานะจบเกม เกิดขึ้นเมื่อพลังชีวิตหมด หน้าจอแสดงข้อความสีแดง ``GAME OVER'' และ ``PRESS BTNC'' กด \texttt{BTNC} เพื่อกลับสู่หน้าจอ \texttt{S\_TITLE}
+สถานะจบเกม เกิดขึ้นเมื่อพลังชีวิตหมด หน้าจอแสดงข้อความสีแดง “GAME OVER” และ “PRESS BTNC” กด \texttt{BTNC} เพื่อกลับสู่หน้าจอ \texttt{S\_TITLE}
 
-นอกจากนี้ยังมี \textbf{Evolution FSM (\texttt{form[1:0]})} ที่ทำงานภายในสถานะ \texttt{S\_PLAY} เพื่อเปลี่ยนจากร่าง 1 $\rightarrow$ ร่าง 2 เมื่อเก็บเม็ดครบ 30 เม็ด, เปลี่ยนจากร่าง 2 $\rightarrow$ ร่าง 3 เมื่อเก็บมงกุฎ (\texttt{crown\_hit}) และกลับจากร่าง 3 $\rightarrow$ ร่าง 2 เมื่อนับถอยหลัง 10 วินาทีครบกำหนด
+นอกจากนี้ยังมี \textbf{Evolution FSM (\texttt{form[1:0]})} ที่ทำงานภายในสถานะ \texttt{S\_PLAY} เพื่อเปลี่ยนจากร่าง 1 $\rightarrow$ ร่าง 2 เมื่อเก็บเม็ดครบ 30 เม็ด, เปลี่ยนจากร่าง 2 $\rightarrow$ ร่าง 3 เมื่อเก็บมงกุฎ (\texttt{crown\_hit}) และกลับจากร่าง 3 $\rightarrow$ ร่าง 2 เมื่อนับถอยหลัง 10 วินาทีครบกำหนด ดังแสดงในรูปที่ \ref{fig:evolution_fsm}
+
+\begin{figure}[H]
+    \centering
+    \smartimage{0.92\textwidth}{evolution_fsm.png}{5.0cm}{แผนภาพ Finite State Machine แสดง Evolution FSM}
+    \caption{แผนภาพ Finite State Machine (Evolution FSM) ใน \texttt{slime\_logic.v}}
+    \label{fig:evolution_fsm}
+\end{figure}
 
 \subsection{ระบบฮาร์ดแวร์และสัญญาณควบคุม (Hardware System)}
 
@@ -258,6 +264,7 @@ always @* begin
 end
 \end{lstlisting}
 
+\clearpage
 \subsection{ระบบจำลองการทำงานบนคอมพิวเตอร์ (Simulation System — Verilator + SDL2)}
 
 เพื่อเพิ่มความรวดเร็วในการทดสอบระบบเกมและตรวจสอบความถูกต้องของกราฟิกโดยไม่ต้องรอกระบวนการ Synthesis บน Vivado ทุกครั้งที่แก้โค้ด คณะผู้จัดทำได้พัฒนาชุดจำลองในโฟลเดอร์ \texttt{sim/} โดยใช้ Verilator แปลงโค้ด Verilog ชุดเดียวกับที่ใช้บนบอร์ดจริงร่วมกับไลบรารี SDL2 แบ่งออกเป็น 2 โหมด ได้แก่

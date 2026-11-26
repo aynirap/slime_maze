@@ -31,58 +31,82 @@
     \end{tabularx}
 \end{table}
 
+\clearpage
 \subsection{ฮาร์ดแวร์ (Hardware)}
 
 อุปกรณ์ฮาร์ดแวร์ที่ใช้ในการทดสอบและนำเสนอผลงานจริง แสดงดังตารางที่ \ref{tab:hardware}
 
-% [INSERT PICTURE: nexys_a7_board.png, vga_cable.png, vga_monitor.png, micro_usb.png]
-\begin{table}[H]
-    \centering
+\begin{longtable}{@{}c >{\centering\arraybackslash}p{0.44\textwidth} >{\raggedright\arraybackslash}p{0.43\textwidth}@{}}
     \caption{รายการเครื่องมือฮาร์ดแวร์ที่ใช้ในการพัฒนา}
-    \label{tab:hardware}
-    \begin{tabularx}{\textwidth}{@{}c >{\centering\arraybackslash}p{0.46\textwidth} L@{}}
-        \toprule
-        \textbf{ลำดับที่} & \textbf{ภาพอุปกรณ์} & \textbf{ชื่ออุปกรณ์ / วัตถุประสงค์} \\
-        \midrule
-        1 &
-        \begin{minipage}[t]{\linewidth}
-            \centering
-            \smartimage{0.85\linewidth}{nexys_a7_board.png}{2.4cm}{ภาพถ่ายด้านบนของบอร์ด Digilent Nexys A7-100T ให้เห็นปุ่มกด 5 ทิศทาง, CPU\_RESETN, 16 LEDs, 7-Segment และพอร์ต VGA}
-            \captionof{figure}{บอร์ดพัฒนา Digilent Nexys A7-100T}
-        \end{minipage}
-        &
-        \textbf{อุปกรณ์:} Digilent Nexys A7-100T FPGA Trainer Board (Xilinx Artix-7 \texttt{xc7a100tcsg324-1}) \par\vspace{0.3em}
-        \textbf{วัตถุประสงค์:} ใช้เป็นหน่วยประมวลผลหลักของเกม รับคำสั่งจากปุ่มกด ประมวลผลตรรกะ และส่งสัญญาณภาพออกไปยังจอมอนิเตอร์ พร้อมแสดงสถานะบน 7-Segment และ LED \\
-        \midrule
-        2 &
-        \begin{minipage}[t]{\linewidth}
-            \centering
-            \smartimage{0.85\linewidth}{vga_cable.png}{2.1cm}{ภาพสาย VGA แบบ D-Sub 15 ขา (Male-to-Male)}
-            \captionof{figure}{สายเชื่อมต่อสัญญาณภาพ VGA}
-        \end{minipage}
-        &
-        \textbf{อุปกรณ์:} สาย VGA (D-Sub 15-pin) \par\vspace{0.3em}
-        \textbf{วัตถุประสงค์:} นำส่งสัญญาณภาพ RGB และสัญญาณซิงค์ HS/VS จากพอร์ต VGA บนบอร์ด FPGA ไปยังจอมอนิเตอร์ \\
-        \midrule
-        3 &
-        \begin{minipage}[t]{\linewidth}
-            \centering
-            \smartimage{0.85\linewidth}{vga_monitor.png}{2.1cm}{ภาพจอมอนิเตอร์ LCD ที่รองรับอินพุต VGA 60 Hz}
-            \captionof{figure}{จอมอนิเตอร์แสดงผลมาตรฐาน VGA}
-        \end{minipage}
-        &
-        \textbf{อุปกรณ์:} จอมอนิเตอร์ที่รองรับพอร์ต VGA ความละเอียด $640\times480$ @ 60 Hz \par\vspace{0.3em}
-        \textbf{วัตถุประสงค์:} แสดงผลภาพกราฟิกของเกม Slime Maze แบบเรียลไทม์ \\
-        \midrule
-        4 &
-        \begin{minipage}[t]{\linewidth}
-            \centering
-            \smartimage{0.85\linewidth}{micro_usb.png}{2.1cm}{ภาพสาย USB Type-A to Micro-B สำหรับโปรแกรมและจ่ายไฟให้บอร์ด}
-            \captionof{figure}{สาย Micro-USB สำหรับโปรแกรมบอร์ด FPGA}
-        \end{minipage}
-        &
-        \textbf{อุปกรณ์:} สาย Micro-USB \par\vspace{0.3em}
-        \textbf{วัตถุประสงค์:} เชื่อมต่อระหว่างคอมพิวเตอร์กับบอร์ด Nexys A7-100T เพื่อโปรแกรม Bitstream ผ่าน JTAG และจ่ายไฟเลี้ยงบอร์ด \\
-        \bottomrule
-    \end{tabularx}
-\end{table}
+    \label{tab:hardware} \\
+    \toprule
+    \textbf{ลำดับที่} & \textbf{ภาพอุปกรณ์} & \textbf{ชื่ออุปกรณ์ / วัตถุประสงค์} \\
+    \midrule
+    \endfirsthead
+
+    \multicolumn{3}{c}{\textit{(ต่อจากหน้าก่อน)}} \\
+    \toprule
+    \textbf{ลำดับที่} & \textbf{ภาพอุปกรณ์} & \textbf{ชื่ออุปกรณ์ / วัตถุประสงค์} \\
+    \midrule
+    \endhead
+
+    \midrule
+    \multicolumn{3}{r}{\textit{(มีต่อหน้าถัดไป)}} \\
+    \bottomrule
+    \endfoot
+
+    \bottomrule
+    \endlastfoot
+
+    \begin{minipage}[t]{2em}\vspace{0pt}\centering 1\end{minipage} &
+    \begin{minipage}[t]{\linewidth}
+        \vspace{0pt}\centering
+        \smartimage{0.85\linewidth}{nexys_a7_board.png}{2.4cm}{ภาพถ่ายด้านบนของบอร์ด Digilent Nexys A7-100T ให้เห็นปุ่มกด 5 ทิศทาง, CPU\_RESETN, 16 LEDs, 7-Segment และพอร์ต VGA}
+        \tablefigcap{บอร์ดพัฒนา Digilent Nexys A7-100T}
+    \end{minipage}
+    &
+    \begin{minipage}[t]{\linewidth}
+        \vspace{0pt}\raggedright
+        \textbf{อุปกรณ์:} Digilent Nexys A7-100T FPGA Trainer Board (Xilinx Artix-7 \texttt{xc7a100tcsg324-1}) \par\vspace{0.4em}
+        \textbf{วัตถุประสงค์:} ใช้เป็นหน่วยประมวลผลหลักของเกม รับคำสั่งจากปุ่มกด ประมวลผลตรรกะ และส่งสัญญาณภาพออกไปยังจอมอนิเตอร์ พร้อมแสดงสถานะบน 7-Segment และ LED
+    \end{minipage} \\
+    \midrule
+    \begin{minipage}[t]{2em}\vspace{0pt}\centering 2\end{minipage} &
+    \begin{minipage}[t]{\linewidth}
+        \vspace{0pt}\centering
+        \smartimage{0.85\linewidth}{vga_cable.png}{2.1cm}{ภาพสาย VGA แบบ D-Sub 15 ขา (Male-to-Male)}
+        \tablefigcap{สายเชื่อมต่อสัญญาณภาพ VGA}
+    \end{minipage}
+    &
+    \begin{minipage}[t]{\linewidth}
+        \vspace{0pt}\raggedright
+        \textbf{อุปกรณ์:} สาย VGA (D-Sub 15-pin) \par\vspace{0.4em}
+        \textbf{วัตถุประสงค์:} นำส่งสัญญาณภาพ RGB และสัญญาณซิงค์ HS/VS จากพอร์ต VGA บนบอร์ด FPGA ไปยังจอมอนิเตอร์
+    \end{minipage} \\
+    \midrule
+    \begin{minipage}[t]{2em}\vspace{0pt}\centering 3\end{minipage} &
+    \begin{minipage}[t]{\linewidth}
+        \vspace{0pt}\centering
+        \smartimage{0.85\linewidth}{vga_monitor.png}{2.1cm}{ภาพจอมอนิเตอร์ LCD ที่รองรับอินพุต VGA 60 Hz}
+        \tablefigcap{จอมอนิเตอร์แสดงผลมาตรฐาน VGA}
+    \end{minipage}
+    &
+    \begin{minipage}[t]{\linewidth}
+        \vspace{0pt}\raggedright
+        \textbf{อุปกรณ์:} จอมอนิเตอร์ที่รองรับพอร์ต VGA ความละเอียด $640\times480$ @ 60 Hz \par\vspace{0.4em}
+        \textbf{วัตถุประสงค์:} แสดงผลภาพกราฟิกของเกม Slime Maze แบบเรียลไทม์
+    \end{minipage} \\
+    \midrule
+    \begin{minipage}[t]{2em}\vspace{0pt}\centering 4\end{minipage} &
+    \begin{minipage}[t]{\linewidth}
+        \vspace{0pt}\centering
+        \smartimage{0.85\linewidth}{micro_usb.png}{2.1cm}{ภาพสาย USB Type-A to Micro-B สำหรับโปรแกรมและจ่ายไฟให้บอร์ด}
+        \tablefigcap{สาย Micro-USB สำหรับโปรแกรมบอร์ด FPGA}
+    \end{minipage}
+    &
+    \begin{minipage}[t]{\linewidth}
+        \vspace{0pt}\raggedright
+        \textbf{อุปกรณ์:} สาย Micro-USB \par\vspace{0.4em}
+        \textbf{วัตถุประสงค์:} เชื่อมต่อระหว่างคอมพิวเตอร์กับบอร์ด Nexys A7-100T เพื่อโปรแกรม Bitstream ผ่าน JTAG และจ่ายไฟเลี้ยงบอร์ด
+    \end{minipage} \\
+\end{longtable}
