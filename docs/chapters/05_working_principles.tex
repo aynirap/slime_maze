@@ -1,0 +1,104 @@
+% ============================================================================
+\clearpage
+\mainsection{หลักการทำงาน}
+% ============================================================================
+
+\subsection{ระบบรูปแบบการเล่นเกม (Game Mechanics)}
+
+\subsubsection{การควบคุมตัวละคร (Character Control)}
+\paragraph{การเคลื่อนที่และการกดเลี้ยวล่วงหน้า (Movement \& Pre-turn Input)}
+\todo{อธิบายการเดินตามตาราง 20x15 ช่องและการกดปุ่มเลี้ยวล่วงหน้าก่อนถึงทางแยก}
+
+\paragraph{การเริ่มเกม การหยุดชั่วคราว และการรีเซ็ต (Start, Pause \& Reset)}
+\todo{อธิบายหน้าที่ของปุ่ม BTNC และ CPU\_RESETN}
+
+\subsubsection{ระบบการวิวัฒนาการของสไลม์ (Evolution \& King Mode)}
+\paragraph{ร่างที่ 1 (Form 1: Small Slime)}
+\todo{ร่างเริ่มต้น เก็บเม็ด (+10 คะแนน) และหลบผี 4 ตัว (ภาพสไปรต์จาก images/sprite/slime1\_*.png)}
+
+\paragraph{ร่างที่ 2 (Form 2: Big Slime)}
+\todo{เก็บเม็ดครบ 30 เม็ด (N\_EVOLVE) มงกุฎจะปรากฏขึ้นในเขาวงกต (ภาพสไปรต์จาก images/sprite/slime2\_*.png)}
+
+\paragraph{ร่างที่ 3 (Form 3: King Mode)}
+\todo{เก็บมงกุฎในร่าง 2 เดินเร็วขึ้น 2 เท่า กินผีได้ (+200 คะแนน/ตัว) นาน 10 วินาที (ภาพสไปรต์จาก images/sprite/slime3\_*.png)}
+
+\subsubsection{ระบบศัตรูและไอเทมภายในเขาวงกต (Enemies \& Items)}
+\paragraph{พฤติกรรมของผีทั้ง 4 ตัว (Ghost AI)}
+\todo{อธิบายผี 4 ตัว: Ghost 0 (Chase), Ghost 1 \& 3 (Chase/Random), Ghost 2 (Random) และโหมด Fright (images/sprite/ghost\_*.png)}
+
+\paragraph{เม็ดคะแนน (Pellets) และมงกุฎ (Crown)}
+\todo{การวางเม็ดคะแนนและการสุ่มเกิดใหม่ของมงกุฎ (CROWN\_DELAY = 180 เฟรม) (images/sprite/ball.png, king0..2.png)}
+
+\subsubsection{ระบบคะแนน พลังชีวิต และเงื่อนไขการแพ้ชนะ (Scoring, Lives \& Win/Loss)}
+\todo{คะแนนสูงสุด 9990, พลังชีวิต 3 ดวง (life\_alive.png / life\_died.png), เงื่อนไข WIN และ GAME OVER}
+
+\subsection{ระบบภาพรวมการทำงาน (System Overview)}
+
+\subsubsection{สถาปัตยกรรมระดับบนสุด (\texttt{slime\_top.v})}
+\todo{แผนภาพการเชื่อมต่อระหว่าง clk\_gen, vga\_sync, slime\_logic, slime\_draw, seg7x8 และ LEDs}
+
+\subsubsection{สถานะการทำงานของเกม (Game FSM ใน \texttt{slime\_logic.v})}
+\paragraph{Title State (\texttt{S\_TITLE})}
+\todo{หน้าเริ่มต้น แสดงข้อความ SLIME MAZE และ PRESS BTNC}
+
+\paragraph{Play State (\texttt{S\_PLAY})}
+\todo{สถานะการเล่นเกมหลัก การเดิน การเก็บเม็ด และการอัปเดต AI ผี}
+
+\paragraph{Pause State (\texttt{S\_PAUSE})}
+\todo{สถานะหยุดเกมชั่วคราวเมื่อกด BTNC ระหว่างเล่น}
+
+\paragraph{Dead State (\texttt{S\_DEAD})}
+\todo{สถานะเมื่อสไลม์ถูกผีจับได้ (ลดชีวิต 1 ดวง และรีเซ็ตตำแหน่งเมื่อยังมีชีวิตเหลือ)}
+
+\paragraph{Win State (\texttt{S\_WIN})}
+\todo{สถานะชนะเกมเมื่อกินผีครบทั้ง 4 ตัว}
+
+\paragraph{Game Over State (\texttt{S\_OVER})}
+\todo{สถานะจบเกมเมื่อพลังชีวิตเหลือ 0}
+
+\subsection{ระบบฮาร์ดแวร์และสัญญาณควบคุม (Hardware System)}
+
+\subsubsection{สัญญาณนาฬิกาและวงจรรีเซ็ต (\texttt{clk\_gen.v} และ Reset Sync)}
+\todo{MMCM แปลง 100 MHz -> 25 MHz และ 2-FF Reset Synchronizer}
+
+\subsubsection{การซิงโครไนซ์ปุ่มกด (2-FF Button Synchronizer)}
+\todo{การซิงโครไนซ์ BTNU/D/L/R/C เข้าสู่ Clock Domain 25 MHz และการตรวจจับขอบสัญญาณ}
+
+\subsubsection{การสร้างสัญญาณภาพ VGA (\texttt{vga\_sync.v} และ Output Register)}
+\todo{ไทม์มิง VGA 640x480 @ 60 Hz, tick (y=480), tick2 (y=500) และ Output Register}
+
+\subsubsection{การแสดงผลบน 7-Segment 8 หลัก (\texttt{seg7x8.v}) และ LEDs}
+\todo{การแบ่งแสดงผลคะแนน (4 หลักขวา), เวลาร่าง 3 (หลัก 4-5), ร่างปัจจุบัน (หลักซ้ายสุด) และ LED[2:0] / LED[15:6]}
+
+\subsection{ระบบตรรกะเกม (Game Logic System — \texttt{slime\_logic.v})}
+
+\subsubsection{การสร้างตัวเลขสุ่มด้วย 16-bit LFSR}
+\todo{อธิบาย Linear Feedback Shift Register สำหรับสุ่มการเคลื่อนที่ของผีและตำแหน่งเกิดมงกุฎ}
+
+\subsubsection{การเดินบนตารางและการตรวจกำแพง (Tile Alignment \& \texttt{maze\_rom})}
+\todo{พิกัดพิกเซล (px, py), เงื่อนไข aligned ที่ทวีคูณของ 32 และ next\_tx/next\_ty}
+
+\subsubsection{ระบบคะแนนแบบ BCD (\texttt{bcd\_add10}) และตัวจับเวลา King Mode}
+\todo{การบวกคะแนนแบบ BCD 4 หลัก และการนับถอยหลัง 10 วินาทีในร่าง 3}
+
+\subsubsection{การตรวจจับการชน (Collision Detection)}
+\todo{การตรวจสอบระยะห่างระหว่างสไลม์กับผี, เม็ดคะแนน และมงกุฎ}
+
+\subsection{ระบบกราฟิกและการจัดการหน่วยความจำ (Graphic System)}
+
+\subsubsection{แผนที่เขาวงกตและฟอนต์ (\texttt{slime\_roms.v})}
+\todo{โครงสร้าง maze\_rom (20x15 ช่อง) และ font\_rom (ฟอนต์ 5x7)}
+
+\subsubsection{ระบบสไปรต์และพาเลตสี (\texttt{gen\_art.py} และ \texttt{slime\_art.v})}
+\todo{กระบวนการแปลงไฟล์ PNG จากโฟลเดอร์ sprite/ ด้วย gen\_art.py เป็น art\_palette (5-bit) และ ghost\_palette (4-bit) พร้อมตารางรวมสไปรต์จาก images/sprite/}
+
+\subsubsection{การวาดภาพแบบ Priority Multiplexer (\texttt{slime\_draw.v})}
+\todo{ลำดับชั้นการซ้อนทับพิกเซล: ข้อความ > สไลม์ > ผี > มงกุฎ > เม็ด > ไอคอน HUD > กำแพง > พื้น}
+
+\subsection{ระบบจำลองการทำงานบนคอมพิวเตอร์ (Simulation System — Verilator + SDL2)}
+
+\subsubsection{โหมดจำลอง 60 FPS (\texttt{fast\_top.v}, \texttt{sim\_fast.cpp})}
+\todo{การจำลอง logic และ draw ที่ 60 เฟรมต่อวินาทีด้วย Verilator + SDL2}
+
+\subsubsection{โหมดจำลองสัญญาณ VGA (\texttt{sim\_top.v}, \texttt{sim\_main.cpp})}
+\todo{การจำลองสัญญาณ vga\_sync ทีละพิกเซลเสมือนฮาร์ดแวร์จริง}

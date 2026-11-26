@@ -37,3 +37,29 @@ venv/
 *.sim/
 *.gen/
 *.ioplanning/
+
+# LaTeX / XeLaTeX build & auxiliary files
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.dvi
+*.fdb_latexmk
+*.fls
+*.idx
+*.ilg
+*.ind
+*.lof
+*.lot
+*.nav
+*.out
+*.ps
+*.run.xml
+*.snm
+*.synctex.gz
+*.toc
+*.vrb
+*.xdv
+# Uncomment below if you do not want to commit compiled PDFs
+# docs/report.pdf
+

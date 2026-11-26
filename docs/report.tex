@@ -1,0 +1,189 @@
+% !TEX program = xelatex
+\documentclass[12pt,a4paper]{article}
+
+% ============================================================================
+% Packages & Language Setup (XeLaTeX + Thai)
+% ============================================================================
+\usepackage{geometry}
+\geometry{
+    a4paper,
+    top=2.5cm,
+    bottom=2.5cm,
+    left=2.5cm,
+    right=2.5cm,
+    headheight=16pt
+}
+
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\setdefaultlanguage{thai}
+\setotherlanguage{english}
+
+% ฟอนต์ภาษาไทยมาตรฐานรายงาน (โหลดจากโฟลเดอร์ docs/fonts/ เพื่อความสอดคล้องทุกเครื่อง)
+\setmainfont[
+    Path = fonts/,
+    Extension = .ttf,
+    Script = Thai,
+    Scale = 1.35,
+    UprightFont = THSarabunNew,
+    BoldFont = THSarabunNew-Bold,
+    ItalicFont = THSarabunNew-Italic,
+    BoldItalicFont = THSarabunNew-BoldItalic
+]{THSarabunNew}
+
+\newfontfamily\thaifont[
+    Path = fonts/,
+    Extension = .ttf,
+    Script = Thai,
+    Scale = 1.35,
+    UprightFont = THSarabunNew,
+    BoldFont = THSarabunNew-Bold,
+    ItalicFont = THSarabunNew-Italic,
+    BoldItalicFont = THSarabunNew-BoldItalic
+]{THSarabunNew}
+
+\newfontfamily\englishfont[Scale=1.0]{Times New Roman}
+\newfontfamily\thaifonttt[Script=Thai, Scale=1.0]{Courier New}
+
+% การตัดคำภาษาไทยอัตโนมัติใน XeLaTeX
+\XeTeXlinebreaklocale "th"
+\XeTeXlinebreakskip = 0pt plus 1pt
+
+\usepackage{graphicx}
+% พาธสำหรับรูปภาพและสไปรต์ที่ scale up แล้วใน docs/images/ และ docs/images/sprite/
+\graphicspath{{images/}{images/sprite/}}
+
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{xcolor}
+\usepackage{hyperref}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    urlcolor=blue,
+    pdftitle={รายงานผลการดำเนินการโครงงาน การพัฒนาเกม SLIME MAZE ด้วย FPGA},
+    pdfauthor={คณะผู้จัดทำโครงงาน CPE222}
+}
+
+% ============================================================================
+% Heading & TOC Numbering Style (คล้าย REF_TH_CPE222_Final_Documentation)
+%   - หัวข้อหลัก (Section): ไม่มีตัวเลขนำหน้า แต่แสดงในสารบัญ
+%   - หัวข้อย่อยระดับ 1 (Subsection): 1), 2), 3) ...
+%   - หัวข้อย่อยระดับ 2 (Subsubsection): 1.1), 1.2), ...
+%   - หัวข้อย่อยระดับ 3 (Paragraph): 1.1.1), 1.1.2), ...
+% ============================================================================
+\setcounter{secnumdepth}{4}
+\setcounter{tocdepth}{4}
+
+\renewcommand{\thesubsection}{\arabic{subsection})}
+\renewcommand{\thesubsubsection}{\arabic{subsection}.\arabic{subsubsection})}
+\renewcommand{\theparagraph}{\arabic{subsection}.\arabic{subsubsection}.\arabic{paragraph})}
+
+% ปรับระยะเยื้องในสารบัญให้พอดี ไม่ล้นขอบขวา
+\makeatletter
+\renewcommand*\l@section{\@dottedtocline{1}{0em}{0em}}
+\renewcommand*\l@subsection{\@dottedtocline{2}{1.2em}{2.0em}}
+\renewcommand*\l@subsubsection{\@dottedtocline{3}{2.8em}{2.8em}}
+\renewcommand*\l@paragraph{\@dottedtocline{4}{4.6em}{3.6em}}
+\makeatother
+
+% คำสั่งสำหรับหัวข้อหลักที่ไม่มีเลขนำหน้า แต่ขึ้นสารบัญและรีเซ็ตเลขหัวข้อย่อย
+\newcommand{\mainsection}[1]{%
+    \phantomsection
+    \stepcounter{section}%
+    \section*{#1}%
+    \addcontentsline{toc}{section}{#1}%
+}
+
+% ข้อความรอเติมเนื้อหา (ลบออกได้เมื่อเริ่มเขียนเนื้อหาแต่ละหัวข้อ)
+\newcommand{\todo}[1]{\noindent\textcolor{gray}{\small\textit{[รอเพิ่มเนื้อหา: #1]}}\par\vspace{0.3em}}
+
+\titleformat{\section}{\Large\bfseries}{}{0pt}{}
+\titleformat{\subsection}{\large\bfseries}{\thesubsection}{0.6em}{}
+\titleformat{\subsubsection}{\normalsize\bfseries}{\thesubsubsection}{0.6em}{}
+\titleformat{\paragraph}[block]{\normalsize\bfseries}{\theparagraph}{0.6em}{}
+
+\titlespacing*{\section}{0pt}{1.2em}{0.4em}
+\titlespacing*{\subsection}{0pt}{0.8em}{0.2em}
+\titlespacing*{\subsubsection}{0.6cm}{0.6em}{0.2em}
+\titlespacing*{\paragraph}{1.2cm}{0.5em}{0.2em}
+
+% ชื่อสารบัญภาษาไทย (ตั้งค่าใน \captionsthai ของ polyglossia)
+\gappto\captionsthai{%
+    \renewcommand{\contentsname}{สารบัญ}%
+    \renewcommand{\listfigurename}{สารบัญรูปภาพ}%
+    \renewcommand{\listtablename}{สารบัญตาราง}%
+    \renewcommand{\figurename}{รูปที่}%
+    \renewcommand{\tablename}{ตาราง}%
+}
+
+% เลขหน้าอักษรไทย (ก, ข, ค, ...) สำหรับส่วนหน้า
+\makeatletter
+\def\@thaialph#1{%
+    \ifcase#1\or ก\or ข\or ค\or ง\or จ\or ฉ\or ช\or ซ\or ฌ\or ญ%
+    \or ฎ\or ฏ\or ฐ\or ฑ\or ฒ\or ณ\or ด\or ต\or ถ\or ท%
+    \or ธ\or น\or บ\or ป\or ผ\or ฝ\or พ\or ฟ\or ภ\or ม%
+    \else\@ctrerr\fi}
+\def\thaialph#1{\expandafter\@thaialph\csname c@#1\endcsname}
+\makeatother
+
+% Header / Footer (เลขหน้ามุมขวาบน ตามรูปแบบรายงานอ้างอิง)
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[R]{\thepage}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+\setlength{\parindent}{1.2cm}
+\setlength{\parskip}{0.3em}
+
+% ============================================================================
+% Document Start
+% ============================================================================
+\begin{document}
+
+% หน้าปก
+\input{chapters/00_cover}
+
+% ----------------------------------------------------------------------------
+% ส่วนหน้า: สารบัญ, สารบัญรูปภาพ, สารบัญตาราง (เลขหน้า ก, ข, ...)
+% ----------------------------------------------------------------------------
+\pagenumbering{thaialph}
+\setcounter{page}{1}
+
+\phantomsection
+\addcontentsline{toc}{section}{สารบัญ}
+\tableofcontents
+\clearpage
+
+\phantomsection
+\addcontentsline{toc}{section}{สารบัญรูปภาพ}
+\listoffigures
+\vspace{1.5cm}
+
+\phantomsection
+\addcontentsline{toc}{section}{สารบัญตาราง}
+\listoftables
+\clearpage
+
+% ----------------------------------------------------------------------------
+% ส่วนเนื้อหา (เลขหน้า 1, 2, 3, ...)
+% ----------------------------------------------------------------------------
+\pagenumbering{arabic}
+\setcounter{page}{1}
+
+\input{chapters/01_introduction}
+\input{chapters/02_objectives}
+\input{chapters/03_equipment}
+\input{chapters/04_circuit_components}
+\input{chapters/05_working_principles}
+\input{chapters/06_results}
+\input{chapters/07_problems_solutions}
+\input{chapters/08_conclusion}
+\input{chapters/09_references}
+\input{chapters/10_appendix}
+
+\end{document}
