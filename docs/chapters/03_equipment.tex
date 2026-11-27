@@ -19,11 +19,11 @@
         1 & Xilinx Vivado\textsuperscript{\textregistered} Design Suite &
         ใช้สำหรับเขียนโค้ด Verilog HDL, ตรวจสอบโครงสร้างวงจร, กำหนด Pin Constraints (\texttt{.xdc}), สังเคราะห์วงจร (Synthesis), Implementation และสร้างไฟล์ Bitstream ลงบอร์ด Nexys A7-100T \\
         \addlinespace[0.4em]
-        2 & Krita (โฟลเดอร์ \texttt{art/}) &
+        2 & Krita (โฟลเดอร์ \texttt{sprite/}) &
         ใช้สำหรับวาดภาพกราฟิกสไปรต์ภายในเกม เช่น สไลม์ 3 ร่าง ท่าทางละ 6 ท่า, ผี 4 ตัว, ผีตอนกลัว, มงกุฎ 3 เฟรม, เม็ดคะแนน และไอคอน โดยบันทึกเป็นไฟล์ \texttt{.png} ขนาด $32\times32$ และ $8\times8$ \\
         \addlinespace[0.4em]
         3 & Python 3 + Library Pillow (สคริปต์ \texttt{gen\_art.py}) &
-        ใช้รันสคริปต์ \texttt{gen\_art.py} เพื่ออ่านไฟล์ \texttt{.png} จากโฟลเดอร์ \texttt{art/} แล้ว Quantize สีเป็น RGB444 (12-bit) และสร้างเป็นโมดูล Combinational ROM ในไฟล์ \texttt{slime\_art.v} อัตโนมัติ \\
+        ใช้รันสคริปต์ \texttt{gen\_art.py} เพื่ออ่านไฟล์ \texttt{.png} จากโฟลเดอร์ \texttt{sprite/} แล้ว Quantize สีเป็น RGB444 (12-bit) และสร้างเป็นโมดูล Combinational ROM ในไฟล์ \texttt{slime\_art.v} อัตโนมัติ \\
         \addlinespace[0.4em]
         4 & Verilator + SDL2 + Make (โฟลเดอร์ \texttt{sim/}) &
         ใช้จำลองการทำงานของโค้ด Verilog จริง (\texttt{slime\_logic.v}, \texttt{slime\_draw.v}, \texttt{vga\_sync.v}) บนคอมพิวเตอร์แบบโต้ตอบได้ทั้งโหมด 60 FPS (\texttt{fast\_top}) และโหมดจำลองทุกพิกเซล (\texttt{sim\_top}) \\

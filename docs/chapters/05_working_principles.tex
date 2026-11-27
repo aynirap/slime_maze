@@ -214,7 +214,7 @@ end
 
 \subsubsection{ระบบสไปรต์และพาเลตสี (\texttt{gen\_art.py} และ \texttt{slime\_art.v})}
 
-เพื่อความสะดวกในการปรับแก้กราฟิกและประหยัดทรัพยากร LUT บน FPGA สคริปต์ Python \texttt{gen\_art.py} จะอ่านไฟล์ PNG ทั้ง 30 ภาพจากโฟลเดอร์ \texttt{art/} แล้ว Quantize สีเป็น RGB 12-bit แบ่งออกเป็น 2 พาเลตแยกกัน (รหัสสี \texttt{0} ใช้เป็นสีโปร่งใส) และตัดแถวที่โปร่งใสทั้งหมดออกจากเคสของ ROM ดังสรุปในตารางที่ \ref{tab:palettes}
+เพื่อความสะดวกในการปรับแก้กราฟิกและประหยัดทรัพยากร LUT บน FPGA สคริปต์ Python \texttt{gen\_art.py} จะอ่านไฟล์ PNG ทั้ง 30 ภาพจากโฟลเดอร์ \texttt{sprite/} แล้ว Quantize สีเป็น RGB 12-bit แบ่งออกเป็น 2 พาเลตแยกกัน (รหัสสี \texttt{0} ใช้เป็นสีโปร่งใส) และตัดแถวที่โปร่งใสทั้งหมดออกจากเคสของ ROM ดังสรุปในตารางที่ \ref{tab:palettes}
 
 \begin{table}[H]
     \centering
